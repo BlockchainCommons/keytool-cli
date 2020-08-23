@@ -1,0 +1,47 @@
+# @configure_input@
+
+#
+#  Makefile.in
+#
+#  Copyright © 2020 by Blockchain Commons, LLC
+#  Licensed under the "BSD-2-Clause Plus Patent License"
+#
+
+# Package-specific substitution variables
+package = @PACKAGE_NAME@
+version = @PACKAGE_VERSION@
+
+# Prefix-specific substitution variables
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+
+# VPATH-specific substitution variables
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+# Terminal colors
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+RESET=`tput sgr0`
+
+.PHONY: all clean keytool check
+all clean keytool check:
+	source set_build_paths.sh && cd src && $(MAKE) $@
+
+.PHONY: install uninstall
+install uninstall:
+	source set_build_paths.sh && cd src && $(MAKE) $@
+
+config.status: configure
+	./config.status --recheck
+
+.PHONY: distclean
+distclean:
+	cd src && $(MAKE) $@
+	rm -f Makefile
+	rm -rf autom4te.cache
+	rm -f autoscan.log
+	rm -f configure.scan configure.status config.log
+	rm -f config.log config.status config.h
+	rm -rf libs

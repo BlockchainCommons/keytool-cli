@@ -12,6 +12,7 @@
 #include <stdexcept>
 
 #include <bc-crypto-base/bc-crypto-base.h>
+#include <wally.hpp>
 
 #include "params.hpp"
 #include "config.h"

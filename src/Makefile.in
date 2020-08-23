@@ -42,7 +42,7 @@ OBJS = \
 	utils.o \
 	params.o
 
-LDFLAGS += -lstdc++ -lbc-crypto-base -lbc-shamir -lbc-slip39 -lbc-bip39 -lbc-ur -largp
+LDFLAGS += -lstdc++ -lbc-crypto-base -lbc-ur -lsecp256k1 -lwallycore -largp
 
 $(toolname): $(OBJS)
 

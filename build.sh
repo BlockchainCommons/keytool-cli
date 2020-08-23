@@ -12,6 +12,14 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 RESET=`tput sgr0`
 
+pushd deps/libwally-core
+./tools/autogen.sh
+./configure --disable-shared --prefix ${SYSROOT}
+make
+make check
+make install
+popd
+
 pushd deps/bc-crypto-base
 ./configure --prefix ${SYSROOT}
 make check

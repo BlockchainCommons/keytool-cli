@@ -13,10 +13,11 @@
 #include <chrono>
 
 #include <bc-crypto-base/bc-crypto-base.h>
+#include "randombytes.h"
 
 using namespace std;
 
-const string data_to_hex(const byte_vector& in) {
+string data_to_hex(const ByteVector& in) {
     auto hex = "0123456789abcdef";
     string result;
     for(auto c: in) {
@@ -38,8 +39,8 @@ uint8_t hex_digit_to_bin(char hex) {
     }
 }
 
-const byte_vector hex_to_data(const string& hex) {
-    byte_vector result;
+ByteVector hex_to_data(const string& hex) {
+    ByteVector result;
 
     auto len = hex.length();
     if(len % 2 != 0) {
@@ -56,8 +57,8 @@ const byte_vector hex_to_data(const string& hex) {
     return result;
 }
 
-const byte_vector data_to_base(const byte_vector& buf, size_t base) {
-    byte_vector result;
+ByteVector data_to_base(const ByteVector& buf, size_t base) {
+    ByteVector result;
     result.reserve(buf.size());
     for(auto b: buf) {
         result.push_back(roundf(b / 255.0 * (base - 1)));
@@ -65,7 +66,7 @@ const byte_vector data_to_base(const byte_vector& buf, size_t base) {
     return result;
 }
 
-const string data_to_alphabet(const byte_vector &in,
+string data_to_alphabet(const ByteVector &in,
     size_t base,
     string (to_alphabet)(size_t))
 {
@@ -80,7 +81,7 @@ const string data_to_alphabet(const byte_vector &in,
     return result;
 }
 
-const string data_to_ints(const byte_vector &in,
+string data_to_ints(const ByteVector &in,
     size_t low, size_t high, const string &separator)
 {
     if (!(0 <= low && low < high && high <= 255)) {
@@ -101,8 +102,8 @@ const string data_to_ints(const byte_vector &in,
     return result;
 }
 
-const byte_vector digits_to_data(const string& in, size_t low, size_t high) {
-    byte_vector result;
+ByteVector digits_to_data(const string& in, size_t low, size_t high) {
+    ByteVector result;
     for(auto c: in) {
         int n = c - '0';
         if(n < low || n > high) {
@@ -113,7 +114,7 @@ const byte_vector digits_to_data(const string& in, size_t low, size_t high) {
     return result;
 }
 
-const string join(const string_vector &strings, const string &separator) {
+string join(const StringVector &strings, const string &separator) {
     ostringstream result;
     bool first = true;
     for(auto s: strings) {
@@ -126,8 +127,8 @@ const string join(const string_vector &strings, const string &separator) {
     return result.str();
 }
 
-const string_vector split(const string& s, const char& separator) {
-	string_vector result;
+StringVector split(const string& s, const char& separator) {
+	StringVector result;
 	string buf;
 
 	for(auto c: s) {
@@ -146,44 +147,31 @@ const string_vector split(const string& s, const char& separator) {
 	return result;
 }
 
-const byte_vector sha256(const byte_vector &buf) {
-    uint8_t digest[SHA256_DIGEST_LENGTH];
-    sha256_Raw(&buf[0], buf.size(), digest);
-    return byte_vector(digest, digest + SHA256_DIGEST_LENGTH);
-}
-
-const byte_vector crc32(const byte_vector &buf) {
-    uint32_t checksum = crc32n(&buf[0], buf.size());
-    auto cbegin = (uint8_t*)&checksum;
-    auto cend = cbegin + sizeof(uint32_t);
-    return byte_vector(cbegin, cend);
-}
-
-const string to_lower(const string& s) {
+string to_lowercase(const string& s) {
     string out;
     transform(s.begin(), s.end(), back_inserter(out), ::tolower);
     return out;
 }
 
-const bool has_prefix(const string& s, const string& prefix) {
+bool has_prefix(const string& s, const string& prefix) {
     if(s.length() < prefix.length()) return false;
     return string(s.begin(), s.begin() + prefix.length()) == prefix;
 }
 
-const string take(const string &s, size_t count) {
+string take(const string &s, size_t count) {
     auto first = s.begin();
     auto c = min(s.size(), count);
     auto last = first + c;
     return string(first, last);
 }
 
-const string drop(const string& s, size_t count) {
+string drop(const string& s, size_t count) {
     if(count >= s.length()) { return ""; }
     return string(s.begin() + count, s.end());
 }
 
-const string_vector partition(const string& s, size_t size) {
-    string_vector result;
+StringVector partition(const string& s, size_t size) {
+    StringVector result;
     auto remaining = s;
     while(remaining.length() > 0) {
         result.push_back(take(remaining, size));
@@ -198,4 +186,14 @@ int days_since_epoch() {
     auto time_since = today.time_since_epoch();
     typedef duration<int, ratio<60*60*24>> days;
     return duration_cast<days>(time_since).count();
+}
+
+ByteVector random_bytes(size_t len) {
+    ByteVector result(len, 0);
+    randombytes(&result[0], len);
+    return result;
+}
+
+std::ostream& operator<< (std::ostream& os, const ByteVector& bytes) {
+    return os << data_to_hex(bytes);
 }

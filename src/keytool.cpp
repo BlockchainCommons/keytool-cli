@@ -13,22 +13,21 @@
 using namespace std;
 
 int main( int argc, char *argv[] ) {
-    auto p = Params::parse(argc, argv);
-
     try {
-        // p->input_format->process_input(p);
-        // p->output_format->process_output(p);
+        auto p = Params::parse(argc, argv);
+        p->process();
 
         if(p->output.empty()) {
             throw runtime_error("An internal error occurred.");
         }
 
         cout << p->output << endl;
+
+        delete p;
+        return 0;
+
     } catch(exception &e) {
         cerr << argv[0] << ": " << e.what() << endl;
         exit(1);
     }
-
-    delete p;
-    return 0;
 }

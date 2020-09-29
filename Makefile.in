@@ -45,3 +45,5 @@ distclean:
 	rm -f configure.scan configure.status config.log
 	rm -f config.log config.status config.h
 	rm -rf libs
+	rm -rf sysroot
+	rm -rf deps/*

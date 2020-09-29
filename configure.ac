@@ -13,24 +13,8 @@ AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
 # Checks for libraries.
-AC_CHECK_LIB([bc-crypto-base], [sha256_Raw], [], [
-  echo "### Error! libbc-crypto-base must be installed first."
-  exit -1
-  ])
-AC_CHECK_LIB([bc-shamir], [split_secret], [], [
-  echo "### Error! libbc-shamir must be installed first."
-  exit -1
-  ])
-AC_CHECK_LIB([bc-slip39], [slip39_word_for_string], [], [
-  echo "### Error! libbc-slip39 must be installed first."
-  exit -1
-  ])
-AC_CHECK_LIB([bc-bip39], [bip39_mnemonic_from_word], [], [
-  echo "### Error! libbc-bip39 must be installed first."
-  exit -1
-  ])
-AC_CHECK_LIB([bc-bytewords], [bytewords_encode], [], [
-  echo "### Error! libbc-bytewords must be installed first."
+AC_CHECK_LIB([wallycore], [wally_init], [], [
+  echo "### Error! libwally-core must be installed first."
   exit -1
   ])
 AC_CHECK_LIB([argp], [argp_parse], [], [

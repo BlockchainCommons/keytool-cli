@@ -1,12 +1,6 @@
-[submodule "deps/bc-crypto-base"]
-	path = deps/bc-crypto-base
-	url = https://github.com/BlockchainCommons/bc-crypto-base.git
 [submodule "deps/argp-standalone"]
 	path = deps/argp-standalone
 	url = https://github.com/BlockchainCommons/argp-standalone.git
-[submodule "deps/bc-ur"]
-	path = deps/bc-ur
-	url = https://github.com/BlockchainCommons/bc-ur.git
 [submodule "deps/libwally-core"]
 	path = deps/libwally-core
-	url = https://github.com/ElementsProject/libwally-core.git
+	url = https://github.com/BlockchainCommons/bc-libwally-core.git

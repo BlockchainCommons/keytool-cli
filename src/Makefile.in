@@ -26,11 +26,9 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 RESET=`tput sgr0`
 
-CBOR_DIR = ../deps/cbor-lite
-
 COMPILER = g++
 CFLAGS += --debug -O0
-CXXFLAGS += -std=c++17 -stdlib=libc++ --debug -O0 -I"$(CBOR_DIR)/include"
+CXXFLAGS += -std=c++17 -stdlib=libc++ --debug -O0
 
 toolname = keytool
 
@@ -40,15 +38,33 @@ all: $(toolname)
 OBJS = \
 	keytool.o \
 	utils.o \
-	params.o
+	params.o \
+	wally-utils.o \
+	randombytes.o \
+	network.o \
+	asset.o \
+	model.o \
+	hd-key.o \
+	derivation-path.o \
+	chain-type.o \
+	ec-key.o
 
-LDFLAGS += -lstdc++ -lbc-crypto-base -lbc-ur -lsecp256k1 -lwallycore -largp
+LDFLAGS += -lstdc++ -lsecp256k1 -lwallycore -largp
 
 $(toolname): $(OBJS)
 
 keytool.o: params.hpp
-utils.o: utils.hpp
-params.o: params.hpp utils.hpp config.h
+utils.o: utils.hpp randombytes.h
+params.o: params.hpp utils.hpp config.h model.hpp
+wally-utils.o: wally-utils.hpp utils.hpp asset.hpp data-node.hpp model.hpp hd-key.hpp derivation-path.hpp ec-key.hpp
+randombytes.o: randombytes.h
+network.o: network.hpp
+asset.o: asset.hpp network.hpp
+model.o: model.hpp data-node.hpp asset.hpp hd-key.hpp ec-key.hpp utils.hpp wally-utils.hpp derivation-path.hpp chain-type.hpp
+hd-key.o: hd-key.hpp utils.hpp network.hpp wally-utils.hpp derivation-path.hpp
+derivation-path.o: derivation-path.hpp utils.hpp
+chain-type.o: chain-type.hpp
+ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
 
 bindir = $(DESTDIR)/$(prefix)/bin
 
@@ -64,7 +80,7 @@ uninstall:
 
 .PHONY: check
 check: $(toolname)
-	./$(toolname)
+	./test.sh ./$(toolname)
 
 .PHONY: clean
 clean:

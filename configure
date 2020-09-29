@@ -3517,13 +3517,13 @@ fi
 
 # Checks for libraries.
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for sha256_Raw in -lbc-crypto-base" >&5
-$as_echo_n "checking for sha256_Raw in -lbc-crypto-base... " >&6; }
-if ${ac_cv_lib_bc_crypto_base_sha256_Raw+:} false; then :
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for wally_init in -lwallycore" >&5
+$as_echo_n "checking for wally_init in -lwallycore... " >&6; }
+if ${ac_cv_lib_wallycore_wally_init+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lbc-crypto-base  $LIBS"
+LIBS="-lwallycore  $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -3533,236 +3533,36 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char sha256_Raw ();
+char wally_init ();
 int
 main ()
 {
-return sha256_Raw ();
+return wally_init ();
   ;
   return 0;
 }
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_bc_crypto_base_sha256_Raw=yes
+  ac_cv_lib_wallycore_wally_init=yes
 else
-  ac_cv_lib_bc_crypto_base_sha256_Raw=no
+  ac_cv_lib_wallycore_wally_init=no
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 LIBS=$ac_check_lib_save_LIBS
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bc_crypto_base_sha256_Raw" >&5
-$as_echo "$ac_cv_lib_bc_crypto_base_sha256_Raw" >&6; }
-if test "x$ac_cv_lib_bc_crypto_base_sha256_Raw" = xyes; then :
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_wallycore_wally_init" >&5
+$as_echo "$ac_cv_lib_wallycore_wally_init" >&6; }
+if test "x$ac_cv_lib_wallycore_wally_init" = xyes; then :
   cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBBC_CRYPTO_BASE 1
+#define HAVE_LIBWALLYCORE 1
 _ACEOF
 
-  LIBS="-lbc-crypto-base $LIBS"
+  LIBS="-lwallycore $LIBS"
 
 else
 
-  echo "### Error! libbc-crypto-base must be installed first."
-  exit -1
-
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for split_secret in -lbc-shamir" >&5
-$as_echo_n "checking for split_secret in -lbc-shamir... " >&6; }
-if ${ac_cv_lib_bc_shamir_split_secret+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lbc-shamir  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char split_secret ();
-int
-main ()
-{
-return split_secret ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_bc_shamir_split_secret=yes
-else
-  ac_cv_lib_bc_shamir_split_secret=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bc_shamir_split_secret" >&5
-$as_echo "$ac_cv_lib_bc_shamir_split_secret" >&6; }
-if test "x$ac_cv_lib_bc_shamir_split_secret" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBBC_SHAMIR 1
-_ACEOF
-
-  LIBS="-lbc-shamir $LIBS"
-
-else
-
-  echo "### Error! libbc-shamir must be installed first."
-  exit -1
-
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for slip39_word_for_string in -lbc-slip39" >&5
-$as_echo_n "checking for slip39_word_for_string in -lbc-slip39... " >&6; }
-if ${ac_cv_lib_bc_slip39_slip39_word_for_string+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lbc-slip39  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char slip39_word_for_string ();
-int
-main ()
-{
-return slip39_word_for_string ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_bc_slip39_slip39_word_for_string=yes
-else
-  ac_cv_lib_bc_slip39_slip39_word_for_string=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bc_slip39_slip39_word_for_string" >&5
-$as_echo "$ac_cv_lib_bc_slip39_slip39_word_for_string" >&6; }
-if test "x$ac_cv_lib_bc_slip39_slip39_word_for_string" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBBC_SLIP39 1
-_ACEOF
-
-  LIBS="-lbc-slip39 $LIBS"
-
-else
-
-  echo "### Error! libbc-slip39 must be installed first."
-  exit -1
-
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for bip39_mnemonic_from_word in -lbc-bip39" >&5
-$as_echo_n "checking for bip39_mnemonic_from_word in -lbc-bip39... " >&6; }
-if ${ac_cv_lib_bc_bip39_bip39_mnemonic_from_word+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lbc-bip39  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char bip39_mnemonic_from_word ();
-int
-main ()
-{
-return bip39_mnemonic_from_word ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_bc_bip39_bip39_mnemonic_from_word=yes
-else
-  ac_cv_lib_bc_bip39_bip39_mnemonic_from_word=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bc_bip39_bip39_mnemonic_from_word" >&5
-$as_echo "$ac_cv_lib_bc_bip39_bip39_mnemonic_from_word" >&6; }
-if test "x$ac_cv_lib_bc_bip39_bip39_mnemonic_from_word" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBBC_BIP39 1
-_ACEOF
-
-  LIBS="-lbc-bip39 $LIBS"
-
-else
-
-  echo "### Error! libbc-bip39 must be installed first."
-  exit -1
-
-fi
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for bytewords_encode in -lbc-bytewords" >&5
-$as_echo_n "checking for bytewords_encode in -lbc-bytewords... " >&6; }
-if ${ac_cv_lib_bc_bytewords_bytewords_encode+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lbc-bytewords  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char bytewords_encode ();
-int
-main ()
-{
-return bytewords_encode ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_bc_bytewords_bytewords_encode=yes
-else
-  ac_cv_lib_bc_bytewords_bytewords_encode=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bc_bytewords_bytewords_encode" >&5
-$as_echo "$ac_cv_lib_bc_bytewords_bytewords_encode" >&6; }
-if test "x$ac_cv_lib_bc_bytewords_bytewords_encode" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBBC_BYTEWORDS 1
-_ACEOF
-
-  LIBS="-lbc-bytewords $LIBS"
-
-else
-
-  echo "### Error! libbc-bytewords must be installed first."
+  echo "### Error! libwally-core must be installed first."
   exit -1
 
 fi

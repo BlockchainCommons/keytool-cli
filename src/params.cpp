@@ -45,6 +45,16 @@ void Params::validate() {
     }
 }
 
+static std::string read_arg_from_stdin() {
+    string line;
+    if(getline(cin, line)) {
+        trim(line);
+        return line;
+    } else {
+        throw domain_error("Input expected from stdin.");
+    }
+}
+
 static int parse_opt(int key, char* arg, struct argp_state* state) {
     try {
         auto p = static_cast<Params*>(state->input);
@@ -63,7 +73,12 @@ static int parse_opt(int key, char* arg, struct argp_state* state) {
             break;
         default:
             if(key < 0) {
-                opts[key] = arg;
+                string s = arg ? arg : "";
+                if(s.empty()) {
+                    opts[key] = read_arg_from_stdin();
+                } else {
+                    opts[key] = s;
+                }
             }
             break;
         }

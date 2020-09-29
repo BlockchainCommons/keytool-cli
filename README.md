@@ -2,7 +2,7 @@
 
 ## Introduction
 
-`keytool` is command-line tool that implements a data flow graph for deriving cryptocurrency keys and addresses. Any of the nodes in the graph can be assigned and any set of nodes can be derived as long as their dependencies are met.
+`keytool` is a command-line tool that implements a data flow graph for deriving cryptocurrency keys and addresses. Any of the nodes in the graph can be assigned and any set of nodes can be derived as long as their dependencies are met.
 
 ![](docs/Derivations.png)
 
@@ -75,7 +75,7 @@ m/44h/0h/0h/0/9
 
 ## Full Documentation
 
-See [`MANUAL.md`](MANUAL.md) for details, many more examples, and version history.
+See [`MANUAL.md`](MANUAL.md) for details, more examples, and version history.
 
 ## Dependencies
 

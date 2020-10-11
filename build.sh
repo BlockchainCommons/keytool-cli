@@ -17,7 +17,14 @@ echo "${BLUE}== libwally-core ==${RESET}"
 
 pushd deps/libwally-core
 ./tools/autogen.sh
+
+if [[ "$OSTYPE" == "msys" ]]; then
+# FIXME: figure out how to disable PTHREADS instead of tests
+./configure --disable-tests --disable-shared --prefix ${SYSROOT}
+else
 ./configure --disable-shared --prefix ${SYSROOT}
+fi
+
 make
 make check
 make install

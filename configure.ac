@@ -16,7 +16,7 @@ AC_PROG_MAKE_SET
 AC_CHECK_LIB([wallycore], [wally_init], [], [
   echo "### Error! libwally-core must be installed first."
   exit -1
-  ])
+  ], [-lsecp256k1])
 AC_CHECK_LIB([argp], [argp_parse], [], [
   echo "### Error! argp must be installed first. Try 'brew install argp-standalone'."
   exit -1

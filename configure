@@ -3523,7 +3523,7 @@ if ${ac_cv_lib_wallycore_wally_init+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lwallycore  $LIBS"
+LIBS="-lwallycore -lsecp256k1 $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 

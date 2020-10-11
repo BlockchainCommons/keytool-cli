@@ -49,7 +49,17 @@ OBJS = \
 	chain-type.o \
 	ec-key.o
 
-LDFLAGS += -lstdc++ -lsecp256k1 -lwallycore -largp
+LDLIBS += -lwallycore -lsecp256k1 -largp
+
+UNAME := $(shell uname)
+ifeq ($(UNAME), Linux)
+    LDLIBS += -lm -lc++ -lc++abi -lgcc_s -lgcc
+else ifeq ($(findstring MINGW64, $(UNAME)), MINGW64)
+    # on windows building with msys2/mingw64
+    LDLIBS += -lm -lc++ -lws2_32
+else
+    LDLIBS += -lstdc++
+endif
 
 $(toolname): $(OBJS)
 

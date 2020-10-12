@@ -13,6 +13,14 @@ GREEN=`tput setaf 2`
 BLUE=`tput setaf 4`
 RESET=`tput sgr0`
 
+echo "${BLUE}== bc-crypto-base ==${RESET}"
+
+pushd deps/bc-crypto-base
+./configure --prefix ${SYSROOT}
+make check
+make install
+popd
+
 echo "${BLUE}== libwally-core ==${RESET}"
 
 pushd deps/libwally-core

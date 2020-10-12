@@ -27,6 +27,10 @@ if test "x$is_mingw" == "xyes"; then
     exit -1
   ])
 fi
+AC_CHECK_LIB([bc-crypto-base], [sha256_Raw], [], [
+  echo "### Error! libbc-crypto-base must be installed first."
+  exit -1
+  ])
 AC_CHECK_LIB([wallycore], [wally_init], [], [
   echo "### Error! libwally-core must be installed first."
   exit -1

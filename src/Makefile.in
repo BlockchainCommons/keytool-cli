@@ -76,7 +76,7 @@ derivation-path.o: derivation-path.hpp utils.hpp
 chain-type.o: chain-type.hpp
 ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
 
-bindir = $(DESTDIR)/$(prefix)/bin
+bindir = $(DESTDIR)$(prefix)/bin
 
 .PHONY: install
 install: $(toolname)

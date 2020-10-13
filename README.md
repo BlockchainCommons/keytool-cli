@@ -118,6 +118,10 @@ $ export CC="clang-10" && export CXX="clang++-10" && ./build.sh
 $ sudo make install
 ```
 
+### Build on Windows
+
+See [instructions here](docs/Install-Windows.md).
+
 ## Alternative Installation
 
 This sequence does *not* install the dependencies from submodules; instead they must be installed in the usual places on the build system, otherwise the `./configure` step below will fail.

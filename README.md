@@ -15,7 +15,7 @@ $ keytool --seed 8935a8068526d84da555cdb741a3b8a8 master-key
 xprv9s21ZrQH143K3rJgfaUmUCueBxbDT1bbksxayh7ik1nZN41zAy2kQNop8REXEAAwqwes1E8rxk1313tyzsNmMq69h4vDyyrXkmjDZ2Nf3pN
 ```
 
-Derive an arbitrary BIP32 private and public keys from master HD key.
+### Derive arbitrary BIP32 private and public keys from master HD key
 
 ```
 $ keytool \
@@ -28,7 +28,7 @@ xprv9zvzy7RBcHUqSY5uPpz5jMgA4f98yCxW21Qrwg5qQu3GcqTSBsAgpRXfTnmE4SqSbLJVHx4NdWFE
 xpub6DvMNcx5Sf38f2ANVrX66VctcgydNfgMPELTk4VSyEaFVdnajQUwNDr9K54VQ2SRM7gmcQmJcMa23xyWEwU2ehdU9tgFBozSUnLaWJAhmBk
 ```
 
-Derive 10 successive bitcoin addreses from a seed.
+### Derive 10 successive bitcoin addreses from a seed.
 
 ```
 for (( i=0; i <= 9; ++i ))
@@ -82,7 +82,7 @@ See [`MANUAL.md`](MANUAL.md) for details, more examples, and version history.
 * [`libwally-core`](https://github.com/BlockchainCommons/bc-libwally-core)
 * [`GNU argp`](https://www.gnu.org/software/libc/manual/html_node/Argp.html)
 
-## Installation
+## Recommended Installation
 
 These dependencies are automatically installed as submodules when you run the build script. This is the recommended way to install.
 

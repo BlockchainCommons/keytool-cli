@@ -49,7 +49,17 @@ OBJS = \
 	chain-type.o \
 	ec-key.o
 
-LDFLAGS += -lstdc++ -lsecp256k1 -lwallycore -largp
+LDLIBS += -lwallycore -lsecp256k1 -largp
+
+UNAME := $(shell uname)
+ifeq ($(UNAME), Linux)
+    LDLIBS += -lm -lc++ -lc++abi -lgcc_s -lgcc
+else ifeq ($(findstring MINGW64, $(UNAME)), MINGW64)
+    # on windows building with msys2/mingw64
+    LDLIBS += -lm -lc++ -lws2_32 -lssp
+else
+    LDLIBS += -lstdc++
+endif
 
 $(toolname): $(OBJS)
 
@@ -66,7 +76,7 @@ derivation-path.o: derivation-path.hpp utils.hpp
 chain-type.o: chain-type.hpp
 ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
 
-bindir = $(DESTDIR)/$(prefix)/bin
+bindir = $(DESTDIR)$(prefix)/bin
 
 .PHONY: install
 install: $(toolname)

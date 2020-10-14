@@ -4,3 +4,6 @@
 [submodule "deps/libwally-core"]
 	path = deps/libwally-core
 	url = https://github.com/BlockchainCommons/bc-libwally-core.git
+[submodule "deps/bc-crypto-base"]
+	path = deps/bc-crypto-base
+	url = git@github.com:BlockchainCommons/bc-crypto-base.git

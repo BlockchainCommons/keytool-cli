@@ -3515,7 +3515,121 @@ $as_echo "no" >&6; }
 fi
 
 
+# on windows/msys2/mingw64:
+case $(uname -s) in #(
+  *MINGW*) :
+
+    LIBS+=-lws2_32
+    is_mingw="yes"
+
+ ;; #(
+  *) :
+     ;;
+esac
+
 # Checks for libraries.
+if test "x$is_mingw" == "xyes"; then
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for __stack_chk_fail in -lssp" >&5
+$as_echo_n "checking for __stack_chk_fail in -lssp... " >&6; }
+if ${ac_cv_lib_ssp___stack_chk_fail+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lssp  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char __stack_chk_fail ();
+int
+main ()
+{
+return __stack_chk_fail ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_ssp___stack_chk_fail=yes
+else
+  ac_cv_lib_ssp___stack_chk_fail=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_ssp___stack_chk_fail" >&5
+$as_echo "$ac_cv_lib_ssp___stack_chk_fail" >&6; }
+if test "x$ac_cv_lib_ssp___stack_chk_fail" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBSSP 1
+_ACEOF
+
+  LIBS="-lssp $LIBS"
+
+else
+
+    echo "### Error! ssp must be installed first"
+    exit -1
+
+fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for sha256_Raw in -lbc-crypto-base" >&5
+$as_echo_n "checking for sha256_Raw in -lbc-crypto-base... " >&6; }
+if ${ac_cv_lib_bc_crypto_base_sha256_Raw+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lbc-crypto-base  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char sha256_Raw ();
+int
+main ()
+{
+return sha256_Raw ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  ac_cv_lib_bc_crypto_base_sha256_Raw=yes
+else
+  ac_cv_lib_bc_crypto_base_sha256_Raw=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_bc_crypto_base_sha256_Raw" >&5
+$as_echo "$ac_cv_lib_bc_crypto_base_sha256_Raw" >&6; }
+if test "x$ac_cv_lib_bc_crypto_base_sha256_Raw" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBBC_CRYPTO_BASE 1
+_ACEOF
+
+  LIBS="-lbc-crypto-base $LIBS"
+
+else
+
+  echo "### Error! libbc-crypto-base must be installed first."
+  exit -1
+
+fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for wally_init in -lwallycore" >&5
 $as_echo_n "checking for wally_init in -lwallycore... " >&6; }
@@ -3523,7 +3637,7 @@ if ${ac_cv_lib_wallycore_wally_init+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lwallycore  $LIBS"
+LIBS="-lwallycore -lsecp256k1 $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 

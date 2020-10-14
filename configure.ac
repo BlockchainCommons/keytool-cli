@@ -12,11 +12,29 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
+# on windows/msys2/mingw64:
+AS_CASE([$(uname -s)],
+  [*MINGW*], [
+    LIBS+=-lws2_32
+    is_mingw="yes"
+  ]
+)
+
 # Checks for libraries.
+if test "x$is_mingw" == "xyes"; then
+  AC_CHECK_LIB([ssp], [__stack_chk_fail], [], [
+    echo "### Error! ssp must be installed first"
+    exit -1
+  ])
+fi
+AC_CHECK_LIB([bc-crypto-base], [sha256_Raw], [], [
+  echo "### Error! libbc-crypto-base must be installed first."
+  exit -1
+  ])
 AC_CHECK_LIB([wallycore], [wally_init], [], [
   echo "### Error! libwally-core must be installed first."
   exit -1
-  ])
+  ], [-lsecp256k1])
 AC_CHECK_LIB([argp], [argp_parse], [], [
   echo "### Error! argp must be installed first. Try 'brew install argp-standalone'."
   exit -1

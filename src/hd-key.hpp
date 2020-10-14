@@ -1,6 +1,7 @@
 #ifndef KEYTOOL_HD_KEY_HPP
 #define KEYTOOL_HD_KEY_HPP
 
+#include <assert.h>
 #include <string>
 #include <exception>
 #include <memory>

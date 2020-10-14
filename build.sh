@@ -13,11 +13,26 @@ GREEN=`tput setaf 2`
 BLUE=`tput setaf 4`
 RESET=`tput sgr0`
 
+echo "${BLUE}== bc-crypto-base ==${RESET}"
+
+pushd deps/bc-crypto-base
+./configure --prefix ${SYSROOT}
+make check
+make install
+popd
+
 echo "${BLUE}== libwally-core ==${RESET}"
 
 pushd deps/libwally-core
 ./tools/autogen.sh
+
+if [[ "$OSTYPE" == "msys" ]]; then
+# FIXME: figure out how to disable PTHREADS instead of tests
+./configure --disable-tests --disable-shared --prefix ${SYSROOT}
+else
 ./configure --disable-shared --prefix ${SYSROOT}
+fi
+
 make
 make check
 make install

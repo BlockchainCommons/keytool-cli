@@ -1,5 +1,12 @@
 #include "asset.hpp"
 
+Network Network::mainnet {"mainnet"};
+Network Network::testnet {"testnet"};
+
+std::vector<Network> Network::_networks = {
+    mainnet, testnet
+};
+
 std::ostream& operator<< (std::ostream& os, const Network& network) {
     return os << network.name();
 }

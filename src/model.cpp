@@ -44,7 +44,7 @@ Model::Model()
     all_nodes.push_back(&seed);
 
     // asset
-    asset = Asset::btc;
+    asset = Asset::btc ? *Asset::btc : throw runtime_error("Asset::btc NULL");
     asset.set_to_string([](const Asset& asset) { return asset.symbol(); });
     asset.set_from_string([](const string& symbol) -> Asset { return Asset::find(symbol); });
     all_nodes.push_back(&asset);

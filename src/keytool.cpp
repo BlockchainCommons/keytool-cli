@@ -13,6 +13,9 @@
 using namespace std;
 
 int main( int argc, char *argv[] ) {
+
+    Asset::init();
+
     try {
         auto p = Params::parse(argc, argv);
         p->process();

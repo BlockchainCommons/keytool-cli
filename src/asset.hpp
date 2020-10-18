@@ -24,9 +24,10 @@ public:
     uint8_t version_pkh() const { return _version_pkh; }
     uint8_t version_sh() const { return _version_sh; }
 
-    static Asset btc;
-    static Asset btct;
-    static const std::vector<Asset>& assets() { return _assets; }
+    static void init(void);
+    static const Asset *btc;
+    static const Asset *btct;
+    static const std::vector<Asset>& assets() { return _assets ? *_assets : throw std::runtime_error("_assets NULL"); }
     static Asset find(const std::string& symbol);
 
 private:
@@ -37,7 +38,7 @@ private:
     uint8_t _version_pkh;
     uint8_t _version_sh;
 
-    static std::vector<Asset> _assets;
+    static std::vector<Asset> *_assets;
 };
 
 std::ostream& operator<< (std::ostream& os, const Asset& asset);

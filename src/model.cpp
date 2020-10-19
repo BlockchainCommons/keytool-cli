@@ -44,7 +44,7 @@ Model::Model()
     all_nodes.push_back(&seed);
 
     // asset
-    asset = Asset::btc;
+    asset = Asset::btc();
     asset.set_to_string([](const Asset& asset) { return asset.symbol(); });
     asset.set_from_string([](const string& symbol) -> Asset { return Asset::find(symbol); });
     all_nodes.push_back(&asset);
@@ -124,7 +124,7 @@ Model::Model()
     all_nodes.push_back(&account_pub_key);
 
     // chain_type
-    chain_type = ChainType::external;
+    chain_type = ChainType::external();
     chain_type.set_to_string([](const ChainType& t) { return t.to_string(); });
     chain_type.set_from_string([](const string& t) -> ChainType { return ChainType::find(t); });
     all_nodes.push_back(&chain_type);

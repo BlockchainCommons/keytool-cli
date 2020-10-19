@@ -1,12 +1,24 @@
 #include "chain-type.hpp"
 
-ChainType ChainType::external { "external", 0 };
-ChainType ChainType::change { "change", 1 };
-ChainType ChainType::identity { "identity", 7 };
+ChainType ChainType::external() {
+    static auto t = new ChainType("external", 0);
+    return *t;
+}
 
-std::vector<ChainType> ChainType::_chain_types = {
-    external, change, identity
-};
+ChainType ChainType::change() {
+    static auto t = new ChainType("change", 1);
+    return *t;
+}
+
+ChainType ChainType::identity() {
+    static auto t = new ChainType("identity", 7);
+    return *t;
+}
+
+std::vector<ChainType> ChainType::chain_types() {
+    static auto a = new std::vector<ChainType>{ external(), change(), identity() };
+    return *a;
+}
 
 std::string ChainType::to_string() const {
     if(_name.has_value()) {

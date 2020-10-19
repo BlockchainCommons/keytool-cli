@@ -10,15 +10,13 @@ public:
 
     const std::string& name() const { return _name; }
 
-    static Network mainnet;
-    static Network testnet;
-    static const std::vector<Network>& networks() { return _networks; }
+    static Network mainnet();
+    static Network testnet();
+    static std::vector<Network> networks();
     static Network find(const std::string& name);
 
 private:
     std::string _name;
-
-    static std::vector<Network> _networks;
 };
 
 std::ostream& operator<< (std::ostream& os, const Network& network);

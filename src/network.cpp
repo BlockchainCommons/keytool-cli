@@ -1,11 +1,19 @@
 #include "asset.hpp"
 
-Network Network::mainnet {"mainnet"};
-Network Network::testnet {"testnet"};
+Network Network::mainnet() {
+    static auto n = new Network("mainnet");
+    return *n;
+}
 
-std::vector<Network> Network::_networks = {
-    mainnet, testnet
-};
+Network Network::testnet() {
+    static auto n = new Network("testnet");
+    return *n;
+}
+
+std::vector<Network> Network::networks() {
+    static auto a = new std::vector<Network>{ mainnet(), testnet() };
+    return *a;
+}
 
 std::ostream& operator<< (std::ostream& os, const Network& network) {
     return os << network.name();

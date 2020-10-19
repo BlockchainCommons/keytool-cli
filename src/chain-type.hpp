@@ -15,17 +15,15 @@ public:
 
     std::string to_string() const;
 
-    static ChainType external;
-    static ChainType change;
-    static ChainType identity;
-    static const std::vector<ChainType>& chain_types() { return _chain_types; }
+    static ChainType external();
+    static ChainType change();
+    static ChainType identity();
+    static std::vector<ChainType> chain_types();
     static ChainType find(const std::string& name);
 
 private:
     std::optional<std::string> _name;
     uint32_t _index;
-
-    static std::vector<ChainType> _chain_types;
 };
 
 bool operator==(const ChainType& a, const ChainType& b);

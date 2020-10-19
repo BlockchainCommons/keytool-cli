@@ -65,9 +65,9 @@ HDKey Wally::bip32_key_from_seed(const ByteVector& seed, const Network& network)
     ext_key* key = NULL;
 
     uint32_t version;
-    if(network == Network::mainnet) {
+    if(network == Network::mainnet()) {
         version = BIP32_VER_MAIN_PRIVATE;
-    } else if(network == Network::testnet) {
+    } else if(network == Network::testnet()) {
         version = BIP32_VER_TEST_PRIVATE;
     } else {
         assert(false);
@@ -164,7 +164,7 @@ ECCompressedPublicKey Wally::ec_key_compress(const ECUncompressedPublicKey& key)
 
 string Wally::ec_key_to_wif(const ECPrivateKey& key, const Network& network) const {
     char* wif_out;
-    uint32_t prefix = network == Network::mainnet ? 0x80 : 0xef;
+    uint32_t prefix = network == Network::mainnet() ? 0x80 : 0xef;
     assert(wally_wif_from_bytes(&key.data()[0], key.data().size(), prefix, WALLY_WIF_FLAG_COMPRESSED, &wif_out) == WALLY_OK);
     auto result = string(wif_out);
     wally_free_string(wif_out);
@@ -172,7 +172,7 @@ string Wally::ec_key_to_wif(const ECPrivateKey& key, const Network& network) con
 }
 
 ECPrivateKey Wally::wif_to_ec_key(const string& wif, const Network& network) const {
-    uint32_t prefix = network == Network::mainnet ? 0x80 : 0xef;
+    uint32_t prefix = network == Network::mainnet() ? 0x80 : 0xef;
     ByteVector bytes_out(EC_PRIVATE_KEY_LEN);
     if(wally_wif_to_bytes(wif.c_str(), prefix, WALLY_WIF_FLAG_COMPRESSED, &bytes_out.front(), bytes_out.size()) != WALLY_OK) {
         throw std::domain_error("Invalid WIF.");

@@ -9,6 +9,12 @@
 /* Define to 1 if you have the `argp' library (-largp). */
 #undef HAVE_LIBARGP
 
+/* Define to 1 if you have the `bc-crypto-base' library (-lbc-crypto-base). */
+#undef HAVE_LIBBC_CRYPTO_BASE
+
+/* Define to 1 if you have the `ssp' library (-lssp). */
+#undef HAVE_LIBSSP
+
 /* Define to 1 if you have the `wallycore' library (-lwallycore). */
 #undef HAVE_LIBWALLYCORE
 

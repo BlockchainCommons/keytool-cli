@@ -7,7 +7,7 @@
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/src/keytool",
-            "args": [ "--address-derivation-path", "m/44h/0h/0h/0/0", "address-derivation-path" ],
+            "args": [ "asset" ],
             "cwd": "${workspaceFolder}/src",
             "preLaunchTask": "Build"
         }

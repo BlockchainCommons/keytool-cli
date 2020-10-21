@@ -16,27 +16,29 @@ static uint32_t parse_uint32(const std::string& s) {
 }
 
 Model::Model()
-    : seed("seed", -1)
-    , asset("asset", -2)
-    , network("network", -3)
-    , master_key("master-key", -4)
-    , purpose("purpose", -5)
-    , coin_type("coin-type", -6)
-    , account_index("account-index", -7)
-    , account_derivation_path("account-derivation-path", -8)
-    , account_key("account-key", -9)
-    , account_pub_key("account-pub-key", -10)
-    , chain_type("chain-type", -11)
-    , chain_type_int("chain-type-int", -12)
-    , address_index("address-index", -13)
-    , address_derivation_path("address-derivation-path", -14)
-    , address_key("address-key", -15)
-    , address_pub_key("address-pub-key", -16)
-    , address_ec_key("address-ec-key", -17)
-    , address_ec_key_wif("address-ec-key-wif", -18)
-    , address_pub_ec_key("address-pub-ec-key", -19)
-    , address_pkh("address-pkh", -20)
-    , address_sh("address-sh", -21)
+    : seed("seed",                                          -1)
+    , asset("asset",                                        -2)
+    , network("network",                                    -3)
+    , master_key("master-key",                              -4)
+    , master_key_fingerprint("master-key-fingerprint",      -5)
+    , purpose("purpose",                                    -6)
+    , coin_type("coin-type",                                -7)
+    , account_index("account-index",                        -8)
+    , account_derivation_path("account-derivation-path",    -9)
+    , account_key("account-key",                            -10)
+    , account_pub_key("account-pub-key",                    -11)
+    , chain_type("chain-type",                              -12)
+    , chain_type_int("chain-type-int",                      -13)
+    , address_index("address-index",                        -14)
+    , address_derivation_path("address-derivation-path",    -15)
+    , address_key("address-key",                            -16)
+    , address_pub_key("address-pub-key",                    -17)
+    , address_ec_key("address-ec-key",                      -18)
+    , address_ec_key_wif("address-ec-key-wif",              -19)
+    , address_pub_ec_key("address-pub-ec-key",              -20)
+    , address_pkh("address-pkh",                            -21)
+    , address_sh("address-sh",                              -22)
+    , output_descriptor_type("output-descriptor-type",      -23)
 {
     // seed
     seed.set_to_string([](const ByteVector& bytes) { return data_to_hex(bytes); });
@@ -66,6 +68,18 @@ Model::Model()
     master_key.set_to_string([](const HDKey& key) { return key.to_base58(true); });
     master_key.set_from_string([](const string& prv) -> HDKey { return HDKey(prv, true); });
     all_nodes.push_back(&master_key);
+
+    // master_key_fingerprint <- [master_key]
+    master_key_fingerprint.set_f([&]() -> optional<ByteVector> {
+        if(master_key.has_value()) {
+            return master_key().fingerprint();
+        } else {
+            return nullopt;
+        }
+    });
+    master_key_fingerprint.set_to_string([](const ByteVector& bytes) { return data_to_hex(bytes); });
+    master_key_fingerprint.set_from_string([](const string& hex) -> ByteVector { return hex_to_data(hex); });
+    all_nodes.push_back(&master_key_fingerprint);
 
     // purpose
     purpose = 44;
@@ -251,6 +265,11 @@ Model::Model()
     address_sh.set_to_string([](const string& s) { return s; });
     address_sh.set_from_string([](const string& a) -> std::string { return a; });
     all_nodes.push_back(&address_sh);
+
+    // output_descriptor_type
+    output_descriptor_type.set_to_string([](const OutputDescriptorType& d) { return d.name(); });
+    output_descriptor_type.set_from_string([](const string& name) -> OutputDescriptorType { return OutputDescriptorType::find(name); });
+    all_nodes.push_back(&output_descriptor_type);
 }
 
 DataNodeProtocol* Model::find_by_name(const string& node_name) const {

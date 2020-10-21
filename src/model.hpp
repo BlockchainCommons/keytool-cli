@@ -9,6 +9,7 @@
 #include "wally-utils.hpp"
 #include "derivation-path.hpp"
 #include "chain-type.hpp"
+#include "output-descriptor-type.hpp"
 
 class Model final {
 public:
@@ -25,6 +26,9 @@ public:
 
     // master_key <- [network, seed]
     DataNode<HDKey> master_key;
+
+    // master_key_fingerprint <- [master_key]
+    DataNode<ByteVector> master_key_fingerprint;
 
     // purpose (default: 44 per BIP-44)
     DataNode<uint32_t> purpose;
@@ -80,6 +84,9 @@ public:
 
     // address_sh <- [address_pub_ec_key, asset]
     DataNode<std::string> address_sh;
+
+    // output_descriptor_type
+    DataNode<OutputDescriptorType> output_descriptor_type;
 
     std::vector<DataNodeProtocol*> all_nodes;
 

@@ -32,6 +32,7 @@ public:
     ByteVector bip32_key_serialize(const HDKey& parent, bool is_private) const;
     HDKey bip32_key_unserialize(const ByteVector& serialized) const;
     HDKey bip32_key_to_public(const HDKey& key) const;
+    ByteVector bip32_key_get_fingerprint(const HDKey& key) const;
 
     ECPrivateKey bip32_key_to_ec_private(const HDKey& key) const;
     ECCompressedPublicKey bip32_key_to_ec_public(const HDKey& key) const;

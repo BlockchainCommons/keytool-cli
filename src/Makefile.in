@@ -47,7 +47,8 @@ OBJS = \
 	hd-key.o \
 	derivation-path.o \
 	chain-type.o \
-	ec-key.o
+	ec-key.o \
+	output-descriptor-type.o
 
 LDLIBS += -lwallycore -lsecp256k1 -largp
 
@@ -70,11 +71,12 @@ wally-utils.o: wally-utils.hpp utils.hpp asset.hpp data-node.hpp model.hpp hd-ke
 randombytes.o: randombytes.h
 network.o: network.hpp
 asset.o: asset.hpp network.hpp
-model.o: model.hpp data-node.hpp asset.hpp hd-key.hpp ec-key.hpp utils.hpp wally-utils.hpp derivation-path.hpp chain-type.hpp
+model.o: model.hpp data-node.hpp asset.hpp hd-key.hpp ec-key.hpp utils.hpp wally-utils.hpp derivation-path.hpp chain-type.hpp output-descriptor-type.hpp
 hd-key.o: hd-key.hpp utils.hpp network.hpp wally-utils.hpp derivation-path.hpp
 derivation-path.o: derivation-path.hpp utils.hpp
 chain-type.o: chain-type.hpp
 ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
+output-descriptor-type.o: output-descriptor-type.hpp
 
 bindir = $(DESTDIR)$(prefix)/bin
 

@@ -32,6 +32,10 @@ bool HDKey::is_private() const {
     return _key->priv_key[0] == BIP32_FLAG_KEY_PRIVATE;
 }
 
+ByteVector HDKey::fingerprint() const {
+    return Wally::instance.bip32_key_get_fingerprint(*this);
+}
+
 HDKey HDKey::derive(uint32_t index, bool is_hardened, bool is_private) const {
     return Wally::instance.bip32_key_from_parent(*this, index, is_hardened, is_private);
 }

@@ -129,6 +129,12 @@ HDKey Wally::bip32_key_to_public(const HDKey& key) const {
     return bip32_key_unserialize(pub_serialized);
 }
 
+ByteVector Wally::bip32_key_get_fingerprint(const HDKey& key) const {
+    uint8_t buf[BIP32_KEY_FINGERPRINT_LEN];
+    assert(::bip32_key_get_fingerprint(key._key.get(), buf, BIP32_KEY_FINGERPRINT_LEN) == WALLY_OK);
+    return ByteVector(buf, buf + BIP32_KEY_FINGERPRINT_LEN);
+}
+
 ECPrivateKey Wally::bip32_key_to_ec_private(const HDKey& key) const {
     if(!key.is_private()) {
         throw std::domain_error("Cannot derive private key from public key.");

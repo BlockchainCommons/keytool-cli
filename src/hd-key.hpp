@@ -21,6 +21,8 @@ public:
 
     bool is_private() const;
 
+    ByteVector fingerprint() const;
+
     HDKey derive(uint32_t index, bool is_hardened, bool is_private) const;
     HDKey derive(DerivationPath derivation_path, bool is_private) const;
 

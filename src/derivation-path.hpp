@@ -4,19 +4,31 @@
 #include <vector>
 #include <ostream>
 #include <string>
-
-// typedef std::pair<uint32_t, uint32_t> IndexRange;
+#include "utils.hpp"
 
 class DerivationPathElement final {
 public:
-    DerivationPathElement(uint32_t index, bool is_hardened) : _index(index), _is_hardened(is_hardened) { }
+    enum Type {
+        master,
+        indexed,
+        wildcard
+    };
 
+    DerivationPathElement(uint32_t index, bool is_hardened) : _type(Type::indexed), _index(index), _is_hardened(is_hardened) { }
+    DerivationPathElement(bool is_hardened) : _type(Type::wildcard), _is_hardened(is_hardened) { }
+    DerivationPathElement(const ByteVector& fingerprint) : _type(Type::master), _fingerprint(fingerprint) { }
+    DerivationPathElement() : _type(Type::master) { }
+
+    Type type() const { return _type; }
+    ByteVector fingerprint() const { return _fingerprint; }
     uint32_t index() const { return _index; }
     bool is_hardened() const { return _is_hardened; }
 
     std::string to_string() const;
 
 private:
+    Type _type;
+    ByteVector _fingerprint;
     uint32_t _index;
     bool _is_hardened;
 };

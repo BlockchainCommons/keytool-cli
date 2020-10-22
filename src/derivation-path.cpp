@@ -2,14 +2,30 @@
 
 #include <algorithm>
 #include <exception>
-#include "utils.hpp"
 
 using namespace std;
 
 string DerivationPathElement::to_string() const {
-    string h = is_hardened() ? "h" : "";
-    auto s = std::to_string(index());
-    return s + h;
+    switch(type()) {
+        case Type::master: {
+            if(fingerprint().empty()) {
+                return "m";
+            } else {
+                return data_to_hex(fingerprint());
+            }
+        }
+        break;
+        case Type::indexed: {
+            string h = is_hardened() ? "h" : "";
+            auto s = std::to_string(index());
+            return s + h;
+        }
+        break;
+        case Type::wildcard: {
+            return "*";
+        }
+        break;
+    }
 }
 
 ostream& operator<< (ostream& os, const DerivationPathElement& elem) {
@@ -18,7 +34,6 @@ ostream& operator<< (ostream& os, const DerivationPathElement& elem) {
 
 string to_string(const DerivationPath& path) {
     StringVector elems;
-    elems.push_back("m");
     transform(path.begin(), path.end(), back_inserter(elems), [](const DerivationPathElement& elem) { return elem.to_string(); });
     return join(elems, "/");
 }
@@ -32,6 +47,13 @@ static DerivationPathElement parse_elem(const string& s) {
     if(s2.empty()) {
         throw domain_error("Invalid derivation path element.");
     }
+    if(s2 == "m") {
+        return DerivationPathElement();
+    }
+    if(s2.length() == 8) {
+        return DerivationPathElement(hex_to_data(s2));
+    }
+
     bool is_hardened = false;
     if(s2.back() == 'h') {
         is_hardened = true;
@@ -39,6 +61,9 @@ static DerivationPathElement parse_elem(const string& s) {
     }
     if(s2.empty()) {
         throw domain_error("Invalid derivation path element.");
+    }
+    if(s2 == "*") {
+        return DerivationPathElement(is_hardened);
     }
     int index = 0;
     try {
@@ -54,12 +79,6 @@ static DerivationPathElement parse_elem(const string& s) {
 
 DerivationPath parse_derivation_path(const string& path) {
     auto elems = split(to_lowercase(path), '/');
-    if(elems.size() < 2) {
-        throw domain_error("Invalid derivation path.");
-    } else if(elems.front() != "m") {
-        throw domain_error("Invalid derivation path.");
-    }
-    elems.erase(elems.begin());
     DerivationPath result;
     for(auto elem: elems) {
         result.push_back(parse_elem(elem));

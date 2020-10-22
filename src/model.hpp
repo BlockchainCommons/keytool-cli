@@ -57,15 +57,18 @@ public:
     // address_index (default: 0)
     DataNode<uint32_t> address_index;
 
-    // address_derivation_path <- [account_derivation_path, chain_type, address_index]
+    // partial_address_derivation_path <- [chain_type, address_index]
+    DataNode<DerivationPath> partial_address_derivation_path;
+
+    // address_derivation_path <- [account_derivation_path, partial_address_derivation_path]
     DataNode<DerivationPath> address_derivation_path;
 
     // address_key <- [master_key, address_derivation_path]
-    // address_key <- [account_key, chain_type, address_index]
+    // address_key <- [account_key, partial_address_derivation_path]
     DataNode<HDKey> address_key;
 
     // address_pub_key <- [address_key]
-    // address_pub_key <- [account_pub_key, chain_type, address_index]
+    // address_pub_key <- [account_pub_key, partial_address_derivation_path]
     DataNode<HDKey> address_pub_key;
 
     // address_ec_key <- [address_key]

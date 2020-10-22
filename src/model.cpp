@@ -16,29 +16,30 @@ static uint32_t parse_uint32(const std::string& s) {
 }
 
 Model::Model()
-    : seed("seed",                                          -1)
-    , asset("asset",                                        -2)
-    , network("network",                                    -3)
-    , master_key("master-key",                              -4)
-    , master_key_fingerprint("master-key-fingerprint",      -5)
-    , purpose("purpose",                                    -6)
-    , coin_type("coin-type",                                -7)
-    , account_index("account-index",                        -8)
-    , account_derivation_path("account-derivation-path",    -9)
-    , account_key("account-key",                            -10)
-    , account_pub_key("account-pub-key",                    -11)
-    , chain_type("chain-type",                              -12)
-    , chain_type_int("chain-type-int",                      -13)
-    , address_index("address-index",                        -14)
-    , address_derivation_path("address-derivation-path",    -15)
-    , address_key("address-key",                            -16)
-    , address_pub_key("address-pub-key",                    -17)
-    , address_ec_key("address-ec-key",                      -18)
-    , address_ec_key_wif("address-ec-key-wif",              -19)
-    , address_pub_ec_key("address-pub-ec-key",              -20)
-    , address_pkh("address-pkh",                            -21)
-    , address_sh("address-sh",                              -22)
-    , output_descriptor_type("output-descriptor-type",      -23)
+    : seed("seed",                                                          -1)
+    , asset("asset",                                                        -2)
+    , network("network",                                                    -3)
+    , master_key("master-key",                                              -4)
+    , master_key_fingerprint("master-key-fingerprint",                      -5)
+    , purpose("purpose",                                                    -6)
+    , coin_type("coin-type",                                                -7)
+    , account_index("account-index",                                        -8)
+    , account_derivation_path("account-derivation-path",                    -9)
+    , account_key("account-key",                                            -10)
+    , account_pub_key("account-pub-key",                                    -11)
+    , chain_type("chain-type",                                              -12)
+    , chain_type_int("chain-type-int",                                      -13)
+    , address_index("address-index",                                        -14)
+    , partial_address_derivation_path("partial-address-derivation-path",    -15)
+    , address_derivation_path("address-derivation-path",                    -16)
+    , address_key("address-key",                                            -17)
+    , address_pub_key("address-pub-key",                                    -18)
+    , address_ec_key("address-ec-key",                                      -19)
+    , address_ec_key_wif("address-ec-key-wif",                              -20)
+    , address_pub_ec_key("address-pub-ec-key",                              -21)
+    , address_pkh("address-pkh",                                            -22)
+    , address_sh("address-sh",                                              -23)
+    , output_descriptor_type("output-descriptor-type",                      -24)
 {
     // seed
     seed.set_to_string([](const ByteVector& bytes) { return data_to_hex(bytes); });
@@ -104,6 +105,7 @@ Model::Model()
     // account_derivation_path <- [purpose, coin_type, account_index]
     account_derivation_path.set_f([&]() {
         return DerivationPath {
+            DerivationPathElement(),
             DerivationPathElement(purpose(), true),
             DerivationPathElement(coin_type(), true),
             DerivationPathElement(account_index(), true)
@@ -157,11 +159,22 @@ Model::Model()
     address_index.set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
     all_nodes.push_back(&address_index);
 
-    // address_derivation_path <- [account_derivation_path, chain_type_int, address_index]
+    // partial_address_derivation_path <- [chain_type, address_index]
+    partial_address_derivation_path.set_f([&]() {
+        return DerivationPath {
+            DerivationPathElement(chain_type_int(), false),
+            DerivationPathElement(address_index(), false)
+        };
+    });
+    partial_address_derivation_path.set_to_string([](const DerivationPath& path) { return to_string(path); });
+    partial_address_derivation_path.set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
+    all_nodes.push_back(&partial_address_derivation_path);
+
+    // address_derivation_path <- [account_derivation_path, partial_address_derivation_path]
     address_derivation_path.set_f([&]() {
         auto path = account_derivation_path();
-        path.push_back(DerivationPathElement(chain_type_int(), false));
-        path.push_back(DerivationPathElement(address_index(), false));
+        auto address_path = partial_address_derivation_path();
+        path.insert(path.end(), address_path.begin(), address_path.end());
         return path;
     });
     address_derivation_path.set_to_string([](const DerivationPath& path) { return to_string(path); });
@@ -169,13 +182,12 @@ Model::Model()
     all_nodes.push_back(&address_derivation_path);
 
     // address_key <- [master_key, address_derivation_path]
-    // address_key <- [account_key, chain_type_int, address_index]
+    // address_key <- [account_key, partial_address_derivation_path]
     address_key.set_f([&]() -> optional<HDKey> {
         if(master_key.has_value() && address_derivation_path.has_value()) {
             return master_key().derive(address_derivation_path(), true);
-        } else if(account_key.has_value() && chain_type_int.has_value() && address_index.has_value()) {
-            DerivationPath path = { DerivationPathElement(chain_type_int(), false), DerivationPathElement(address_index(), false) };
-            return account_key().derive(path, true);
+        } else if(account_key.has_value() && partial_address_derivation_path.has_value()) {
+            return account_key().derive(partial_address_derivation_path(), true);
         } else {
             return nullopt;
         }
@@ -185,13 +197,12 @@ Model::Model()
     all_nodes.push_back(&address_key);
 
     // address_pub_key <- [address_key]
-    // address_pub_key <- [account_pub_key, chain_type_int, address_index]
+    // address_pub_key <- [account_pub_key, partial_address_derivation_path]
     address_pub_key.set_f([&]() -> optional<HDKey> {
         if(address_key.has_value()) {
             return address_key().to_public();
-        } else if(account_pub_key.has_value() && chain_type_int.has_value() && address_index.has_value()) {
-            DerivationPath path = { DerivationPathElement(chain_type_int(), false), DerivationPathElement(address_index(), false) };
-            return account_pub_key().derive(path, false);
+        } else if(account_pub_key.has_value() && partial_address_derivation_path.has_value()) {
+            return account_pub_key().derive(partial_address_derivation_path(), false);
         } else {
             return nullopt;
         }

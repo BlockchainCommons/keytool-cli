@@ -48,10 +48,17 @@ HDKey HDKey::derive(DerivationPath derivation_path, bool is_private) const {
                 // ignore
             break;
             case DerivationPathElement::Type::indexed:
-                result = result.derive(elem.index(), elem.is_hardened(), is_private);
-            break;
-            case DerivationPathElement::Type::wildcard:
-                throw domain_error("Cannot derive a single key from a wildcard path element.");
+                auto index_range = elem.index();
+                switch(index_range.type()) {
+                    case IndexBound::Type::value: {
+                        result = result.derive(index_range.index(), elem.is_hardened(), is_private);
+                    }
+                    break;
+                    case IndexBound::Type::wildcard: {
+                        throw domain_error("Cannot derive a single key from a wildcard path element.");
+                    }
+                    break;
+                }
             break;
         }
     }

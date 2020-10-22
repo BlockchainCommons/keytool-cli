@@ -102,10 +102,11 @@ Model::Model()
     account_index.set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
     all_nodes.push_back(&account_index);
 
-    // account_derivation_path <- [purpose, coin_type, account_index]
+    // account_derivation_path <- [master_key_fingerprint, purpose, coin_type, account_index]
     account_derivation_path.set_f([&]() {
+        DerivationPathElement m = master_key_fingerprint.has_value() ? DerivationPathElement(master_key_fingerprint()) : DerivationPathElement();
         return DerivationPath {
-            DerivationPathElement(),
+            m,
             DerivationPathElement(purpose(), true),
             DerivationPathElement(coin_type(), true),
             DerivationPathElement(account_index(), true)
@@ -155,11 +156,11 @@ Model::Model()
 
     // address_index
     address_index = 0;
-    address_index.set_to_string([](uint32_t n) { return to_string(n); });
-    address_index.set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
+    address_index.set_to_string([](IndexBound n) { return n.to_string(); });
+    address_index.set_from_string([](const string& s) -> IndexBound { return parse_index_range(s); });
     all_nodes.push_back(&address_index);
 
-    // partial_address_derivation_path <- [chain_type, address_index]
+    // partial_address_derivation_path <- [chain_type_int, address_index]
     partial_address_derivation_path.set_f([&]() {
         return DerivationPath {
             DerivationPathElement(chain_type_int(), false),
@@ -278,6 +279,7 @@ Model::Model()
     all_nodes.push_back(&address_sh);
 
     // output_descriptor_type
+    output_descriptor_type = OutputDescriptorType::pkh();
     output_descriptor_type.set_to_string([](const OutputDescriptorType& d) { return d.name(); });
     output_descriptor_type.set_from_string([](const string& name) -> OutputDescriptorType { return OutputDescriptorType::find(name); });
     all_nodes.push_back(&output_descriptor_type);

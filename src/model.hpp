@@ -10,6 +10,7 @@
 #include "derivation-path.hpp"
 #include "chain-type.hpp"
 #include "output-descriptor-type.hpp"
+#include "index-bound.hpp"
 
 class Model final {
 public:
@@ -39,7 +40,7 @@ public:
     // account_index (default: 0)
     DataNode<uint32_t> account_index;
 
-    // account_derivation_path <- [purpose, coin_type, account_index]
+    // account_derivation_path <- [master_key_fingerprint, purpose, coin_type, account_index]
     DataNode<DerivationPath> account_derivation_path;
 
     // account_key <- [master_key, account_derivation_path]
@@ -55,9 +56,9 @@ public:
     DataNode<uint32_t> chain_type_int;
 
     // address_index (default: 0)
-    DataNode<uint32_t> address_index;
+    DataNode<IndexBound> address_index;
 
-    // partial_address_derivation_path <- [chain_type, address_index]
+    // partial_address_derivation_path <- [chain_type_int, address_index]
     DataNode<DerivationPath> partial_address_derivation_path;
 
     // address_derivation_path <- [account_derivation_path, partial_address_derivation_path]
@@ -90,6 +91,9 @@ public:
 
     // output_descriptor_type
     DataNode<OutputDescriptorType> output_descriptor_type;
+
+    // output_descriptor <- [master_key_fingerprint, partial_address_derivation_path, output_descriptor_type, account_pub_key]
+    DataNode<OutputDescriptor> output_descriptor;
 
     std::vector<DataNodeProtocol*> all_nodes;
 

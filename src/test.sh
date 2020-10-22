@@ -21,6 +21,9 @@ testDefaults()
 
   # chain-type
   assertEquals $'external' "$(${KEYTOOL} chain-type)"
+
+  # output-descriptor-type
+  assertEquals $'pkh' "$(${KEYTOOL} output-descriptor-type)"
 }
 
 testMultilineOutput()
@@ -57,10 +60,18 @@ testMasterKey()
     "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 master-key)"
 }
 
+testMasterKeyFingerprint()
+{
+  # master-key-fingerprint <- [master-key]
+  assertEquals $'01577231' \
+    "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 master-key-fingerprint)"
+}
+
 testAccountDerivationPath()
 {
-  # account-derivation-path <- [purpose, coin-type, account-index]
+  # account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
   assertEquals $'m/44h/0h/0h' "$(${KEYTOOL} account-derivation-path)"
+  assertEquals $'9abcdef0/44h/0h/0h' "$(${KEYTOOL} --master-key-fingerprint 9abcdef0 account-derivation-path)"
 }
 
 testAccountKey()
@@ -70,9 +81,16 @@ testAccountKey()
     "$(${KEYTOOL} --master-key xprv9s21ZrQH143K28kcT3e8kegkeMexRDzozueBMsHVtctk8gYxLUiBVqzZpK8KwcTjz5xnzZq84ymFKTmbXqwdexKJRkSuejVcCAM8P7sc39b account-key)"
 }
 
+testPartialAddressDerivationPath()
+{
+    # partial-address-derivation-path <- [chain-type, address-index]
+    assertEquals $'0/0' "$(${KEYTOOL} partial-address-derivation-path)"
+    assertEquals $'1/*' "$(${KEYTOOL} --chain-type change --address-index '*' partial-address-derivation-path)"
+}
+
 testAddressDerivationPath()
 {
-  # address-derivation-path <- [account-derivation-path, chain-type-int, address-index]
+  # address-derivation-path <- [account-derivation-path, partial-address-derivation-path]
   assertEquals $'m/44h/0h/0h/0/0' "$(${KEYTOOL} address-derivation-path)"
 }
 
@@ -89,7 +107,7 @@ testAddressKey()
   assertEquals $'xprvA2p2Wu4w5XUZ6L2iHjvuxCkm38bUcwNCKwSB9XXG5oMjArwtkm2TeA3amg5p73QZVH6owECFo4T9nGnCEuwgUMWLbivB24yyjpsWBWPvYgf' \
     "$(${KEYTOOL} --master-key xprv9s21ZrQH143K28kcT3e8kegkeMexRDzozueBMsHVtctk8gYxLUiBVqzZpK8KwcTjz5xnzZq84ymFKTmbXqwdexKJRkSuejVcCAM8P7sc39b address-key)"
 
-  # address-key <- [account-key, chain-type-int, address-index]
+  # address-key <- [account-key, partial-address-derivation-path]
   assertEquals $'xprvA2p2Wu4w5XUZ6L2iHjvuxCkm38bUcwNCKwSB9XXG5oMjArwtkm2TeA3amg5p73QZVH6owECFo4T9nGnCEuwgUMWLbivB24yyjpsWBWPvYgf' \
     "$(${KEYTOOL} --account-key xprv9zEdUqPXrhoqBvxoxmTXhh6ieR3iUL3UpBy8ZqeEov5G6ubmphjipJByVhoxBnRtF5LhgrCSyQLEDKLqKoBVJHzDHXZBkhXmfbDje6Bm7AQ address-key)"
 }
@@ -100,7 +118,7 @@ testAddressPubKey()
   assertEquals $'xpub6FoNvQbpuu2rJp7BPmTvKLhVbARy2Q63hAMmwuvse8ti3fH3JJLiBxN4cyXjeypWSen5ydkxfxJCLkPydGqQrSdhAwxe9ExFzbakNZ46AK6' \
     "$(${KEYTOOL} --address-key xprvA2p2Wu4w5XUZ6L2iHjvuxCkm38bUcwNCKwSB9XXG5oMjArwtkm2TeA3amg5p73QZVH6owECFo4T9nGnCEuwgUMWLbivB24yyjpsWBWPvYgf address-pub-key)"
 
-  # address-pub-key <- [account-pub-key, chain-type-int, address-index]
+  # address-pub-key <- [account-pub-key, partial-address-derivation-path]
   assertEquals $'xpub6FoNvQbpuu2rJp7BPmTvKLhVbARy2Q63hAMmwuvse8ti3fH3JJLiBxN4cyXjeypWSen5ydkxfxJCLkPydGqQrSdhAwxe9ExFzbakNZ46AK6' \
     "$(${KEYTOOL} --account-pub-key xpub6DDytLvRh5N8QR3H4nzY4q3TCStCsnmLBQtjNE3rNFcEyhvvNF3yN6WTLyK599xkUdEKycY5cxcujv9u9YeiENgYBewfCUUHXdQmzj3fjqo address-pub-key)"
 }

@@ -17,12 +17,8 @@ string DerivationPathElement::to_string() const {
         break;
         case Type::indexed: {
             string h = is_hardened() ? "h" : "";
-            auto s = std::to_string(index());
+            auto s = index().to_string();
             return s + h;
-        }
-        break;
-        case Type::wildcard: {
-            return "*";
         }
         break;
     }
@@ -65,15 +61,7 @@ static DerivationPathElement parse_elem(const string& s) {
     if(s2 == "*") {
         return DerivationPathElement(is_hardened);
     }
-    int index = 0;
-    try {
-        index = stoi(s2);
-    } catch(...) {
-        throw domain_error("Invalid derivation path element.");
-    }
-    if(index < 0) {
-        throw domain_error("Invalid derivation path element.");
-    }
+    auto index = parse_index_range(s2);
     return DerivationPathElement(index, is_hardened);
 }
 

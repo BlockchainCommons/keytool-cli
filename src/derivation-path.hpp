@@ -5,23 +5,23 @@
 #include <ostream>
 #include <string>
 #include "utils.hpp"
+#include "index-bound.hpp"
 
 class DerivationPathElement final {
 public:
     enum Type {
         master,
-        indexed,
-        wildcard
+        indexed
     };
 
-    DerivationPathElement(uint32_t index, bool is_hardened) : _type(Type::indexed), _index(index), _is_hardened(is_hardened) { }
-    DerivationPathElement(bool is_hardened) : _type(Type::wildcard), _is_hardened(is_hardened) { }
+    DerivationPathElement(IndexBound index, bool is_hardened) : _type(Type::indexed), _index(index), _is_hardened(is_hardened) { }
+    DerivationPathElement(bool is_hardened) : _type(Type::indexed), _is_hardened(is_hardened) { }
     DerivationPathElement(const ByteVector& fingerprint) : _type(Type::master), _fingerprint(fingerprint) { }
     DerivationPathElement() : _type(Type::master) { }
 
     Type type() const { return _type; }
     ByteVector fingerprint() const { return _fingerprint; }
-    uint32_t index() const { return _index; }
+    IndexBound index() const { return _index; }
     bool is_hardened() const { return _is_hardened; }
 
     std::string to_string() const;
@@ -29,7 +29,7 @@ public:
 private:
     Type _type;
     ByteVector _fingerprint;
-    uint32_t _index;
+    IndexBound _index;
     bool _is_hardened;
 };
 

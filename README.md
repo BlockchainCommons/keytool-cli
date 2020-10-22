@@ -20,7 +20,7 @@ xprv9s21ZrQH143K3rJgfaUmUCueBxbDT1bbksxayh7ik1nZN41zAy2kQNop8REXEAAwqwes1E8rxk13
 ```
 $ keytool \
     --master-key xprv9s21ZrQH143K4FAunaSG9eYwrAaaChpSYwYF22eJiZJrz5zSBKTg7NJcFqWR2UZc7EhneSMJhHLmPsKx96UDgv9CdoLc6JfQo3AncKhYNSc \
-    --address-derivation-path m/99h/1h/2h/3 \
+    --full-address-derivation-path m/99h/1h/2h/3 \
     address-key \
     address-pub-key
 
@@ -37,7 +37,7 @@ do
     	--seed 1eb5338edac6fae54cbb172091ae6c1a \
     	--address-index $i \
     	address-index \
-    	address-derivation-path \
+    	full-address-derivation-path \
     	address-pkh
 done
 

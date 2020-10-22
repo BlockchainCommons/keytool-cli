@@ -11,6 +11,7 @@
 #include "chain-type.hpp"
 #include "output-descriptor-type.hpp"
 #include "index-bound.hpp"
+#include "output-descriptor.hpp"
 
 class Model final {
 public:
@@ -61,10 +62,10 @@ public:
     // partial_address_derivation_path <- [chain_type_int, address_index]
     DataNode<DerivationPath> partial_address_derivation_path;
 
-    // address_derivation_path <- [account_derivation_path, partial_address_derivation_path]
-    DataNode<DerivationPath> address_derivation_path;
+    // full_address_derivation_path <- [account_derivation_path, partial_address_derivation_path]
+    DataNode<DerivationPath> full_address_derivation_path;
 
-    // address_key <- [master_key, address_derivation_path]
+    // address_key <- [master_key, full_address_derivation_path]
     // address_key <- [account_key, partial_address_derivation_path]
     DataNode<HDKey> address_key;
 

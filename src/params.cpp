@@ -104,7 +104,7 @@ struct argp_option options[] = {
     {"chain-type-int",                  -13, "INDEX", 0, "The BIP-44 change field integer value."},
     {"address-index",                   -14, "INDEX_BOUND", 0, "The BIP-44 address_index field. '*' is allowed for output descriptors."},
     {"partial-address-derivation-path", -15, "BIP32_PATH", 0, "The BIP-32 address derivation path, starting from the account-key."},
-    {"address-derivation-path",         -16, "BIP32_PATH", 0, "The BIP-32 address derivation path, starting from the master-key."},
+    {"full-address-derivation-path",    -16, "BIP32_PATH", 0, "The BIP-32 address derivation path, starting from the master-key."},
     {"address-key",                     -17, "XPRV", 0, "The BIP-32 address HD key."},
     {"address-pub-key",                 -18, "XPUB", 0, "The BIP-32 address public HD key."},
     {"address-ec-key",                  -19, "ECPRV", 0, "The address EC key."},

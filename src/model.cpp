@@ -31,7 +31,7 @@ Model::Model()
     , chain_type_int("chain-type-int",                                      -13)
     , address_index("address-index",                                        -14)
     , partial_address_derivation_path("partial-address-derivation-path",    -15)
-    , address_derivation_path("address-derivation-path",                    -16)
+    , full_address_derivation_path("full-address-derivation-path",          -16)
     , address_key("address-key",                                            -17)
     , address_pub_key("address-pub-key",                                    -18)
     , address_ec_key("address-ec-key",                                      -19)
@@ -40,6 +40,7 @@ Model::Model()
     , address_pkh("address-pkh",                                            -22)
     , address_sh("address-sh",                                              -23)
     , output_descriptor_type("output-descriptor-type",                      -24)
+    , output_descriptor("output-descriptor",                                -25)
 {
     // seed
     seed.set_to_string([](const ByteVector& bytes) { return data_to_hex(bytes); });
@@ -171,22 +172,22 @@ Model::Model()
     partial_address_derivation_path.set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
     all_nodes.push_back(&partial_address_derivation_path);
 
-    // address_derivation_path <- [account_derivation_path, partial_address_derivation_path]
-    address_derivation_path.set_f([&]() {
+    // full_address_derivation_path <- [account_derivation_path, partial_address_derivation_path]
+    full_address_derivation_path.set_f([&]() {
         auto path = account_derivation_path();
         auto address_path = partial_address_derivation_path();
         path.insert(path.end(), address_path.begin(), address_path.end());
         return path;
     });
-    address_derivation_path.set_to_string([](const DerivationPath& path) { return to_string(path); });
-    address_derivation_path.set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
-    all_nodes.push_back(&address_derivation_path);
+    full_address_derivation_path.set_to_string([](const DerivationPath& path) { return to_string(path); });
+    full_address_derivation_path.set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
+    all_nodes.push_back(&full_address_derivation_path);
 
-    // address_key <- [master_key, address_derivation_path]
+    // address_key <- [master_key, full_address_derivation_path]
     // address_key <- [account_key, partial_address_derivation_path]
     address_key.set_f([&]() -> optional<HDKey> {
-        if(master_key.has_value() && address_derivation_path.has_value()) {
-            return master_key().derive(address_derivation_path(), true);
+        if(master_key.has_value() && full_address_derivation_path.has_value()) {
+            return master_key().derive(full_address_derivation_path(), true);
         } else if(account_key.has_value() && partial_address_derivation_path.has_value()) {
             return account_key().derive(partial_address_derivation_path(), true);
         } else {

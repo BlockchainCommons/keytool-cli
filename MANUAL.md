@@ -32,8 +32,8 @@ account-pub-key <- [account-key]
 chain-type (default: external)
 chain-type-int <- [chain-type]
 address-index (default: 0)
-address-derivation-path <- [account-derivation-path, chain-type-int, address-index]
-address-key <- [master-key, address-derivation-path]
+full-address-derivation-path <- [account-derivation-path, chain-type-int, address-index]
+address-key <- [master-key, full-address-derivation-path]
 address-key <- [account-key, chain-type-int, address-index]
 address-pub-key <- [address-key]
 address-pub-key <- [account-pub-key, chain-type-int, address-index]
@@ -82,7 +82,7 @@ $ keytool
     [--chain-type ENUM internal|external]
     [--chain-type-int INT]
     [--address-index INT]
-    [--address-derivation-path BIP32_PATH]
+    [--full-address-derivation-path BIP32_PATH]
     [--address-key XPRV]
     [--address-pub-key XPUB]
     [--address-ec-key ECPRV]
@@ -123,7 +123,7 @@ xprvA38UExqsbycjD3bUZYKHpPd8KtTKuJWciteEW5viseA2sXv55MYdib1YBdmN71Aq8jPHmDz9eFcM
 ```
 $ keytool \
     --master-key xprv9s21ZrQH143K4FAunaSG9eYwrAaaChpSYwYF22eJiZJrz5zSBKTg7NJcFqWR2UZc7EhneSMJhHLmPsKx96UDgv9CdoLc6JfQo3AncKhYNSc \
-    --address-derivation-path m/99h/1h/2h/3 \
+    --full-address-derivation-path m/99h/1h/2h/3 \
     address-key \
     address-pub-key
 
@@ -142,7 +142,7 @@ do
     	--seed 1eb5338edac6fae54cbb172091ae6c1a \
     	--address-index $i \
     	address-index \
-    	address-derivation-path \
+    	full-address-derivation-path \
     	address-pkh
 done
 
@@ -178,10 +178,10 @@ m/44h/0h/0h/0/9
 13LFSpGpeYjnFdbT4Sw8qHhCMKACAyoapR
 ```
 
-Note the following: 
+Note the following:
 
 * When more than one output is requested, each output is printed in the order requested on a separate line.
-* Supplied results, like `address-index`, or intermediate derived results, like `address-derivation-path` can also be requested.
+* Supplied results, like `address-index`, or intermediate derived results, like `full-address-derivation-path` can also be requested.
 
 
 ## Providing Inputs via STDIN

@@ -474,7 +474,7 @@
                     <vertex eid="236">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
-                            <attribute class="java.lang.String" key="title">address-derivation-path</attribute>
+                            <attribute class="java.lang.String" key="title">full-address-derivation-path</attribute>
                             <attribute class="com.arciem.FuzzyBoolean" key="confidence">
                                 <fuzzyBoolean true="0.5"/>
                             </attribute>

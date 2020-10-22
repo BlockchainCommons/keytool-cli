@@ -88,10 +88,10 @@ testPartialAddressDerivationPath()
     assertEquals $'1/*' "$(${KEYTOOL} --chain-type change --address-index '*' partial-address-derivation-path)"
 }
 
-testAddressDerivationPath()
+testFullAddressDerivationPath()
 {
-  # address-derivation-path <- [account-derivation-path, partial-address-derivation-path]
-  assertEquals $'m/44h/0h/0h/0/0' "$(${KEYTOOL} address-derivation-path)"
+  # full-address-derivation-path <- [account-derivation-path, partial-address-derivation-path]
+  assertEquals $'m/44h/0h/0h/0/0' "$(${KEYTOOL} full-address-derivation-path)"
 }
 
 testAccountPubKey()
@@ -103,7 +103,7 @@ testAccountPubKey()
 
 testAddressKey()
 {
-  # address-key <- [master-key, address-derivation-path]
+  # address-key <- [master-key, full-address-derivation-path]
   assertEquals $'xprvA2p2Wu4w5XUZ6L2iHjvuxCkm38bUcwNCKwSB9XXG5oMjArwtkm2TeA3amg5p73QZVH6owECFo4T9nGnCEuwgUMWLbivB24yyjpsWBWPvYgf' \
     "$(${KEYTOOL} --master-key xprv9s21ZrQH143K28kcT3e8kegkeMexRDzozueBMsHVtctk8gYxLUiBVqzZpK8KwcTjz5xnzZq84ymFKTmbXqwdexKJRkSuejVcCAM8P7sc39b address-key)"
 

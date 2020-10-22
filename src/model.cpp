@@ -279,7 +279,7 @@ Model::Model()
     address_sh.set_from_string([](const string& a) -> string { return a; });
     all_nodes.push_back(&address_sh);
 
-    // output_descriptor_type
+    // output_descriptor_type (default: pkh)
     output_descriptor_type = OutputDescriptorType::pkh();
     output_descriptor_type.set_to_string([](const OutputDescriptorType& d) { return d.name(); });
     output_descriptor_type.set_from_string([](const string& name) -> OutputDescriptorType { return OutputDescriptorType::find(name); });

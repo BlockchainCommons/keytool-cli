@@ -1,6 +1,6 @@
 # 🔑 Keytool
 
-**Version 0.1.0**<br/>**September 28, 2020**
+**Version 0.2.0**<br/>**October 22, 2020**
 
 *Copyright © 2020 by Blockchain Commons, LLC*<br/>*Licensed under the "BSD-2-Clause Plus Patent License"*
 
@@ -22,33 +22,37 @@ All the attributes except `entropy` are either derivable from other attributes o
 seed
 asset (default: btc)
 network <- [asset]
-master-key <- [network, entropy]
+master_key <- [network, seed]
+master_key_fingerprint <- [master_key]
 purpose (default: 44 per BIP-44)
-coin-type <- [asset]
-account-index (default: 0)
-account-derivation-path <- [purpose, coin-type, account-index]
-account-key <- [master-key, account-derivation-path]
-account-pub-key <- [account-key]
-chain-type (default: external)
-chain-type-int <- [chain-type]
-address-index (default: 0)
-full-address-derivation-path <- [account-derivation-path, chain-type-int, address-index]
-address-key <- [master-key, full-address-derivation-path]
-address-key <- [account-key, chain-type-int, address-index]
-address-pub-key <- [address-key]
-address-pub-key <- [account-pub-key, chain-type-int, address-index]
-address-ec-key <- [address-key]
-address-ec-key <- [address-ec-key-wif]
-address-ec-key-wif <- [address-ec-key, network]
-address-pub-ec-key <- [address-ec-key]
-address-pub-ec-key <- [address-pub-key]
-address-pkh <- [address-pub-ec-key, asset]
-address-sh <- [address-pub-ec-key, asset]
+coin_type <- [asset]
+account_index (default: 0)
+account_derivation_path <- [master_key_fingerprint, purpose, coin_type, account_index]
+account_key <- [master_key, account_derivation_path]
+account_pub_key <- [account_key]
+chain_type (default: external)
+chain_type_int <- [chain_type];
+address_index (default: 0)
+address_derivation_path <- [chain_type_int, address_index]
+full_address_derivation_path <- [account_derivation_path, address_derivation_path]
+address_key <- [master_key, full_address_derivation_path]
+address_key <- [account_key, address_derivation_path]
+address_pub_key <- [address_key]
+address_pub_key <- [account_pub_key, address_derivation_path]
+address_ec_key <- [address_key]
+address_ec_key <- [address_ec_key_wif]
+address_ec_key_wif <- [address_ec_key, network]
+address_pub_ec_key <- [address_ec_key]
+address_pub_ec_key <- [address_pub_key]
+address_pkh <- [address_pub_ec_key, asset]
+address_sh <- [address_pub_ec_key, asset]
+output_descriptor_type (defult: pkh)
+output_descriptor <- [output_descriptor_type, account_derivation_path, address_derivation_path, account_pub_key]
 ```
 
 These derivations are expressed visually in the graph below. Each node in the graph is a specific attribute that can be supplied directly on the command line, or derived from its predecessors. Two or more arrows entering a node indicate more than one possible set of inputs can be used to derive it. AND junctors indicate that *all* predecessor attributes must be supplied.
 
-![](docs/Derivations.png)
+![](docs/Derivations.jpg)
 
 ## Formats
 
@@ -56,7 +60,8 @@ Keytool uses particular text formats for input and output attributes:
 
 * HEX: A string of hexadecimal digits. Case-insensitive. The number of digits must be even.
 * ENUM: A specific, defined enumerated value. For example `asset` can currently have the value `btc` (Bitcoin) or `btct` (Bitcoin testnet).
-* INT: An integer.
+* INDEX: A non-negative integer.
+* INDEX_BOUND: An INDEX or the wildcard `*` (note that on the Unix command line, you will need to enclose `*` in single quotes to avoid shell globbing.)-
 * BIP32_PATH: A series of BIP-32 path elements, starting with `m` (for "master key") and followed by integers, which may optionally be followed by `h` (for hardened derivation). Example: `m/44h/0h/0h/0/123`.
 * XPRV: A BIP-32 HD private key starting with `xprv`.
 * XPUB: A BIP-32 HD public key starting with `xpub`.
@@ -69,34 +74,42 @@ Keytool uses particular text formats for input and output attributes:
 
 ```
 $ keytool
-    [--seed HEX]
-    [--asset ENUM btc|btct]
-    [--network ENUM mainnet|testnet]
-    [--master-key XPRV]
-    [--purpose INT]
-    [--coin-type INT]
-    [--account-index INT]
-    [--account-derivation-path BIP32_PATH]
-    [--account-key XPRV]
-    [--account-pub-key XPUB]
-    [--chain-type ENUM internal|external]
-    [--chain-type-int INT]
-    [--address-index INT]
-    [--full-address-derivation-path BIP32_PATH]
-    [--address-key XPRV]
-    [--address-pub-key XPUB]
-    [--address-ec-key ECPRV]
-    [--address-ec-key-wif WIF]
-    [--address-pub-ec-key ECPUB]
-    [--address-pkh ADDRESS]
-    [--address-sh ADDRESS]
+    [-?V]
+    [--account-derivation-path=BIP32_PATH]
+    [--account-index=INDEX]
+    [--account-key=XPRV]
+    [--account-pub-key=XPUB]
+    [--address-derivation-path=BIP32_PATH]
+    [--address-ec-key=ECPRV]
+    [--address-ec-key-wif=WIF]
+    [--address-index=INDEX_BOUND]
+    [--address-key=XPRV]
+    [--address-pkh=ADDRESS]
+    [--address-pub-ec-key=ECPUB]
+    [--address-pub-key=XPUB]
+    [--address-sh=ADDRESS]
+    [--asset=ENUM btc|btct]
+    [--chain-type=ENUM internal|external|identity]
+    [--chain-type-int=INDEX]
+    [--coin-type=INDEX]
+    [--full-address-derivation-path=BIP32_PATH]
+    [--master-key=XPRV]
+    [--master-key-fingerprint=HEX]
+    [--network=ENUM mainnet|testnet]
+    [--output-descriptor=OUTPUT_DESCRIPTOR]
+    [--output-descriptor-type=ENUM pkh|wpkh|sh-wpkh]
+    [--purpose=INDEX]
+    [--seed=HEX]
+    [--help]
+    [--usage]
+    [--version]
 
     output-attributes...
 ```
 
 ## Example Usages
 
-**Derive master HD key from seed:**
+### Derive master HD key from seed
 
 ```
 $ keytool \
@@ -107,7 +120,7 @@ $ keytool \
 xprv9s21ZrQH143K4FAunaSG9eYwrAaaChpSYwYF22eJiZJrz5zSBKTg7NJcFqWR2UZc7EhneSMJhHLmPsKx96UDgv9CdoLc6JfQo3AncKhYNSc
 ```
 
-**Derive address #1234 of account #0 private key from master HD key:**
+### Derive address #1234 of account #0 private key from master HD key
 
 ```
 $ keytool \
@@ -118,7 +131,7 @@ $ keytool \
 xprvA38UExqsbycjD3bUZYKHpPd8KtTKuJWciteEW5viseA2sXv55MYdib1YBdmN71Aq8jPHmDz9eFcM1pGRaGrweqUqjzBSLkRoxnre7N8u8jb
 ```
 
-**Derive an arbitrary BIP32 private and public keys from master HD key:**
+### Derive an arbitrary BIP32 private and public keys from master HD key
 
 ```
 $ keytool \
@@ -133,7 +146,7 @@ xpub6DvMNcx5Sf38f2ANVrX66VctcgydNfgMPELTk4VSyEaFVdnajQUwNDr9K54VQ2SRM7gmcQmJcMa2
 
 * Note: Since `'` is a UNIX command-line quote mark, BIP32 paths given to Keytool use `h` to denote hardened derivations.
 
-**Derive 10 successive bitcoin addreses from a seed:**
+### Derive 10 successive bitcoin addreses from a seed
 
 ```
 for (( i=0; i <= 9; ++i ))
@@ -183,6 +196,22 @@ Note the following:
 * When more than one output is requested, each output is printed in the order requested on a separate line.
 * Supplied results, like `address-index`, or intermediate derived results, like `full-address-derivation-path` can also be requested.
 
+### Derive an output descriptor for an account
+
+Output descriptors are described [here](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md) and [here](https://bitcoinops.org/en/topics/output-script-descriptors/). Keytool currently supports `pkh`, `wpkh`, and `sh-wpkh` (`wpkh` nested within `sh`) output descriptor types.
+
+The `address-index` node is set to the wildcard `*` so the returned output descriptor indicates that all address indexes are valid. The asterisk is single-quoted `'*'` to avoid shell globbing.
+
+This example provides a seed, specifies an output descriptor type of `wpkh`, and specifies that any address index is usable. It outputs a descriptor containing the type, the fingerprint of the master key derived from the provided seed, the derivation path of the account key, the account public key, and the derivation path that will be used to derive addresses.
+
+```
+$ keytool \
+    --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 \
+    --output-descriptor-type wpkh \
+    --address-index '*' \
+    output-descriptor
+wpkh([01577231/44h/0h/0h]xpub6DDytLvRh5N8QR3H4nzY4q3TCStCsnmLBQtjNE3rNFcEyhvvNF3yN6WTLyK599xkUdEKycY5cxcujv9u9YeiENgYBewfCUUHXdQmzj3fjqo/0/*)
+```
 
 ## Providing Inputs via STDIN
 
@@ -224,6 +253,10 @@ tprv8ZgxMBicQKsPd1ieDbsts8QA9LzMbaeYE5pw7wL9k1QNteoZSbo62XK3HuP2WqByrRnBasP4jjEJ
 ```
 
 ## Version History
+
+### 0.2.0, 10/22/2020
+
+* Support for `output-descriptor`.
 
 ### 0.1.0, 9/28/2020
 

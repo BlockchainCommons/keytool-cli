@@ -90,7 +90,7 @@ public:
     // address_sh <- [address_pub_ec_key, asset]
     DataNode<std::string> address_sh;
 
-    // output_descriptor_type
+    // output_descriptor_type (default: pkh)
     DataNode<OutputDescriptorType> output_descriptor_type;
 
     // output_descriptor <- [output_descriptor_type, account_derivation_path, address_derivation_path, account_pub_key]

@@ -59,18 +59,18 @@ public:
     // address_index (default: 0)
     DataNode<IndexBound> address_index;
 
-    // partial_address_derivation_path <- [chain_type_int, address_index]
-    DataNode<DerivationPath> partial_address_derivation_path;
+    // address_derivation_path <- [chain_type_int, address_index]
+    DataNode<DerivationPath> address_derivation_path;
 
-    // full_address_derivation_path <- [account_derivation_path, partial_address_derivation_path]
+    // full_address_derivation_path <- [account_derivation_path, address_derivation_path]
     DataNode<DerivationPath> full_address_derivation_path;
 
     // address_key <- [master_key, full_address_derivation_path]
-    // address_key <- [account_key, partial_address_derivation_path]
+    // address_key <- [account_key, address_derivation_path]
     DataNode<HDKey> address_key;
 
     // address_pub_key <- [address_key]
-    // address_pub_key <- [account_pub_key, partial_address_derivation_path]
+    // address_pub_key <- [account_pub_key, address_derivation_path]
     DataNode<HDKey> address_pub_key;
 
     // address_ec_key <- [address_key]
@@ -93,7 +93,7 @@ public:
     // output_descriptor_type
     DataNode<OutputDescriptorType> output_descriptor_type;
 
-    // output_descriptor <- [master_key_fingerprint, partial_address_derivation_path, output_descriptor_type, account_pub_key]
+    // output_descriptor <- [output_descriptor_type, account_derivation_path, address_derivation_path, account_pub_key]
     DataNode<OutputDescriptor> output_descriptor;
 
     std::vector<DataNodeProtocol*> all_nodes;

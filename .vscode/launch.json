@@ -7,7 +7,7 @@
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/src/keytool",
-            "args": [ "asset" ],
+            "args": [ ],
             "cwd": "${workspaceFolder}/src",
             "preLaunchTask": "Build"
         }

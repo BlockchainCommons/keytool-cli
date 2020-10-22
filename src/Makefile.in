@@ -69,7 +69,7 @@ $(toolname): $(OBJS)
 keytool.o: params.hpp
 utils.o: utils.hpp randombytes.h
 params.o: params.hpp utils.hpp config.h model.hpp
-wally-utils.o: wally-utils.hpp utils.hpp asset.hpp data-node.hpp model.hpp hd-key.hpp derivation-path.hpp ec-key.hpp
+wally-utils.o: wally-utils.hpp utils.hpp asset.hpp model.hpp hd-key.hpp derivation-path.hpp ec-key.hpp
 randombytes.o: randombytes.h
 network.o: network.hpp
 asset.o: asset.hpp network.hpp
@@ -79,8 +79,8 @@ derivation-path.o: derivation-path.hpp utils.hpp index-bound.hpp
 chain-type.o: chain-type.hpp
 ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
 output-descriptor-type.o: output-descriptor-type.hpp
-output-descriptor.o: output-descriptor.hpp output-descriptor-type.hpp
-index-bound.o : index-bound.hpp
+output-descriptor.o: output-descriptor.hpp output-descriptor-type.hpp derivation-path.hpp hd-key.hpp
+index-bound.o: index-bound.hpp
 
 bindir = $(DESTDIR)$(prefix)/bin
 

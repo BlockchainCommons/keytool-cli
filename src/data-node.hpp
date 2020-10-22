@@ -52,6 +52,9 @@ public:
     }
 
     virtual void from_string(const std::string& s) {
+        if(!_from_string) {
+            throw std::domain_error("Input not accepted for " + name());
+        }
         try {
             *this = _from_string(s);
         } catch(std::exception &e) {

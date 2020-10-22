@@ -2,7 +2,7 @@
 
 using namespace std;
 
-static uint32_t parse_uint32(const std::string& s) {
+static uint32_t parse_uint32(const string& s) {
     int n;
     try {
         n = stoi(s, nullptr, 0);
@@ -30,7 +30,7 @@ Model::Model()
     , chain_type("chain-type",                                              -12)
     , chain_type_int("chain-type-int",                                      -13)
     , address_index("address-index",                                        -14)
-    , partial_address_derivation_path("partial-address-derivation-path",    -15)
+    , address_derivation_path("address-derivation-path",                    -15)
     , full_address_derivation_path("full-address-derivation-path",          -16)
     , address_key("address-key",                                            -17)
     , address_pub_key("address-pub-key",                                    -18)
@@ -161,21 +161,21 @@ Model::Model()
     address_index.set_from_string([](const string& s) -> IndexBound { return parse_index_range(s); });
     all_nodes.push_back(&address_index);
 
-    // partial_address_derivation_path <- [chain_type_int, address_index]
-    partial_address_derivation_path.set_f([&]() {
+    // address_derivation_path <- [chain_type_int, address_index]
+    address_derivation_path.set_f([&]() {
         return DerivationPath {
             DerivationPathElement(chain_type_int(), false),
             DerivationPathElement(address_index(), false)
         };
     });
-    partial_address_derivation_path.set_to_string([](const DerivationPath& path) { return to_string(path); });
-    partial_address_derivation_path.set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
-    all_nodes.push_back(&partial_address_derivation_path);
+    address_derivation_path.set_to_string([](const DerivationPath& path) { return to_string(path); });
+    address_derivation_path.set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
+    all_nodes.push_back(&address_derivation_path);
 
-    // full_address_derivation_path <- [account_derivation_path, partial_address_derivation_path]
+    // full_address_derivation_path <- [account_derivation_path, address_derivation_path]
     full_address_derivation_path.set_f([&]() {
         auto path = account_derivation_path();
-        auto address_path = partial_address_derivation_path();
+        auto address_path = address_derivation_path();
         path.insert(path.end(), address_path.begin(), address_path.end());
         return path;
     });
@@ -184,12 +184,12 @@ Model::Model()
     all_nodes.push_back(&full_address_derivation_path);
 
     // address_key <- [master_key, full_address_derivation_path]
-    // address_key <- [account_key, partial_address_derivation_path]
+    // address_key <- [account_key, address_derivation_path]
     address_key.set_f([&]() -> optional<HDKey> {
         if(master_key.has_value() && full_address_derivation_path.has_value()) {
             return master_key().derive(full_address_derivation_path(), true);
-        } else if(account_key.has_value() && partial_address_derivation_path.has_value()) {
-            return account_key().derive(partial_address_derivation_path(), true);
+        } else if(account_key.has_value() && address_derivation_path.has_value()) {
+            return account_key().derive(address_derivation_path(), true);
         } else {
             return nullopt;
         }
@@ -199,12 +199,12 @@ Model::Model()
     all_nodes.push_back(&address_key);
 
     // address_pub_key <- [address_key]
-    // address_pub_key <- [account_pub_key, partial_address_derivation_path]
+    // address_pub_key <- [account_pub_key, address_derivation_path]
     address_pub_key.set_f([&]() -> optional<HDKey> {
         if(address_key.has_value()) {
             return address_key().to_public();
-        } else if(account_pub_key.has_value() && partial_address_derivation_path.has_value()) {
-            return account_pub_key().derive(partial_address_derivation_path(), false);
+        } else if(account_pub_key.has_value() && address_derivation_path.has_value()) {
+            return account_pub_key().derive(address_derivation_path(), false);
         } else {
             return nullopt;
         }
@@ -237,7 +237,7 @@ Model::Model()
         }
     });
     address_ec_key_wif.set_to_string([](const string& s) { return s; });
-    address_ec_key_wif.set_from_string([](const string& wif) -> std::string { return wif; });
+    address_ec_key_wif.set_from_string([](const string& wif) -> string { return wif; });
     all_nodes.push_back(&address_ec_key_wif);
 
     // address_pub_ec_key <- [address_ec_key]
@@ -264,7 +264,7 @@ Model::Model()
         }
     });
     address_pkh.set_to_string([](const string& s) { return s; });
-    address_pkh.set_from_string([](const string& a) -> std::string { return a; });
+    address_pkh.set_from_string([](const string& a) -> string { return a; });
     all_nodes.push_back(&address_pkh);
 
     // address_sh <- [address_pub_ec_key, asset]
@@ -276,7 +276,7 @@ Model::Model()
         }
     });
     address_sh.set_to_string([](const string& s) { return s; });
-    address_sh.set_from_string([](const string& a) -> std::string { return a; });
+    address_sh.set_from_string([](const string& a) -> string { return a; });
     all_nodes.push_back(&address_sh);
 
     // output_descriptor_type
@@ -284,6 +284,17 @@ Model::Model()
     output_descriptor_type.set_to_string([](const OutputDescriptorType& d) { return d.name(); });
     output_descriptor_type.set_from_string([](const string& name) -> OutputDescriptorType { return OutputDescriptorType::find(name); });
     all_nodes.push_back(&output_descriptor_type);
+
+    // output_descriptor <- [output_descriptor_type, account_derivation_path, address_derivation_path, account_pub_key]
+    output_descriptor.set_f([&]() -> optional<OutputDescriptor> {
+        if(output_descriptor_type.has_value() && account_derivation_path.has_value(), address_derivation_path.has_value() && account_pub_key.has_value()) {
+            return OutputDescriptor(output_descriptor_type(), account_derivation_path(), address_derivation_path(), account_pub_key());
+        } else {
+            return nullopt;
+        }
+    });
+    output_descriptor.set_to_string([](const OutputDescriptor& o) -> string { return o.to_string(); });
+    all_nodes.push_back(&output_descriptor);
 }
 
 DataNodeProtocol* Model::find_by_name(const string& node_name) const {

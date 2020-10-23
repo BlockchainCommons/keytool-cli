@@ -21,25 +21,25 @@ Model::Model()
     , network("network",                                                    -3)
     , master_key("master-key",                                              -4)
     , master_key_fingerprint("master-key-fingerprint",                      -5)
-    , purpose("purpose",                                                    -6)
-    , coin_type("coin-type",                                                -7)
-    , account_index("account-index",                                        -8)
-    , account_derivation_path("account-derivation-path",                    -9)
-    , account_key("account-key",                                            -10)
-    , account_pub_key("account-pub-key",                                    -11)
-    , chain_type("chain-type",                                              -12)
-    , chain_type_int("chain-type-int",                                      -13)
-    , address_index("address-index",                                        -14)
-    , address_derivation_path("address-derivation-path",                    -15)
-    , full_address_derivation_path("full-address-derivation-path",          -16)
-    , address_key("address-key",                                            -17)
-    , address_pub_key("address-pub-key",                                    -18)
-    , address_ec_key("address-ec-key",                                      -19)
-    , address_ec_key_wif("address-ec-key-wif",                              -20)
-    , address_pub_ec_key("address-pub-ec-key",                              -21)
-    , address_pkh("address-pkh",                                            -22)
-    , address_sh("address-sh",                                              -23)
-    , output_descriptor_type("output-descriptor-type",                      -24)
+    , output_type("output-type",                      -6)
+    , purpose("purpose",                                                    -7)
+    , coin_type("coin-type",                                                -8)
+    , account_index("account-index",                                        -9)
+    , account_derivation_path("account-derivation-path",                    -10)
+    , account_key("account-key",                                            -11)
+    , account_pub_key("account-pub-key",                                    -12)
+    , chain_type("chain-type",                                              -13)
+    , chain_type_int("chain-type-int",                                      -14)
+    , address_index("address-index",                                        -15)
+    , address_derivation_path("address-derivation-path",                    -16)
+    , full_address_derivation_path("full-address-derivation-path",          -17)
+    , address_key("address-key",                                            -18)
+    , address_pub_key("address-pub-key",                                    -19)
+    , address_ec_key("address-ec-key",                                      -20)
+    , address_ec_key_wif("address-ec-key-wif",                              -21)
+    , address_pub_ec_key("address-pub-ec-key",                              -22)
+    , address_pkh("address-pkh",                                            -23)
+    , address_sh("address-sh",                                              -24)
     , output_descriptor("output-descriptor",                                -25)
 {
     // seed
@@ -83,8 +83,16 @@ Model::Model()
     master_key_fingerprint.set_from_string([](const string& hex) -> ByteVector { return hex_to_data(hex); });
     all_nodes.push_back(&master_key_fingerprint);
 
-    // purpose
-    purpose = 44;
+    // output_type (default: pkh)
+    output_type = OutputDescriptorType::wpkh();
+    output_type.set_to_string([](const OutputDescriptorType& d) { return d.name(); });
+    output_type.set_from_string([](const string& name) -> OutputDescriptorType { return OutputDescriptorType::find(name); });
+    all_nodes.push_back(&output_type);
+
+    // purpose <- [output_type]
+    purpose.set_f([&]() {
+        return output_type().purpose();
+    });
     purpose.set_to_string([](uint32_t n) { return to_string(n); });
     purpose.set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
     all_nodes.push_back(&purpose);
@@ -279,16 +287,10 @@ Model::Model()
     address_sh.set_from_string([](const string& a) -> string { return a; });
     all_nodes.push_back(&address_sh);
 
-    // output_descriptor_type (default: pkh)
-    output_descriptor_type = OutputDescriptorType::pkh();
-    output_descriptor_type.set_to_string([](const OutputDescriptorType& d) { return d.name(); });
-    output_descriptor_type.set_from_string([](const string& name) -> OutputDescriptorType { return OutputDescriptorType::find(name); });
-    all_nodes.push_back(&output_descriptor_type);
-
-    // output_descriptor <- [output_descriptor_type, account_derivation_path, address_derivation_path, account_pub_key]
+    // output_descriptor <- [output_type, account_derivation_path, address_derivation_path, account_pub_key]
     output_descriptor.set_f([&]() -> optional<OutputDescriptor> {
-        if(output_descriptor_type.has_value() && account_derivation_path.has_value(), address_derivation_path.has_value() && account_pub_key.has_value()) {
-            return OutputDescriptor(output_descriptor_type(), account_derivation_path(), address_derivation_path(), account_pub_key());
+        if(output_type.has_value() && account_derivation_path.has_value(), address_derivation_path.has_value() && account_pub_key.has_value()) {
+            return OutputDescriptor(output_type(), account_derivation_path(), address_derivation_path(), account_pub_key());
         } else {
             return nullopt;
         }

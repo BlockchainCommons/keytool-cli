@@ -1,7 +1,7 @@
 #ifndef KEYTOOL_OUTPUT_DESCRIPTOR_HPP
 #define KEYTOOL_OUTPUT_DESCRIPTOR_HPP
 
-#include "output-descriptor-type.hpp"
+#include "output-type.hpp"
 #include "derivation-path.hpp"
 #include "hd-key.hpp"
 

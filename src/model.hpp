@@ -9,7 +9,7 @@
 #include "wally-utils.hpp"
 #include "derivation-path.hpp"
 #include "chain-type.hpp"
-#include "output-descriptor-type.hpp"
+#include "output-type.hpp"
 #include "index-bound.hpp"
 #include "output-descriptor.hpp"
 
@@ -32,7 +32,10 @@ public:
     // master_key_fingerprint <- [master_key]
     DataNode<ByteVector> master_key_fingerprint;
 
-    // purpose (default: 44 per BIP-44)
+    // output_type (default: wpkh)
+    DataNode<OutputDescriptorType> output_type;
+
+    // purpose <- [output_type]
     DataNode<uint32_t> purpose;
 
     // coin_type <- [asset]
@@ -90,10 +93,7 @@ public:
     // address_sh <- [address_pub_ec_key, asset]
     DataNode<std::string> address_sh;
 
-    // output_descriptor_type (default: pkh)
-    DataNode<OutputDescriptorType> output_descriptor_type;
-
-    // output_descriptor <- [output_descriptor_type, account_derivation_path, address_derivation_path, account_pub_key]
+    // output_descriptor <- [output_type, account_derivation_path, address_derivation_path, account_pub_key]
     DataNode<OutputDescriptor> output_descriptor;
 
     std::vector<DataNodeProtocol*> all_nodes;

@@ -22,35 +22,35 @@ All the attributes except `entropy` are either derivable from other attributes o
 seed
 asset (default: btc)
 network <- [asset]
-master_key <- [network, seed]
-master_key_fingerprint <- [master_key]
-purpose (default: 44 per BIP-44)
-coin_type <- [asset]
-account_index (default: 0)
-account_derivation_path <- [master_key_fingerprint, purpose, coin_type, account_index]
-account_key <- [master_key, account_derivation_path]
-account_pub_key <- [account_key]
-chain_type (default: external)
-chain_type_int <- [chain_type];
-address_index (default: 0)
-address_derivation_path <- [chain_type_int, address_index]
-full_address_derivation_path <- [account_derivation_path, address_derivation_path]
-address_key <- [master_key, full_address_derivation_path]
-address_key <- [account_key, address_derivation_path]
-address_pub_key <- [address_key]
-address_pub_key <- [account_pub_key, address_derivation_path]
-address_ec_key <- [address_key]
-address_ec_key <- [address_ec_key_wif]
-address_ec_key_wif <- [address_ec_key, network]
-address_pub_ec_key <- [address_ec_key]
-address_pub_ec_key <- [address_pub_key]
-address_pkh <- [address_pub_ec_key, asset]
-address_sh <- [address_pub_ec_key, asset]
-output_descriptor_type (defult: pkh)
-output_descriptor <- [output_descriptor_type, account_derivation_path, address_derivation_path, account_pub_key]
+master-key <- [network, seed]
+master-key-fingerprint <- [master-key]
+output-type (defult: wpkh)
+purpose <- [output-type]
+coin-type <- [asset]
+account-index (default: 0)
+account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
+account-key <- [master-key, account-derivation-path]
+account-pub-key <- [account-key]
+chain-type (default: external)
+chain-type-int <- [chain-type];
+address-index (default: 0)
+address-derivation-path <- [chain-type-int, address-index]
+full-address-derivation-path <- [account-derivation-path, address-derivation-path]
+address-key <- [master-key, full-address-derivation-path]
+address-key <- [account-key, address-derivation-path]
+address-pub-key <- [address-key]
+address-pub-key <- [account-pub-key, address-derivation-path]
+address-ec-key <- [address-key]
+address-ec-key <- [address-ec-key-wif]
+address-ec-key-wif <- [address-ec-key, network]
+address-pub-ec-key <- [address-ec-key]
+address-pub-ec-key <- [address-pub-key]
+address-pkh <- [address-pub-ec-key, asset]
+address-sh <- [address-pub-ec-key, asset]
+output-descriptor <- [output-type, account-derivation-path, address-derivation-path, account-pub-key]
 ```
 
-These derivations are expressed visually in the graph below. Each node in the graph is a specific attribute that can be supplied directly on the command line, or derived from its predecessors. Two or more arrows entering a node indicate more than one possible set of inputs can be used to derive it. AND junctors indicate that *all* predecessor attributes must be supplied.
+These derivations are expressed visually in the graph below. Each node in the graph is a specific attribute that can be supplied directly on the command line, or derived from its predecessors. Two or more arrows entering a node indicate more than one possible set of inputs can be used to derive it. AND junctors indicate that *all* predecessor attributes must be supplied, unless a predecessor is marked `optional`.
 
 ![](docs/Derivations.jpg)
 
@@ -97,7 +97,7 @@ $ keytool
     [--master-key-fingerprint=HEX]
     [--network=ENUM mainnet|testnet]
     [--output-descriptor=OUTPUT_DESCRIPTOR]
-    [--output-descriptor-type=ENUM pkh|wpkh|sh-wpkh]
+    [--output-type=ENUM pkh|wpkh|sh-wpkh]
     [--purpose=INDEX]
     [--seed=HEX]
     [--help]
@@ -128,7 +128,7 @@ $ keytool \
     --address-index 1234 \
     address-key
 
-xprvA38UExqsbycjD3bUZYKHpPd8KtTKuJWciteEW5viseA2sXv55MYdib1YBdmN71Aq8jPHmDz9eFcM1pGRaGrweqUqjzBSLkRoxnre7N8u8jb
+xprvA33qYVBGLwEiCQNFTTpga5EHqJy1EnswzgzuSsBC3tPqz29qQ8PGDwyNuwearjiReYB8DK7nbJj52gKLjvGXsUx7RqmqtVgaYMun9CCQ3h8
 ```
 
 ### Derive an arbitrary BIP32 private and public keys from master HD key
@@ -160,35 +160,35 @@ do
 done
 
 0
-m/44h/0h/0h/0/0
-1M56Xw3jpmx2bdfvWH7HvJiXHyq9ybY6zq
+c1859926/84h/0h/0h/0/0
+17u4HStkGWxJ5PtNqzCMEKRzaPJ8h35eBc
 1
-m/44h/0h/0h/0/1
-1J3DmbvZLACBkXxFpehuBDMziYmpRmM1cs
+c1859926/84h/0h/0h/0/1
+1JyxrbHYS7ZGhq68JewhJAMWka38Bv8tFw
 2
-m/44h/0h/0h/0/2
-1CbgRLCWsgRs92gfcZRcdu49AczLSnhE8v
+c1859926/84h/0h/0h/0/2
+1Agp5QYUPXWT2PLQtqHezQB8oChEBCTmnk
 3
-m/44h/0h/0h/0/3
-16qW5iyYtvB9ZB3hUjQBW9q99DYdqAALvc
+c1859926/84h/0h/0h/0/3
+1Jauyj8uiz5YwWKq6kcP5jNKxEigLYAo35
 4
-m/44h/0h/0h/0/4
-1FK9hTgVqAXh6Vgnf8p4t7UnzkdfKjH1T7
+c1859926/84h/0h/0h/0/4
+15ccuKzfmJQ6GSLzbgcUYwjKkkEdKt1ELf
 5
-m/44h/0h/0h/0/5
-1DG8MXbTgRPpjpKBw3ySwBh6mq2K9rPD8d
+c1859926/84h/0h/0h/0/5
+1CTnrP3Pwrd3Xf77rvh4XuhJJDpyiV2PGe
 6
-m/44h/0h/0h/0/6
-16GB39n2RK3KF95nxdVCMM3PSeAXiB7hUu
+c1859926/84h/0h/0h/0/6
+19pbYMfrNUJesmyUTxVxHVHRfFwkRhPXmK
 7
-m/44h/0h/0h/0/7
-1JSyFfXprnofwZhB7X2DxN3WfQtk1Kibxs
+c1859926/84h/0h/0h/0/7
+141Wb2o9u22XFiiQXo4RQhCWRefKiUU8GJ
 8
-m/44h/0h/0h/0/8
-14mkCprpUs86Q8eUPQVwadhfNGpMcSPP67
+c1859926/84h/0h/0h/0/8
+171m44xH6vs5yJmRdY8mEf8zVAUr5ka8SA
 9
-m/44h/0h/0h/0/9
-13LFSpGpeYjnFdbT4Sw8qHhCMKACAyoapR
+c1859926/84h/0h/0h/0/9
+1BHXRjigSLZLt8Z7Rss27u6kZA17Pptpga
 ```
 
 Note the following:
@@ -207,10 +207,9 @@ This example provides a seed, specifies an output descriptor type of `wpkh`, and
 ```
 $ keytool \
     --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 \
-    --output-descriptor-type wpkh \
     --address-index '*' \
     output-descriptor
-wpkh([01577231/44h/0h/0h]xpub6DDytLvRh5N8QR3H4nzY4q3TCStCsnmLBQtjNE3rNFcEyhvvNF3yN6WTLyK599xkUdEKycY5cxcujv9u9YeiENgYBewfCUUHXdQmzj3fjqo/0/*)
+wpkh([01577231/84h/0h/0h]xpub6CaE5t6vuSJpRZ4mUb8SX27bmZcinKzUfpn2ZFMYTK81vvrrA9XJZyT8bypiz7gMsjPnpdAJDaQDwvsErnAYi9ZFbDSSSxKR7PtM8msR29D/0/*)
 ```
 
 ## Providing Inputs via STDIN
@@ -253,6 +252,12 @@ tprv8ZgxMBicQKsPd1ieDbsts8QA9LzMbaeYE5pw7wL9k1QNteoZSbo62XK3HuP2WqByrRnBasP4jjEJ
 ```
 
 ## Version History
+
+### 0.2.1, 10/22/2020
+
+* Renamed `output-descriptor-type` to `output-type`.
+* Made `purpose` dependent on `output-type`.
+* Changed default `output-type` to `wpkh`.
 
 ### 0.2.0, 10/22/2020
 

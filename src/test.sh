@@ -10,9 +10,6 @@ testDefaults()
   # asset
   assertEquals $'btc' "$(${KEYTOOL} asset)"
 
-  # purpose
-  assertEquals $'44' "$(${KEYTOOL} purpose)"
-
   # account-index
   assertEquals $'0' "$(${KEYTOOL} account-index)"
 
@@ -22,13 +19,16 @@ testDefaults()
   # chain-type
   assertEquals $'external' "$(${KEYTOOL} chain-type)"
 
-  # output-descriptor-type
-  assertEquals $'pkh' "$(${KEYTOOL} output-descriptor-type)"
+  # output-type
+  assertEquals $'wpkh' "$(${KEYTOOL} output-type)"
+
+  # purpose
+  assertEquals $'84' "$(${KEYTOOL} purpose)"
 }
 
 testMultilineOutput()
 {
-  assertEquals $'btc\n44' "$(${KEYTOOL} asset purpose)"
+  assertEquals $'btc\n84' "$(${KEYTOOL} asset purpose)"
 }
 
 testNetwork()
@@ -70,14 +70,14 @@ testMasterKeyFingerprint()
 testAccountDerivationPath()
 {
   # account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
-  assertEquals $'m/44h/0h/0h' "$(${KEYTOOL} account-derivation-path)"
-  assertEquals $'9abcdef0/44h/0h/0h' "$(${KEYTOOL} --master-key-fingerprint 9abcdef0 account-derivation-path)"
+  assertEquals $'m/84h/0h/0h' "$(${KEYTOOL} account-derivation-path)"
+  assertEquals $'9abcdef0/84h/0h/0h' "$(${KEYTOOL} --master-key-fingerprint 9abcdef0 account-derivation-path)"
 }
 
 testAccountKey()
 {
   # account-key <- [master-key, account-derivation-path]
-  assertEquals $'xprv9zEdUqPXrhoqBvxoxmTXhh6ieR3iUL3UpBy8ZqeEov5G6ubmphjipJByVhoxBnRtF5LhgrCSyQLEDKLqKoBVJHzDHXZBkhXmfbDje6Bm7AQ' \
+  assertEquals $'xprv9yasgNa354kXD4zJNZbS9tAsDXnENsGdJbrRkrwvtyb348XhccD42B8ekimwxyj6dNy6jX4K7NpUoNNaxTrCjrWMgFGTcaqZbwpevvwfBeR' \
     "$(${KEYTOOL} --master-key xprv9s21ZrQH143K28kcT3e8kegkeMexRDzozueBMsHVtctk8gYxLUiBVqzZpK8KwcTjz5xnzZq84ymFKTmbXqwdexKJRkSuejVcCAM8P7sc39b account-key)"
 }
 
@@ -91,7 +91,7 @@ testPartialAddressDerivationPath()
 testFullAddressDerivationPath()
 {
   # full-address-derivation-path <- [account-derivation-path, address-derivation-path]
-  assertEquals $'m/44h/0h/0h/0/0' "$(${KEYTOOL} full-address-derivation-path)"
+  assertEquals $'m/84h/0h/0h/0/0' "$(${KEYTOOL} full-address-derivation-path)"
 }
 
 testAccountPubKey()
@@ -104,7 +104,7 @@ testAccountPubKey()
 testAddressKey()
 {
   # address-key <- [master-key, full-address-derivation-path]
-  assertEquals $'xprvA2p2Wu4w5XUZ6L2iHjvuxCkm38bUcwNCKwSB9XXG5oMjArwtkm2TeA3amg5p73QZVH6owECFo4T9nGnCEuwgUMWLbivB24yyjpsWBWPvYgf' \
+  assertEquals $'xprvA3wj42STH7XPmjS3eSAQiZKowik7pky9r3hck3jNVWA2tHBXyn92mtC3M6CJDSbG92av7CJF8Zr64gsb4s9LQkQvGi5E1QvAFgvuVk3bEqE' \
     "$(${KEYTOOL} --master-key xprv9s21ZrQH143K28kcT3e8kegkeMexRDzozueBMsHVtctk8gYxLUiBVqzZpK8KwcTjz5xnzZq84ymFKTmbXqwdexKJRkSuejVcCAM8P7sc39b address-key)"
 
   # address-key <- [account-key, address-derivation-path]
@@ -168,8 +168,9 @@ testAddressSH()
 
 testOutputDescriptor()
 {
-    assertEquals $'sh(wpkh([01577231/44h/0h/0h]xpub6DDytLvRh5N8QR3H4nzY4q3TCStCsnmLBQtjNE3rNFcEyhvvNF3yN6WTLyK599xkUdEKycY5cxcujv9u9YeiENgYBewfCUUHXdQmzj3fjqo/0/*))' \
-    "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 --output-descriptor-type sh-wpkh --address-index '*' output-descriptor)"
+  # output-descriptor <- [output-descriptor-type, account-derivation-path, address-derivation-path, account-pub-key]
+  assertEquals $'sh(wpkh([01577231/49h/0h/0h]xpub6DMNt7GPfYj4XkPio3LdjTsofQWTfYAM1ryRLpwU5XQ17xpiSuKicFBL5uD42RRXeFAFvHepiFw5xpRqGhCqj2QgmQ5ZTJCXXhY2VUU6xvw/0/*))' \
+    "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 --output-type sh-wpkh --address-index '*' output-descriptor)"
 }
 
 # Eat all command-line arguments before calling shunit2.

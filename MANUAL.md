@@ -6,7 +6,7 @@
 
 ---
 
-Keytool is a CLI tool that implements a data flow graph for deriving cryptocurrency keys and addresses.
+Keytool is a CLI tool that implements a data flow graph for deriving cryptocurrency keys and addresses, and signing transactions.
 
 As its inputs, Keytool can be supplied with any of the attributes for the nodes, and as its outputs Keytool can be asked for any of the attribues of the existing or derivable nodes. In this way, Keytool can implement a very short derivation such as "Derive a master HD key from a seed," or a long sequence of derivations from a seed all the way to a payment address, also outputting any of the intermediate steps along the way.
 

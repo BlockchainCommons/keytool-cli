@@ -94,7 +94,7 @@ struct argp_option options[] = {
     {"network",                         -3, "ENUM mainnet|testnet", 0, "The network."},
     {"master-key",                      -4, "XPRV", 0, "The BIP-32 master HD key."},
     {"master-key-fingerprint",          -5, "HEX", 0, "Fingerprint of the master HD key."},
-    {"output-type",          -6, "ENUM pkh|wpkh|sh-wpkh", 0, "The output descriptor type."},
+    {"output-type",                     -6, "ENUM pkh|wpkh|sh-wpkh", 0, "The output descriptor type."},
     {"purpose",                         -7, "INDEX", 0, "The purpose field of the BIP-44 derivation path."},
     {"coin-type",                       -8, "INDEX", 0, "The coin type field of the BIP-44 derivation path."},
     {"account-index",                   -9, "INDEX", 0, "The account field of the BIP-44 derivation path."},
@@ -113,7 +113,12 @@ struct argp_option options[] = {
     {"address-pub-ec-key",              -22, "ECPUB", 0, "The compressed public EC key."},
     {"address-pkh",                     -23, "ADDRESS", 0, "The pay-to-public-key-hash address."},
     {"address-sh",                      -24, "ADDRESS", 0, "The pay-to-script-hash address."},
-    {"output-descriptor",               -25, "OUTPUT_DESCRIPTOR", 0, "A single-signature output descriptor."},
+    {"address-segwit",                  -25, "ADDRESS", 0, "The segwit address."},
+    {"output-descriptor",               -26, "OUTPUT_DESCRIPTOR", 0, "A single-signature output descriptor."},
+    {"psbt",                            -27, "BASE64", 0, "A partially signed Bitcoin transaction (PSBT)."},
+    {"psbt-finalized",                  -28, "BASE64", 0, "The finalized PSBT."},
+    {"transaction",                     -29, "HEX", 0, "The raw Bitcoin transaction."},
+    {"psbt-signed",                     -30, "BASE64", 0, "A PBST signed by address-key."},
 
     { 0 }
 };

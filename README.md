@@ -115,15 +115,19 @@ a minimum recommended version 10.
 
 #### Build on Ubuntu and Debian
 
+First, install the dependencies:
+
 ```bash
 $ sudo apt-get update
 
-$ apt install lsb-release wget software-properties-common
+$ sudo apt install lsb-release wget software-properties-common
 $ wget https://apt.llvm.org/llvm.sh
 $ chmod +x llvm.sh
 $ sudo ./llvm.sh 10  # version 10
 $ sudo apt-get -y install build-essential pkg-config autoconf libtool shunit2 libc++-10-dev libc++abi-10-dev python
 ```
+
+Then, you can clone and bit this repo:
 
 ```bash
 $ sudo apt-get install git

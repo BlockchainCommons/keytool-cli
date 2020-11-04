@@ -120,7 +120,7 @@ First, install the dependencies:
 ```bash
 $ sudo apt-get update
 
-$ sudo apt install lsb-release wget software-properties-common
+$ sudo apt install lsb-release wget software-properties-common git
 $ wget https://apt.llvm.org/llvm.sh
 $ chmod +x llvm.sh
 $ sudo ./llvm.sh 10  # version 10
@@ -130,7 +130,6 @@ $ sudo apt-get -y install build-essential pkg-config autoconf libtool shunit2 li
 Then, you can clone and bit this repo:
 
 ```bash
-$ sudo apt-get install git
 $ git clone https://github.com/BlockchainCommons/bc-keytool-cli.git
 $ cd bc-keytool-cli/  
 $ export CC="clang-10" && export CXX="clang++-10" && ./build.sh

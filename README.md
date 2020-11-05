@@ -102,7 +102,7 @@ These dependencies are automatically installed as submodules when you run the bu
 ```bash
 $ brew install autoconf automake libtool shunit2
 ```
-
+You must then download or clone this repo. Afterward, cd into the repo directory and:
 ```bash
 $ ./build.sh
 $ sudo make install
@@ -115,16 +115,23 @@ a minimum recommended version 10.
 
 #### Build on Ubuntu and Debian
 
+First, install the dependencies:
+
 ```bash
 $ sudo apt-get update
-$ sudo apt-get -y install build-essential pkg-config autoconf libtool shunit2 libc++-10-dev libc++abi-10-dev python
 
+$ sudo apt install lsb-release wget software-properties-common git
 $ wget https://apt.llvm.org/llvm.sh
 $ chmod +x llvm.sh
 $ sudo ./llvm.sh 10  # version 10
+$ sudo apt-get -y install build-essential pkg-config autoconf libtool shunit2 libc++-10-dev libc++abi-10-dev python
 ```
 
+Then, you can clone and bit this repo:
+
 ```bash
+$ git clone https://github.com/BlockchainCommons/bc-keytool-cli.git
+$ cd bc-keytool-cli/  
 $ export CC="clang-10" && export CXX="clang++-10" && ./build.sh
 $ sudo make install
 ```

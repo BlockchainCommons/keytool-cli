@@ -1,5 +1,7 @@
 # 🔑 Blockchain Commons bc-keytool-cli
 
+![](images/logos/keytool-screen.png)
+
 ## Introduction
 
 `keytool` is a command-line tool that implements a data flow graph for deriving cryptocurrency keys and addresses, and signing transactions. Any of the nodes in the graph can be assigned and any set of nodes can be derived as long as their dependencies are met.

@@ -7,3 +7,6 @@
 [submodule "deps/bc-crypto-base"]
 	path = deps/bc-crypto-base
 	url = https://github.com/BlockchainCommons/bc-crypto-base.git
+[submodule "deps/bc-ur"]
+	path = deps/bc-ur
+	url = https://github.com/BlockchainCommons/bc-ur.git

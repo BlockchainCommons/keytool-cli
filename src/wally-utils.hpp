@@ -54,10 +54,8 @@ public:
     std::string to_segwit_address(const HDKey& key, const Network& network) const;
 
     wally_psbt* psbt_from_data(const ByteVector& data) const;
-    wally_psbt* psbt_from_base64(const std::string& base64) const;
     bool psbt_is_finalized(wally_psbt* psbt) const;
     ByteVector psbt_to_data(wally_psbt* psbt) const;
-    std::string psbt_to_base64(wally_psbt* psbt) const;
     wally_psbt* psbt_copy(wally_psbt* psbt) const;
     void psbt_finalize(wally_psbt* psbt) const;
     void psbt_sign(wally_psbt* psbt, const ECPrivateKey& key) const;

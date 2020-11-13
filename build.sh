@@ -21,6 +21,14 @@ make check
 make install
 popd
 
+echo "${BLUE}== bc-ur ==${RESET}"
+
+pushd deps/bc-ur
+./configure --prefix ${SYSROOT}
+make check
+make install
+popd
+
 echo "${BLUE}== libwally-core ==${RESET}"
 
 pushd deps/libwally-core

@@ -54,7 +54,7 @@ OBJS = \
 	psbt.o \
 	transaction.o
 
-LDLIBS += -lwallycore -lsecp256k1 -largp
+LDLIBS += -lwallycore -lsecp256k1 -largp -lbc-ur
 
 UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)

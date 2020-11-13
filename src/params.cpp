@@ -115,10 +115,17 @@ struct argp_option options[] = {
     {"address-sh",                      -24, "ADDRESS", 0, "The pay-to-script-hash address."},
     {"address-segwit",                  -25, "ADDRESS", 0, "The segwit address."},
     {"output-descriptor",               -26, "OUTPUT_DESCRIPTOR", 0, "A single-signature output descriptor."},
-    {"psbt",                            -27, "BASE64", 0, "A partially signed Bitcoin transaction (PSBT)."},
-    {"psbt-finalized",                  -28, "BASE64", 0, "The finalized PSBT."},
-    {"transaction",                     -29, "HEX", 0, "The raw Bitcoin transaction."},
-    {"psbt-signed",                     -30, "BASE64", 0, "A PBST signed by address-key."},
+    {"psbt",                            -27, "BASE64 | HEX | UR:CRYPTO-PSBT", 0, "A partially signed Bitcoin transaction (PSBT)."},
+    {"psbt-hex",                        -28, "HEX", 0, "PSBT in hex format."},
+    {"psbt-ur",                         -29, "UR:CRYPTO-PSBT", 0, "PSBT in UR format."},
+    {"psbt-finalized",                  -30, "BASE64 | HEX | UR:CRYPTO-PSBT", 0, "The finalized PSBT."},
+    {"psbt-finalized-hex",              -31, "HEX", 0, "Finalized PSBT in hex format."},
+    {"psbt-finalized-ur",               -32, "UR:CRYPTO-PSBT", 0, "Finalized PSBT in UR format."},
+    {"psbt-signed",                     -33, "BASE64 | HEX | UR:CRYPTO-PSBT", 0, "A PBST signed by address-key."},
+    {"psbt-signed-hex",                 -34, "HEX", 0, "Signed PSBT in hex format."},
+    {"psbt-signed-ur",                  -35, "UR:CRYPTO-PSBT", 0, "Signed PSBT in UR format."},
+    {"transaction",                     -36, "HEX | UR:CRYPTO-TX", 0, "The raw Bitcoin transaction."},
+    {"transaction-ur",                  -37, "UR:CRYPTO-TX", 0, "The raw Bitcoin transaction in UR format."},
 
     { 0 }
 };

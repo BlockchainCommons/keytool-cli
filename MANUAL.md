@@ -1,6 +1,6 @@
 # 🔑 Keytool
 
-**Version 0.3.0**<br/>**November 2, 2020**
+**Version 0.4.0**<br/>**November 12, 2020**
 
 *Copyright © 2020 by Blockchain Commons, LLC*<br/>*Licensed under the "BSD-2-Clause Plus Patent License"*
 
@@ -50,9 +50,16 @@ address-sh <- [address-pub-ec-key, asset]
 address-segwit <- [address-pub-key, network]
 output-descriptor <- [output-type, account-derivation-path, address-derivation-path, account-pub-key]
 psbt
+psbt-hex <- [psbt]
+psbt-ur <- [psbt]
 psbt-finalized <- [psbt]
-transaction <- [psbt-finalized]
+psbt-finalized-hex <- [psbt-finalized]
+psbt-finalized-ur <- [psbt-finalized]
 psbt-signed <- [psbt, address-ec-key]
+psbt-signed-hex <- [psbt-signed]
+psbt-signed-ur <- [psbt-signed]
+transaction <- [psbt-finalized]
+transaction-ur <- [transaction]
 ```
 
 These derivations are expressed visually in the graph below. Each node in the graph is a specific attribute that can be supplied directly on the command line, or derived from its predecessors. Two or more arrows entering a node indicate more than one possible set of inputs can be used to derive it. AND junctors indicate that *all* predecessor attributes must be supplied, unless a predecessor is marked `optional`.
@@ -63,58 +70,73 @@ These derivations are expressed visually in the graph below. Each node in the gr
 
 Keytool uses particular text formats for input and output attributes:
 
-* HEX: A string of hexadecimal digits, case-insensitive.
-* ENUM: A specific, defined enumerated value. For example `asset` can currently have the value `btc` (Bitcoin) or `btct` (Bitcoin testnet).
-* INDEX: A non-negative integer.
-* INDEX_BOUND: An INDEX or the wildcard `*` (note that on the Unix command line, you will need to enclose `*` in single quotes to avoid shell globbing.)-
-* BIP32_PATH: A series of BIP-32 path elements, starting with `m` (for "master key") and followed by integers, which may optionally be followed by `h` (for hardened derivation). Example: `m/44h/0h/0h/0/123`.
-* XPRV: A BIP-32 HD private key starting with `xprv`.
-* XPUB: A BIP-32 HD public key starting with `xpub`.
-* ECPRV: An elliptic curve private key in hex format.
-* ECPUB: A compressed elliptic curve public key in hex format.
-* WIF: An elliptic curve private key in Wallet Import Format.
-* ADDRESS: An address in base-58 check format.
-* BASE64: A partially-signed Bitcoin transaction (PSBT).
-* TRANSACTION: A raw Bitcoin transaction.
+|    |    |
+|:---|:---|
+| HEX | A string of hexadecimal digits, case-insensitive. |
+| ENUM | A specific, defined enumerated value. For example `asset` can currently have the value `btc` (Bitcoin) or `btct` (Bitcoin testnet).
+| INDEX | A non-negative integer.
+| INDEX_BOUND | An INDEX or the wildcard `*` (note that on the Unix command line, you will need to enclose `*` in single quotes to avoid shell globbing.)-
+| BIP32_PATH | A series of BIP-32 path elements, starting with `m` (for "master key") and followed by integers, which may optionally be followed by `h` (for hardened derivation). Example | `m/44h/0h/0h/0/123`.
+| XPRV | A BIP-32 HD private key starting with `xprv`.
+| XPUB | A BIP-32 HD public key starting with `xpub`.
+| ECPRV | An elliptic curve private key in hex format.
+| ECPUB | A compressed elliptic curve public key in hex format.
+| WIF | An elliptic curve private key in Wallet Import Format.
+| ADDRESS | An address in base-58 check format.
+| PSBT | A partially-signed Bitcoin transaction (PSBT) in base-64, hex, or `ur:crypto-psbt` format.
+| UR:CRYPTO-PSBT | A PSBT in Uniform Resource (UR) format 
+| TRANSACTION | A raw Bitcoin transaction in hex or `ur:crypto-tx` format.
+| UR:CRYPTO-TX | A raw Bitcoin transaction in Uniform Resource (UR) format.
+
+The Uniform Resource (UR) format is described [here](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-005-ur.md).
+
+The specific formats of the `ur:crypto-psbt` and `ur:crypto-tx` are defined [here](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-006-urtypes.md#partially-signed-bitcoin-transaction-psbt-crypto-psbt).
 
 ## Usage
 
 ```
-keytool
-  [-?V] [--account-derivation-path=BIP32_PATH]
+keytool [-?V]
+  [--account-derivation-path=BIP32_PATH]
   [--account-index=INDEX] 
   [--account-key=XPRV]
-  [--account-pub-key=XPUB] 
+  [--account-pub-key=XPUB]
   [--address-derivation-path=BIP32_PATH]
-  [--address-ec-key=ECPRV] 
+  [--address-ec-key=ECPRV]
   [--address-ec-key-wif=WIF]
-  [--address-index=INDEX_BOUND] 
+  [--address-index=INDEX_BOUND]
   [--address-key=XPRV]
-  [--address-pkh=ADDRESS] 
+  [--address-pkh=ADDRESS]
   [--address-pub-ec-key=ECPUB]
-  [--address-pub-key=XPUB] 
+  [--address-pub-key=XPUB]
   [--address-segwit=ADDRESS]
-  [--address-sh=ADDRESS] 
-  [--asset=ENUM btc|btct] 
-  [--chain-type=ENUM internal|external|identity] 
+  [--address-sh=ADDRESS]
+  [--asset=ENUM btc|btct]
+  [--chain-type=ENUM internal|external|identity]
   [--chain-type-int=INDEX]
-  [--coin-type=INDEX] 
+  [--coin-type=INDEX]
   [--full-address-derivation-path=BIP32_PATH]
-  [--master-key=XPRV] 
-  [--master-key-fingerprint=HEX] 
-  [--network=ENUM mainnet|testnet] 
+  [--master-key=XPRV]
+  [--master-key-fingerprint=HEX]
+  [--network=ENUM mainnet|testnet]
   [--output-descriptor=OUTPUT_DESCRIPTOR]
-  [--output-type=ENUM pkh|wpkh|sh-wpkh] 
-  [--psbt=BASE64]
-  [--psbt-finalized=BASE64] 
-  [--psbt-signed=BASE64] 
+  [--output-type=ENUM pkh|wpkh|sh-wpkh]
+  [--psbt=BASE64 | HEX | UR:CRYPTO-PSBT]
+  [--psbt-finalized=BASE64 | HEX | UR:CRYPTO-PSBT]
+  [--psbt-finalized-hex=HEX]
+  [--psbt-finalized-ur=UR:CRYPTO-PSBT]
+  [--psbt-hex=HEX]
+  [--psbt-signed=BASE64 | HEX | UR:CRYPTO-PSBT]
+  [--psbt-signed-hex=HEX]
+  [--psbt-signed-ur=UR:CRYPTO-PSBT]
+  [--psbt-ur=UR:CRYPTO-PSBT]
   [--purpose=INDEX]
-  [--seed=HEX] 
-  [--transaction=HEX] 
-  [--help] 
+  [--seed=HEX]
+  [--transaction=HEX | UR:CRYPTO-TX]
+  [--transaction-ur=UR:CRYPTO-TX]
+  [--help]
   [--usage]
   [--version]
-              
+  
   output-attributes...
 ```
 
@@ -300,10 +322,20 @@ keytool --asset btct --psbt ${PSBT_TO_SIGN} --address-ec-key-wif ${KEY_1} psbt-s
   | keytool --psbt '' transaction
   
 0200000000010340dcb219a9212fd95bde1feeba2da3532104d864e91cff65a7ad4517dc79d87d0000000000fdffffffc26fa66c521b4d888f94d36107c3f5fef05cc0a1bf66bc8e1cc2a42fb752a9360000000000fdffffff82999814c85add28d099528a9f8018420053913dd88ffeaaf438eb782399fe0a0000000000fdffffff0240420f00000000001600142064efcca7d9102922a59fb978a0aed8b759c4119dc61000000000001600148cca1fd8f39a1724a5194094fe21e019264fcc7802483045022100e49b0e63ffba6e684f6971436b38a7b81cba5780fdb0784acd12c145254590600220280aa566aba4bc78911a3672b0cbb5180189460cd9c728dd11a9f71194d1ac6c012102b4a32c64f108fa46fd75a31315e17ffbc8a8ea9a03bd3c7e7229e93e8f72d44402483045022100de1732ee1350d171012fc097af03e91ff26f00cbd2c96e7a0fe2a6abb61b9d1d02206329366501086ef5d2143877eed4c6f6ed93db8ed26c27f360db1b2c55b80156012103715ee32a6095ff88309b22198dc563d4b5e1d7f3387abfc3a643db62252292df024730440220500b1db89395d62c5049414adc52e79d0b5527180669ac811ad61963d57ebec4022000d64181fe2b1c9d0adb2672ad0612c40c4e0cb027e22e340d35a92307ef4c8e012103840f78046760b9024f52aeb59c5a0c36b54ce1551a48427033b95970f1b214f500000000
-
 ```
 
+## Converting Formats
+
+Nodes that hold partially-signed Bitcoin Transactions (PSBTs) accept input to them in three formats: Base64, hex, and Uniform Resources (URs) of the type `ur:crypto-psbt`. These nodes always output PSBTs in Base64 format, but have two other associated nodes that produce output in the other formats. So for instance, the `signed-psbt` node also has two nodes that derive from it: `signed-psbt-hex` and `signed-psbt-ur` that convert the PSBT to the corresponding output types.
+
+Similarly, the `transaction` node accepts input in either hex or as a UR of the type `ur:crypto-tx`. The `transaction` node always outputs hex, but the `transaction-ur` node that derives from it outputs the transaction as a UR.
+
 ## Version History
+
+### 0.4.0, 11/12/2020
+
+* Added ability to input PSBTs in hex and ur:crypto-psbt formats as well as Base-64, and output PSBTs in all three formats as well.
+* Added ability to input transactions in ur:crypto-tx format as well as hex, and output transactions in both formats as well.
 
 ### 0.3.0, 11/2/2020
 

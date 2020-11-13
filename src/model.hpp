@@ -104,14 +104,35 @@ public:
     // psbt
     DataNode<PSBT> psbt;
 
+    // psbt-hex <- [psbt]
+    DataNode<std::string> psbt_hex;
+
+    // psbt-ur <- [psbt]
+    DataNode<std::string> psbt_ur;
+
     // psbt-finalized <- [psbt]
     DataNode<PSBT> psbt_finalized;
+
+    // psbt-finalized-hex <- [psbt-finalized]
+    DataNode<std::string> psbt_finalized_hex;
+
+    // psbt-finalized-ur <- [psbt-finalized]
+    DataNode<std::string> psbt_finalized_ur;
+
+    // psbt-signed <- [psbt, address-ec-key]
+    DataNode<PSBT> psbt_signed;
+
+    // psbt-signed-hex <- [psbt-signed]
+    DataNode<std::string> psbt_signed_hex;
+
+    // psbt-signed-ur <- [psbt-signed]
+    DataNode<std::string> psbt_signed_ur;
 
     // transaction <- [psbt-finalized]
     DataNode<Transaction> transaction;
 
-    // psbt-signed <- [psbt, address-ec-key]
-    DataNode<PSBT> psbt_signed;
+    // transaction-ur <- [transaction]
+    DataNode<std::string> transaction_ur;
 
     std::vector<DataNodeProtocol*> all_nodes;
 

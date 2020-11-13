@@ -114,4 +114,7 @@ static inline std::string trim_copy(std::string s) {
     return s;
 }
 
+std::string data_to_base64(const ByteVector& data);
+ByteVector base64_to_data(std::string const& data);
+
 #endif // KEYTOOL_UTILS_HPP

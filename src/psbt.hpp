@@ -10,7 +10,7 @@ struct wally_psbt;
 class PSBT final {
 public:
     PSBT();
-    PSBT(const std::string& base64);
+    PSBT(const std::string& s); // base64, hex, or ur:crypto-psbt
     PSBT(const ByteVector& data);
     PSBT(wally_psbt* psbt);
 
@@ -20,6 +20,8 @@ public:
     PSBT sign(const ECPrivateKey& key) const;
 
     std::string base64() const;
+    std::string hex() const;
+    std::string ur() const;
     ByteVector data() const;
 
     // friend class Wally;

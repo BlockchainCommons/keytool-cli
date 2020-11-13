@@ -35,7 +35,7 @@ uint8_t hex_digit_to_bin(char hex) {
     } else if (hex >= 'a' && hex <= 'f') {
         return hex - 'a' + 10;
     } else {
-        throw runtime_error("Invalid hex digit");
+        throw domain_error("Invalid hex digit");
     }
 }
 
@@ -44,7 +44,7 @@ ByteVector hex_to_data(const string& hex) {
 
     auto len = hex.length();
     if(len % 2 != 0) {
-        throw runtime_error("Hex string must have even number of characters.");
+        throw domain_error("Hex string must have even number of characters.");
     }
     auto count = len / 2;
     result.reserve(count);
@@ -85,7 +85,7 @@ string data_to_ints(const ByteVector &in,
     size_t low, size_t high, const string &separator)
 {
     if (!(0 <= low && low < high && high <= 255)) {
-        throw runtime_error("Int conversion range must be in 0 <= low < high <= 255.");
+        throw domain_error("Int conversion range must be in 0 <= low < high <= 255.");
     }
     size_t base = high - low + 1;
     auto data = data_to_base(in, base);
@@ -107,7 +107,7 @@ ByteVector digits_to_data(const string& in, size_t low, size_t high) {
     for(auto c: in) {
         int n = c - '0';
         if(n < low || n > high) {
-            throw runtime_error("Invalid digit.");
+            throw domain_error("Invalid digit.");
         }
         result.push_back(n);
     }
@@ -194,6 +194,81 @@ ByteVector random_bytes(size_t len) {
     return result;
 }
 
-std::ostream& operator<< (std::ostream& os, const ByteVector& bytes) {
+ostream& operator<< (ostream& os, const ByteVector& bytes) {
     return os << data_to_hex(bytes);
+}
+
+static string get_base64_chars() {
+    static string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                   "abcdefghijklmnopqrstuvwxyz"
+                                   "0123456789+/";
+    return base64_chars;
+}
+
+// Base64 codec based on:
+// https://github.com/tobiaslocker/base64
+// MIT License
+
+string data_to_base64(const ByteVector& data) {
+    int counter = 0;
+    uint32_t bit_stream = 0;
+    const string base64_chars = get_base64_chars();
+    string encoded;
+    int offset = 0;
+    for (auto const& c : data) {
+        auto num_val = static_cast<unsigned int>(c);
+        offset = 16 - counter % 3 * 8;
+        bit_stream += num_val << offset;
+        if (offset == 16) {
+            encoded += base64_chars.at(bit_stream >> 18 & 0x3f);
+        }
+        if (offset == 8) {
+            encoded += base64_chars.at(bit_stream >> 12 & 0x3f);
+        }
+        if (offset == 0 && counter != 3) {
+            encoded += base64_chars.at(bit_stream >> 6 & 0x3f);
+            encoded += base64_chars.at(bit_stream & 0x3f);
+            bit_stream = 0;
+        }
+        counter++;
+    }
+    if (offset == 16) {
+        encoded += base64_chars.at(bit_stream >> 12 & 0x3f);
+        encoded += "==";
+    }
+    if (offset == 8) {
+        encoded += base64_chars.at(bit_stream >> 6 & 0x3f);
+        encoded += '=';
+    }
+    return encoded;
+}
+
+ByteVector base64_to_data(string const& data) {
+    int counter = 0;
+    uint32_t bit_stream = 0;
+    ByteVector decoded;
+    int offset = 0;
+    const string base64_chars = get_base64_chars();
+    for (auto c : data) {
+        auto num_val = base64_chars.find(c);
+        if (num_val != string::npos) {
+            offset = 18 - counter % 4 * 6;
+            bit_stream += num_val << offset;
+            if (offset == 12) {
+                decoded.push_back(
+                    static_cast<uint8_t>(bit_stream >> 16 & 0xff));
+            }
+            if (offset == 6) {
+                decoded.push_back(static_cast<uint8_t>(bit_stream >> 8 & 0xff));
+            }
+            if (offset == 0 && counter != 4) {
+                decoded.push_back(static_cast<uint8_t>(bit_stream & 0xff));
+                bit_stream = 0;
+            }
+        } else if (c != '=') {
+            throw domain_error("Invalid base64.");
+        }
+        counter++;
+    }
+    return decoded;
 }

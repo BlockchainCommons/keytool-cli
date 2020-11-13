@@ -43,9 +43,16 @@ Model::Model()
     , address_segwit("address-segwit",                                      -25)
     , output_descriptor("output-descriptor",                                -26)
     , psbt("psbt",                                                          -27)
-    , psbt_finalized("psbt-finalized",                                      -28)
-    , transaction("transaction",                                            -29)
-    , psbt_signed("psbt-signed",                                            -30)
+    , psbt_hex("psbt-hex",                                                  -28)
+    , psbt_ur("psbt-ur",                                                    -29)
+    , psbt_finalized("psbt-finalized",                                      -30)
+    , psbt_finalized_hex("psbt-finalized-hex",                              -31)
+    , psbt_finalized_ur("psbt-finalized-ur",                                -32)
+    , psbt_signed("psbt-signed",                                            -33)
+    , psbt_signed_hex("psbt-signed-hex",                                    -34)
+    , psbt_signed_ur("psbt-signed-ur",                                      -35)
+    , transaction("transaction",                                            -36)
+    , transaction_ur("transaction-ur",                                      -37)
 {
     // seed
     seed.set_to_string([](const ByteVector& bytes) { return data_to_hex(bytes); });
@@ -320,6 +327,28 @@ Model::Model()
     psbt.set_from_string([](const string& s) -> PSBT { return PSBT(s); });
     all_nodes.push_back(&psbt);
 
+    // psbt-hex <- [psbt]
+    psbt_hex.set_f([&]() -> optional<string> {
+        if(psbt.has_value()) {
+            return psbt().hex();
+        } else {
+            return nullopt;
+        }
+    });
+    psbt_hex.set_to_string([](const string& s) { return s; });
+    all_nodes.push_back(&psbt_hex);
+
+    // psbt-ur <- [psbt]
+    psbt_ur.set_f([&]() -> optional<string> {
+        if(psbt.has_value()) {
+            return psbt().ur();
+        } else {
+            return nullopt;
+        }
+    });
+    psbt_ur.set_to_string([](const string& s) { return s; });
+    all_nodes.push_back(&psbt_ur);
+
     // psbt-finalized <- [psbt]
     psbt_finalized.set_f([&]() -> optional<PSBT> {
         if(psbt.has_value()) {
@@ -338,17 +367,27 @@ Model::Model()
     });
     all_nodes.push_back(&psbt_finalized);
 
-    // transaction <- [psbt-finalized]
-    transaction.set_f([&]() -> optional<Transaction> {
+    // psbt-finalized-hex <- [psbt-finalized]
+    psbt_finalized_hex.set_f([&]() -> optional<string> {
         if(psbt_finalized.has_value()) {
-            return Transaction(psbt_finalized());
+            return psbt_finalized().hex();
         } else {
             return nullopt;
         }
     });
-    transaction.set_to_string([](const Transaction& t) { return data_to_hex(t.data()); });
-    transaction.set_from_string([](const string& s) -> Transaction { return Transaction(hex_to_data(s)); });
-    all_nodes.push_back(&transaction);
+    psbt_finalized_hex.set_to_string([](const string& s) { return s; });
+    all_nodes.push_back(&psbt_finalized_hex);
+
+    // psbt-finalized-ur <- [psbt-finalized]
+    psbt_finalized_ur.set_f([&]() -> optional<string> {
+        if(psbt_finalized.has_value()) {
+            return psbt_finalized().ur();
+        } else {
+            return nullopt;
+        }
+    });
+    psbt_finalized_ur.set_to_string([](const string& s) { return s; });
+    all_nodes.push_back(&psbt_finalized_ur);
 
     // psbt-signed <- [psbt, address-ec-key]
     psbt_signed.set_f([&]() -> optional<PSBT> {
@@ -360,6 +399,51 @@ Model::Model()
     });
     psbt_signed.set_to_string([](const PSBT& p) { return p.base64(); });
     all_nodes.push_back(&psbt_signed);
+
+    // psbt-signed-hex <- [psbt-signed]
+    psbt_signed_hex.set_f([&]() -> optional<string> {
+        if(psbt_signed.has_value()) {
+            return psbt_signed().hex();
+        } else {
+            return nullopt;
+        }
+    });
+    psbt_signed_hex.set_to_string([](const string& s) { return s; });
+    all_nodes.push_back(&psbt_signed_hex);
+
+    // psbt-signed-ur <- [psbt-signed]
+    psbt_signed_ur.set_f([&]() -> optional<string> {
+        if(psbt_signed.has_value()) {
+            return psbt_signed().ur();
+        } else {
+            return nullopt;
+        }
+    });
+    psbt_signed_ur.set_to_string([](const string& s) { return s; });
+    all_nodes.push_back(&psbt_signed_ur);
+
+    // transaction <- [psbt-finalized]
+    transaction.set_f([&]() -> optional<Transaction> {
+        if(psbt_finalized.has_value()) {
+            return Transaction(psbt_finalized());
+        } else {
+            return nullopt;
+        }
+    });
+    transaction.set_to_string([](const Transaction& t) { return t.hex(); });
+    transaction.set_from_string([](const string& s) -> Transaction { return Transaction(s); });
+    all_nodes.push_back(&transaction);
+
+    // transaction-ur <- [transaction]
+    transaction_ur.set_f([&]() -> optional<string> {
+        if(transaction.has_value()) {
+            return transaction().ur();
+        } else {
+            return nullopt;
+        }
+    });
+    transaction_ur.set_to_string([](const string& s) { return s; });
+    all_nodes.push_back(&transaction_ur);
 }
 
 DataNodeProtocol* Model::find_by_name(const string& node_name) const {

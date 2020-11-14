@@ -113,9 +113,11 @@ These dependencies are automatically installed as submodules when you run the bu
 ### MacOS
 
 ```bash
-$ brew install autoconf automake libtool shunit2
+$ brew install autoconf automake gnu-sed libtool shunit2
 ```
+
 You must then download or clone this repo. Afterward, cd into the repo directory and:
+
 ```bash
 $ ./build.sh
 $ sudo make install

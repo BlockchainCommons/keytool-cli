@@ -220,9 +220,9 @@ testPSBTSigning()
   final_transaction=0200000000010340dcb219a9212fd95bde1feeba2da3532104d864e91cff65a7ad4517dc79d87d0000000000fdffffffc26fa66c521b4d888f94d36107c3f5fef05cc0a1bf66bc8e1cc2a42fb752a9360000000000fdffffff82999814c85add28d099528a9f8018420053913dd88ffeaaf438eb782399fe0a0000000000fdffffff0240420f00000000001600142064efcca7d9102922a59fb978a0aed8b759c4119dc61000000000001600148cca1fd8f39a1724a5194094fe21e019264fcc7802483045022100e49b0e63ffba6e684f6971436b38a7b81cba5780fdb0784acd12c145254590600220280aa566aba4bc78911a3672b0cbb5180189460cd9c728dd11a9f71194d1ac6c012102b4a32c64f108fa46fd75a31315e17ffbc8a8ea9a03bd3c7e7229e93e8f72d44402483045022100de1732ee1350d171012fc097af03e91ff26f00cbd2c96e7a0fe2a6abb61b9d1d02206329366501086ef5d2143877eed4c6f6ed93db8ed26c27f360db1b2c55b80156012103715ee32a6095ff88309b22198dc563d4b5e1d7f3387abfc3a643db62252292df024730440220500b1db89395d62c5049414adc52e79d0b5527180669ac811ad61963d57ebec4022000d64181fe2b1c9d0adb2672ad0612c40c4e0cb027e22e340d35a92307ef4c8e012103840f78046760b9024f52aeb59c5a0c36b54ce1551a48427033b95970f1b214f500000000
   assertEquals ${final_transaction} \
     "$(${KEYTOOL} --asset btct --psbt ${psbt_to_sign} --address-ec-key-wif ${key1} psbt-signed \
-      | keytool --asset btct --psbt '' --address-ec-key-wif ${key2} psbt-signed \
-      | keytool --asset btct --psbt '' --address-ec-key-wif ${key3} psbt-signed \
-      | keytool --psbt '' transaction)"
+      | ${KEYTOOL} --asset btct --psbt '' --address-ec-key-wif ${key2} psbt-signed \
+      | ${KEYTOOL} --asset btct --psbt '' --address-ec-key-wif ${key3} psbt-signed \
+      | ${KEYTOOL} --psbt '' transaction)"
 )
 
 testPSBTHex()

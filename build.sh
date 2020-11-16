@@ -1,17 +1,17 @@
 #!/bin/bash
 
+# Terminal colors
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+BLUE=`tput setaf 4`
+RESET=`tput sgr0`
+
 set -e
 
 git submodule init
 git submodule update
 
 source set_build_paths.sh
-
-# Terminal colors
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-BLUE=`tput setaf 4`
-RESET=`tput sgr0`
 
 echo "${BLUE}== bc-crypto-base ==${RESET}"
 

@@ -15,8 +15,8 @@ struct ext_key;
 class HDKey final {
 public:
     HDKey(const ByteVector& entropy, const Network& network);
-    HDKey(ext_key* key);
-    HDKey(const std::string &base58);
+    explicit HDKey(ext_key* key);
+    explicit HDKey(const std::string &base58);
     HDKey(const std::string &base58, bool require_private);
 
     bool is_private() const;

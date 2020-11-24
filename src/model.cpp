@@ -1,5 +1,7 @@
 #include "model.hpp"
 
+#include <algorithm>
+
 using namespace std;
 
 static uint32_t parse_uint32(const string& s) {
@@ -447,27 +449,20 @@ Model::Model()
 }
 
 DataNodeProtocol* Model::find_by_name(const string& node_name) const {
-    for(auto node: all_nodes) {
-        if(node->name() == node_name) {
-            return node;
-        }
-    }
-    return nullptr;
+    auto node = std::find_if(all_nodes.begin(), all_nodes.end(), [&](auto node) { return node->name() == node_name; });
+    return node == all_nodes.end() ? nullptr : *node;
 }
 
 DataNodeProtocol* Model::find_by_tag(int node_tag) const {
-    for(auto node: all_nodes) {
-        if(node->tag() == node_tag) {
-            return node;
-        }
-    }
-    return nullptr;
+    auto node = std::find_if(all_nodes.begin(), all_nodes.end(), [&](auto node) { return node->tag() == node_tag; });
+    return node == all_nodes.end() ? nullptr : *node;
 }
 
 bool Model::is_valid_name(const string& node_name) const {
     return find_by_name(node_name) != nullptr;
 }
 
+// cppcheck-suppress unusedFunction
 bool Model::can_derive(const string& node_name) const {
     auto node = find_by_name(node_name);
     if(node == nullptr) {

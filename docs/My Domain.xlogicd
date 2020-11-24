@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain majorVersion="4" minorVersion="0">
+    <attributes>
+        <attribute class="java.lang.String" key="name">My Domain</attribute>
+        <attribute class="java.lang.Boolean" key="builtIn">false</attribute>
+        <attribute class="java.lang.Boolean" key="hidden">false</attribute>
+    </attributes>
+    <entityClass>
+        <attributes>
+            <attribute class="java.util.UUID" key="uuid">59bc1ed6-9241-40c1-a37c-7f996e032153</attribute>
+            <attribute class="java.lang.String" key="name">Class 1</attribute>
+            <attribute class="com.arciem.graphics.ColorRGB" key="color">
+                <colorRGB blue="0.20000000298023224" green="0.0" red="1.0"/>
+            </attribute>
+            <attribute class="java.lang.Double" key="edgeWeight">1.0</attribute>
+            <attribute class="java.lang.Boolean" key="milestone">false</attribute>
+            <attribute class="java.lang.Boolean" key="builtIn">false</attribute>
+            <attribute class="java.lang.String" key="assignment">ResourceAssignment.fixedeffort</attribute>
+        </attributes>
+    </entityClass>
+    <entityClass>
+        <attributes>
+            <attribute class="java.util.UUID" key="uuid">e839baa2-c516-408d-ae46-0d51b329f0f4</attribute>
+            <attribute class="java.lang.String" key="name">Class 2</attribute>
+            <attribute class="com.arciem.graphics.ColorRGB" key="color">
+                <colorRGB blue="1.0" green="0.20000000298023224" red="0.20000000298023224"/>
+            </attribute>
+            <attribute class="java.lang.Double" key="edgeWeight">1.0</attribute>
+            <attribute class="java.lang.Boolean" key="milestone">false</attribute>
+            <attribute class="java.lang.Boolean" key="builtIn">false</attribute>
+            <attribute class="java.lang.String" key="assignment">ResourceAssignment.fixedeffort</attribute>
+        </attributes>
+    </entityClass>
+</domain>

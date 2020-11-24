@@ -14,8 +14,10 @@ ECPrivateKey::ECPrivateKey(const ByteVector& data) : ECKey(data) {
     }
 }
 
-ECCompressedPublicKey ECPublicKey::compressed() const { return data(); }
-ECUncompressedPublicKey ECPublicKey::uncompressed() const { return data(); }
+// cppcheck-suppress unusedFunction
+ECCompressedPublicKey ECPublicKey::compressed() const { return ECCompressedPublicKey(data()); }
+// cppcheck-suppress unusedFunction
+ECUncompressedPublicKey ECPublicKey::uncompressed() const { return ECUncompressedPublicKey(data()); }
 
 ECCompressedPublicKey ECPrivateKey::to_public() const {
     return Wally::instance.ec_key_to_public(*this);

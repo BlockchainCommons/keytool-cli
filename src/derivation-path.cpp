@@ -68,8 +68,6 @@ static DerivationPathElement parse_elem(const string& s) {
 DerivationPath parse_derivation_path(const string& path) {
     auto elems = split(to_lowercase(path), '/');
     DerivationPath result;
-    for(auto elem: elems) {
-        result.push_back(parse_elem(elem));
-    }
+    std::transform(elems.begin(), elems.end(), back_inserter(result), [&](auto elem) { return parse_elem(elem); });
     return result;
 }

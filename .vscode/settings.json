@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "Makefile.in": "makefile"
+        "Makefile.in": "makefile",
+        "stdexcept": "cpp"
     }
 }

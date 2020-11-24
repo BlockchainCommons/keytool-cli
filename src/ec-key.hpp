@@ -8,7 +8,7 @@ class ECUncompressedPublicKey;
 
 class ECKey {
 public:
-    ECKey(const ByteVector& data) : _data(data) { }
+    explicit ECKey(const ByteVector& data) : _data(data) { }
     virtual ~ECKey() { }
 
     const ByteVector& data() const { return _data; }
@@ -20,14 +20,14 @@ private:
 
 class ECPrivateKey final: public ECKey {
 public:
-    ECPrivateKey(const ByteVector& data);
+    explicit ECPrivateKey(const ByteVector& data);
 
     ECCompressedPublicKey to_public() const;
 };
 
 class ECPublicKey: public ECKey {
 public:
-    ECPublicKey(const ByteVector& data) : ECKey(data) { }
+    explicit ECPublicKey(const ByteVector& data) : ECKey(data) { }
 
     virtual ECCompressedPublicKey compressed() const;
     virtual ECUncompressedPublicKey uncompressed() const;
@@ -35,14 +35,14 @@ public:
 
 class ECCompressedPublicKey: public ECPublicKey {
 public:
-    ECCompressedPublicKey(const ByteVector& data);
+    explicit ECCompressedPublicKey(const ByteVector& data);
 
     virtual ECUncompressedPublicKey uncompressed() const override;
 };
 
 class ECUncompressedPublicKey: public ECPublicKey {
 public:
-    ECUncompressedPublicKey(const ByteVector& data);
+    explicit ECUncompressedPublicKey(const ByteVector& data);
 
     virtual ECCompressedPublicKey compressed() const override;
 };

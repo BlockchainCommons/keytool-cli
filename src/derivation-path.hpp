@@ -15,8 +15,8 @@ public:
     };
 
     DerivationPathElement(IndexBound index, bool is_hardened) : _type(Type::indexed), _index(index), _is_hardened(is_hardened) { }
-    DerivationPathElement(bool is_hardened) : _type(Type::indexed), _is_hardened(is_hardened) { }
-    DerivationPathElement(const ByteVector& fingerprint) : _type(Type::master), _fingerprint(fingerprint) { }
+    explicit DerivationPathElement(bool is_hardened) : _type(Type::indexed), _is_hardened(is_hardened) { }
+    explicit DerivationPathElement(const ByteVector& fingerprint) : _type(Type::master), _fingerprint(fingerprint) { }
     DerivationPathElement() : _type(Type::master) { }
 
     Type type() const { return _type; }
@@ -30,7 +30,7 @@ private:
     Type _type;
     ByteVector _fingerprint;
     IndexBound _index;
-    bool _is_hardened;
+    bool _is_hardened = false;
 };
 
 std::ostream& operator<< (std::ostream& os, const DerivationPathElement& elem);

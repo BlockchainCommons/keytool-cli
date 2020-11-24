@@ -21,8 +21,8 @@ class DataNode final: public DataNodeProtocol {
 public:
     DataNode(const std::string& name, int tag) : _name(name), _tag(tag), _tried(false) { }
 
-    virtual const std::string& name() const { return _name; }
-    virtual int tag() const { return _tag; }
+    virtual const std::string& name() const override { return _name; }
+    virtual int tag() const override { return _tag; }
 
     void set_f(std::function<std::optional<T>(void)> f) { _f = f; }
     void set_to_string(std::function<std::string(const T&)> t) { _to_string = t; }
@@ -38,11 +38,11 @@ public:
         return _value;
     }
 
-    virtual bool has_value() {
+    virtual bool has_value() override {
         return value().has_value();
     }
 
-    virtual std::optional<std::string> to_string() {
+    virtual std::optional<std::string> to_string() override {
         auto t = value();
         if(t.has_value()) {
             return _to_string(*t);
@@ -51,7 +51,7 @@ public:
         }
     }
 
-    virtual void from_string(const std::string& s) {
+    virtual void from_string(const std::string& s) override {
         if(!_from_string) {
             throw std::domain_error("Input not accepted for " + name());
         }

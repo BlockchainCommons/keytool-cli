@@ -10,9 +10,9 @@ struct wally_psbt;
 class PSBT final {
 public:
     PSBT();
-    PSBT(const std::string& s); // base64, hex, or ur:crypto-psbt
-    PSBT(const ByteVector& data);
-    PSBT(wally_psbt* psbt);
+    explicit PSBT(const std::string& s); // base64, hex, or ur:crypto-psbt
+    explicit PSBT(const ByteVector& data);
+    explicit PSBT(wally_psbt* psbt);
 
     bool is_finalized() const;
     PSBT finalized() const;

@@ -13,6 +13,7 @@ public:
     };
 
     IndexBound() : _type(Type::wildcard) { }
+    // cppcheck-suppress noExplicitConstructor
     IndexBound(uint32_t index) : _type(Type::value), _index(index) { }
 
     Type type() const { return _type; }
@@ -22,7 +23,7 @@ public:
 
 private:
     Type _type;
-    uint32_t _index;
+    uint32_t _index = 0;
 };
 
 std::ostream& operator<< (std::ostream& os, const IndexBound& i);

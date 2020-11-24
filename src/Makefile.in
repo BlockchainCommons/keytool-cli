@@ -111,3 +111,7 @@ clean:
 distclean: clean
 	rm -f Makefile
 	rm -f config.h
+
+.PHONY: lint
+lint:
+	cppcheck --enable=all --inline-suppr --suppress=missingInclude --suppress=ConfigurationNotChecked .

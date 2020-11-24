@@ -33,8 +33,8 @@ RED=`tput setaf 1`
 GREEN=`tput setaf 2`
 RESET=`tput sgr0`
 
-.PHONY: all clean keytool check
-all clean keytool check:
+.PHONY: all clean keytool check lint
+all clean keytool check lint:
 	source set_build_paths.sh && cd src && $(MAKE) $@
 
 .PHONY: install uninstall

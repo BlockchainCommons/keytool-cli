@@ -8,7 +8,7 @@
 
 class Asset final {
 public:
-    Asset(const std::string& name, const std::string& symbol, Network network, size_t coin_type, uint8_t version_pkh, uint8_t version_sh)
+    Asset(const std::string& name, const std::string& symbol, Network const &network, size_t coin_type, uint8_t version_pkh, uint8_t version_sh)
         : _name(name)
         , _symbol(symbol)
         , _network(network)

@@ -35,7 +35,7 @@ public:
 
     Model model;
     std::string output;
-    struct argp_state* state;
+    struct argp_state* state = nullptr;
 
     static Params* parse( int argc, char *argv[] );
 

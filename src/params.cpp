@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
 
 #include <bc-crypto-base/bc-crypto-base.h>
 #include <wally.hpp>
@@ -23,8 +24,6 @@ Params::~Params() {
 }
 
 void Params::validate() {
-    std::string name;
-
     for(auto i = opts.begin(); i != opts.end(); i++) {
         auto tag = i->first;
         auto value = i->second;
@@ -38,10 +37,9 @@ void Params::validate() {
         throw domain_error("No outputs requested.");
     }
 
-    for(auto arg: args) {
-        if(!model.is_valid_name(arg)) {
-            throw domain_error("Unknown output requested: " + arg);
-        }
+    auto bad_arg = std::find_if(args.begin(), args.end(), [&](auto arg) { return !model.is_valid_name(arg); });
+    if(bad_arg != args.end()) {
+        throw domain_error("Unknown output requested: " + *bad_arg);
     }
 }
 
@@ -59,7 +57,6 @@ static int parse_opt(int key, char* arg, struct argp_state* state) {
     try {
         auto p = static_cast<Params*>(state->input);
         p->state = state;
-        auto& opts = p->opts;
         auto& args = p->args;
 
         switch (key) {
@@ -74,6 +71,7 @@ static int parse_opt(int key, char* arg, struct argp_state* state) {
         default:
             if(key < 0) {
                 string s = arg ? arg : "";
+                auto& opts = p->opts;
                 if(s.empty()) {
                     opts[key] = read_arg_from_stdin();
                 } else {

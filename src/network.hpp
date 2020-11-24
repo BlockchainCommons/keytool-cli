@@ -6,7 +6,7 @@
 
 class Network final {
 public:
-    Network(const std::string& name) : _name(name) { }
+    explicit Network(const std::string& name) : _name(name) { }
 
     const std::string& name() const { return _name; }
 

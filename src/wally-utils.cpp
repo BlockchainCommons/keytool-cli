@@ -36,6 +36,7 @@ string Wally::bip39_mnemonic_from_entropy(const ByteVector& entropy) const {
     return result;
 }
 
+// cppcheck-suppress unusedFunction
 ByteVector Wally::bip39_mnemonic_to_entropy(const string& mnemonic) const {
     ByteVector result(500);
     size_t written = 0;
@@ -184,8 +185,7 @@ string Wally::ec_key_to_wif(const ECPrivateKey& key, const Network& network) con
 ECPrivateKey Wally::wif_to_ec_key(const string& wif, const Network& network) const {
     uint32_t prefix = network == Network::mainnet() ? 0x80 : 0xef;
     ByteVector bytes_out(EC_PRIVATE_KEY_LEN);
-    int ret = 0;
-    if((ret = wally_wif_to_bytes(wif.c_str(), prefix, WALLY_WIF_FLAG_COMPRESSED, &bytes_out.front(), bytes_out.size())) != WALLY_OK) {
+    if(wally_wif_to_bytes(wif.c_str(), prefix, WALLY_WIF_FLAG_COMPRESSED, &bytes_out.front(), bytes_out.size()) != WALLY_OK) {
         throw domain_error("Invalid WIF.");
     }
     return ECPrivateKey(bytes_out);

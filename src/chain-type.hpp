@@ -8,7 +8,7 @@
 class ChainType final {
 public:
     ChainType(const std::string& name, uint32_t index) : _name(name), _index(index) { }
-    ChainType(uint32_t index) : _index(index) { }
+    explicit ChainType(uint32_t index) : _index(index) { }
 
     const std::optional<std::string>& name() const { return _name; }
     uint32_t index() const { return _index; }

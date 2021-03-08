@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 #include "model.hpp"
 
 using namespace std;
@@ -100,6 +101,30 @@ uint32_t Wally::flags_for_private(bool is_private) {
     return is_private ? BIP32_FLAG_KEY_PRIVATE : BIP32_FLAG_KEY_PUBLIC;
 }
 
+static void print_key(const ext_key& k) {
+    ostringstream result;
+    // "ext_key(chain_code: \(chain_code), parent160: \(parent160), priv_key: \(priv_key), 
+    // child_num: \(child_num), hash160: \(hash160), version: \(version), pub_key: \(pub_key)"
+    result << "ext_key(chain_code: ";
+    result << data_to_hex(ByteVector(&k.chain_code[0], &k.chain_code[0] + 32));
+    result << ", parent160: ";
+    result << data_to_hex(ByteVector(&k.parent160[0], &k.parent160[0] + 20));
+    result << ", depth: ";
+    result << uint32_t(k.depth);
+    result << ", priv_key: ";
+    result << data_to_hex(ByteVector(&k.priv_key[0], &k.priv_key[0] + 33));
+    result << ", child_num: ";
+    result << k.child_num;
+    result << ", hash160: ";
+    result << data_to_hex(ByteVector(&k.hash160[0], &k.hash160[0] + 20));
+    result << ", version: ";
+    result << k.version;
+    result << ", pub_key: ";
+    result << data_to_hex(ByteVector(&k.pub_key[0], &k.pub_key[0] + 33));
+    result << ")";
+    cout << result.str() << endl;
+}
+
 HDKey Wally::bip32_key_from_parent(const HDKey& parent, uint32_t index, bool is_hardened, bool is_private) const {
     if(!parent.is_private()) {
         if(is_private) {
@@ -112,7 +137,9 @@ HDKey Wally::bip32_key_from_parent(const HDKey& parent, uint32_t index, bool is_
     if(is_hardened) {
         index += BIP32_INITIAL_HARDENED_CHILD;
     }
+    print_key(*parent._key.get());
     assert(bip32_key_from_parent_alloc(parent._key.get(), index, flags_for_private(is_private), &out_key) == WALLY_OK);
+    print_key(*out_key);
     return HDKey(out_key);
 }
 

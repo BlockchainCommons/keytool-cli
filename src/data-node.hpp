@@ -11,6 +11,8 @@ class DataNodeProtocol {
 public:
     virtual const std::string& name() const = 0;
     virtual int tag() const = 0;
+    virtual void set_name(const std::string& name) = 0;
+    virtual void set_tag(int tag) = 0;
     virtual std::optional<std::string> to_string() = 0;
     virtual void from_string(const std::string& s) = 0;
     virtual bool has_value() = 0;
@@ -19,11 +21,13 @@ public:
 template <typename T>
 class DataNode final: public DataNodeProtocol {
 public:
-    DataNode(const std::string& name, int tag) : _name(name), _tag(tag), _tried(false) { }
+    DataNode() : _tried(false) { }
 
     virtual const std::string& name() const override { return _name; }
     virtual int tag() const override { return _tag; }
 
+    virtual void set_name(const std::string& name) override { _name = name; }
+    virtual void set_tag(int tag) override { _tag = tag; }
     void set_f(std::function<std::optional<T>(void)> f) { _f = f; }
     void set_to_string(std::function<std::string(const T&)> t) { _to_string = t; }
     void set_from_string(std::function<T(const std::string& s)> t) { _from_string = t; }

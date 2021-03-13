@@ -17,52 +17,15 @@ static uint32_t parse_uint32(const string& s) {
     return n;
 }
 
-Model::Model()
-    : seed("seed",                                                          -1)
-    , seed_ur("seed-ur",                                                    -2)
-    , asset("asset",                                                        -3)
-    , network("network",                                                    -4)
-    , master_key("master-key",                                              -5)
-    , master_key_fingerprint("master-key-fingerprint",                      -6)
-    , output_type("output-type",                                            -7)
-    , purpose("purpose",                                                    -8)
-    , coin_type("coin-type",                                                -9)
-    , account_index("account-index",                                        -10)
-    , account_derivation_path("account-derivation-path",                    -11)
-    , account_key("account-key",                                            -12)
-    , account_pub_key("account-pub-key",                                    -13)
-    , chain_type("chain-type",                                              -14)
-    , chain_type_int("chain-type-int",                                      -15)
-    , address_index("address-index",                                        -16)
-    , address_derivation_path("address-derivation-path",                    -17)
-    , full_address_derivation_path("full-address-derivation-path",          -18)
-    , address_key("address-key",                                            -19)
-    , address_pub_key("address-pub-key",                                    -20)
-    , address_ec_key("address-ec-key",                                      -21)
-    , address_ec_key_wif("address-ec-key-wif",                              -22)
-    , address_pub_ec_key("address-pub-ec-key",                              -23)
-    , address_pkh("address-pkh",                                            -24)
-    , address_sh("address-sh",                                              -25)
-    , address_segwit("address-segwit",                                      -26)
-    , output_descriptor("output-descriptor",                                -27)
-    , psbt("psbt",                                                          -28)
-    , psbt_hex("psbt-hex",                                                  -29)
-    , psbt_ur("psbt-ur",                                                    -30)
-    , psbt_finalized("psbt-finalized",                                      -31)
-    , psbt_finalized_hex("psbt-finalized-hex",                              -32)
-    , psbt_finalized_ur("psbt-finalized-ur",                                -33)
-    , psbt_signed("psbt-signed",                                            -34)
-    , psbt_signed_hex("psbt-signed-hex",                                    -35)
-    , psbt_signed_ur("psbt-signed-ur",                                      -36)
-    , transaction("transaction",                                            -37)
-    , transaction_ur("transaction-ur",                                      -38)
-{
+Model::Model() {
     // seed
+    seed.set_name("seed");
     seed.set_to_string([](const Seed& seed) { return seed.hex(); });
     seed.set_from_string([](const string& s) -> Seed { return Seed(s); });
     all_nodes.push_back(&seed);
 
     // seed-ur <- [seed]
+    seed_ur.set_name("seed-ur");
     seed_ur.set_f([&]() -> optional<string> {
         if(seed.has_value()) {
             return seed().ur();
@@ -74,18 +37,21 @@ Model::Model()
     all_nodes.push_back(&seed_ur);
 
     // asset
+    asset.set_name("asset");
     asset = Asset::btc();
     asset.set_to_string([](const Asset& asset) { return asset.symbol(); });
     asset.set_from_string([](const string& symbol) -> Asset { return Asset::find(symbol); });
     all_nodes.push_back(&asset);
 
     // network <- asset
+    network.set_name("network");
     network.set_f([&]() { return asset().network(); });
     network.set_to_string([](const Network& network) { return network.name(); });
     network.set_from_string([](const string& name) -> Network { return Network::find(name); });
     all_nodes.push_back(&network);
 
     // master-key <- [network, seed]
+    master_key.set_name("master-key");
     master_key.set_f([&]() -> optional<HDKey> {
         if(seed.has_value() && network.has_value()) {
             return HDKey(seed(), network());
@@ -98,6 +64,7 @@ Model::Model()
     all_nodes.push_back(&master_key);
 
     // master-key-fingerprint <- [master-key]
+    master_key_fingerprint.set_name("master-key-fingerprint");
     master_key_fingerprint.set_f([&]() -> optional<ByteVector> {
         if(master_key.has_value()) {
             return master_key().fingerprint();
@@ -110,12 +77,14 @@ Model::Model()
     all_nodes.push_back(&master_key_fingerprint);
 
     // output-type (default: pkh)
+    output_type.set_name("output-type");
     output_type = OutputDescriptorType::wpkh();
     output_type.set_to_string([](const OutputDescriptorType& d) { return d.name(); });
     output_type.set_from_string([](const string& name) -> OutputDescriptorType { return OutputDescriptorType::find(name); });
     all_nodes.push_back(&output_type);
 
     // purpose <- [output-type]
+    purpose.set_name("purpose");
     purpose.set_f([&]() {
         return output_type().purpose();
     });
@@ -124,6 +93,7 @@ Model::Model()
     all_nodes.push_back(&purpose);
 
     // coin-type <- asset
+    coin_type.set_name("coin-type");
     coin_type.set_f([&]() {
         return asset().coin_type();
     });
@@ -132,12 +102,14 @@ Model::Model()
     all_nodes.push_back(&coin_type);
 
     // account-index
+    account_index.set_name("account-index");
     account_index = 0;
     account_index.set_to_string([](uint32_t n) { return to_string(n); });
     account_index.set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
     all_nodes.push_back(&account_index);
 
     // account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
+    account_derivation_path.set_name("account-derivation-path");
     account_derivation_path.set_f([&]() {
         DerivationPathElement m = master_key_fingerprint.has_value() ? DerivationPathElement(master_key_fingerprint()) : DerivationPathElement();
         return DerivationPath {
@@ -152,6 +124,7 @@ Model::Model()
     all_nodes.push_back(&account_derivation_path);
 
     // account-key <- [master-key, account-derivation-path]
+    account_key.set_name("account-key");
     account_key.set_f([&]() -> optional<HDKey> {
         if(master_key.has_value()) {
             return master_key().derive(account_derivation_path(), true);
@@ -164,6 +137,7 @@ Model::Model()
     all_nodes.push_back(&account_key);
 
     // account-pub-key <- [account-key]
+    account_pub_key.set_name("account-pub-key");
     account_pub_key.set_f([&]() -> optional<HDKey> {
         if(account_key.has_value()) {
             return account_key().to_public();
@@ -176,12 +150,14 @@ Model::Model()
     all_nodes.push_back(&account_pub_key);
 
     // chain-type
+    chain_type.set_name("chain-type");
     chain_type = ChainType::external();
     chain_type.set_to_string([](const ChainType& t) { return t.to_string(); });
     chain_type.set_from_string([](const string& t) -> ChainType { return ChainType::find(t); });
     all_nodes.push_back(&chain_type);
 
     // chain-type-int <- [chain-type];
+    chain_type_int.set_name("chain-type-int");
     chain_type_int.set_f([&]() {
         return chain_type().index();
     });
@@ -190,12 +166,14 @@ Model::Model()
     all_nodes.push_back(&chain_type_int);
 
     // address-index
+    address_index.set_name("address-index");
     address_index = 0;
     address_index.set_to_string([](IndexBound n) { return n.to_string(); });
     address_index.set_from_string([](const string& s) -> IndexBound { return parse_index_range(s); });
     all_nodes.push_back(&address_index);
 
     // address-derivation-path <- [chain-type-int, address-index]
+    address_derivation_path.set_name("address-derivation-path");
     address_derivation_path.set_f([&]() {
         return DerivationPath {
             DerivationPathElement(chain_type_int(), false),
@@ -207,6 +185,7 @@ Model::Model()
     all_nodes.push_back(&address_derivation_path);
 
     // full-address-derivation-path <- [account-derivation-path, address-derivation-path]
+    full_address_derivation_path.set_name("full-address-derivation-path");
     full_address_derivation_path.set_f([&]() {
         auto path = account_derivation_path();
         auto address_path = address_derivation_path();
@@ -219,6 +198,7 @@ Model::Model()
 
     // address-key <- [master-key, full-address-derivation-path]
     // address-key <- [account-key, address-derivation-path]
+    address_key.set_name("address-key");
     address_key.set_f([&]() -> optional<HDKey> {
         if(master_key.has_value() && full_address_derivation_path.has_value()) {
             return master_key().derive(full_address_derivation_path(), true);
@@ -234,6 +214,7 @@ Model::Model()
 
     // address-pub-key <- [address-key]
     // address-pub-key <- [account-pub-key, address-derivation-path]
+    address_pub_key.set_name("address-pub-key");
     address_pub_key.set_f([&]() -> optional<HDKey> {
         if(address_key.has_value()) {
             return address_key().to_public();
@@ -249,6 +230,7 @@ Model::Model()
 
     // address-ec-key <- [address-key]
     // address-ec-key <- [address-ec-key-wif, network]
+    address_ec_key.set_name("address-ec-key");
     address_ec_key.set_f([&]() -> optional<ECPrivateKey> {
         if(address_key.has_value()) {
             return Wally::instance.bip32_key_to_ec_private(address_key());
@@ -263,6 +245,7 @@ Model::Model()
     all_nodes.push_back(&address_ec_key);
 
     // address-ec-key-wif <- [address-ec-key, network]
+    address_ec_key_wif.set_name("address-ec-key-wif");
     address_ec_key_wif.set_f([&]() -> optional<string> {
         if(address_ec_key.has_value()) {
             return Wally::instance.ec_key_to_wif(address_ec_key(), network());
@@ -276,6 +259,7 @@ Model::Model()
 
     // address-pub-ec-key <- [address-ec-key]
     // address-pub-ec-key <- [address-pub-key]
+    address_pub_ec_key.set_name("address-pub-ec-key");
     address_pub_ec_key.set_f([&]() -> optional<ECCompressedPublicKey> {
         if(address_pub_key.has_value()) {
             return Wally::instance.bip32_key_to_ec_public(address_pub_key());
@@ -290,6 +274,7 @@ Model::Model()
     all_nodes.push_back(&address_pub_ec_key);
 
     // address-pkh <- [address-pub-ec-key, asset]
+    address_pkh.set_name("address-pkh");
     address_pkh.set_f([&]() -> optional<string> {
         if(address_pub_ec_key.has_value()) {
             return Wally::instance.to_address(address_pub_ec_key(), asset(), false);
@@ -302,6 +287,7 @@ Model::Model()
     all_nodes.push_back(&address_pkh);
 
     // address-sh <- [address-pub-ec-key, asset]
+    address_sh.set_name("address-sh");
     address_sh.set_f([&]() -> optional<string> {
         if(address_pub_ec_key.has_value()) {
             return Wally::instance.to_address(address_pub_ec_key(), asset(), true);
@@ -314,6 +300,7 @@ Model::Model()
     all_nodes.push_back(&address_sh);
 
     // address-segwit <- [address-pub-key, network]
+    address_segwit.set_name("address-segwit");
     address_segwit.set_f([&]() -> optional<string> {
         if(address_pub_key.has_value()) {
             return Wally::instance.to_segwit_address(address_pub_key(), network());
@@ -325,7 +312,8 @@ Model::Model()
     address_segwit.set_from_string([](const string& a) -> string { return a; });
     all_nodes.push_back(&address_segwit);
 
-    // output_descriptor <- [output_type, account_derivation_path, address_derivation_path, account_pub_key]
+    // output-descriptor <- [output_type, account_derivation_path, address_derivation_path, account_pub_key]
+    output_descriptor.set_name("output-descriptor");
     output_descriptor.set_f([&]() -> optional<OutputDescriptor> {
         if(output_type.has_value() && account_derivation_path.has_value(), address_derivation_path.has_value() && account_pub_key.has_value()) {
             return OutputDescriptor(output_type(), account_derivation_path(), address_derivation_path(), account_pub_key());
@@ -337,11 +325,13 @@ Model::Model()
     all_nodes.push_back(&output_descriptor);
 
     // psbt
+    psbt.set_name("psbt");
     psbt.set_to_string([](const PSBT& p) { return p.base64(); });
     psbt.set_from_string([](const string& s) -> PSBT { return PSBT(s); });
     all_nodes.push_back(&psbt);
 
     // psbt-hex <- [psbt]
+    psbt_hex.set_name("psbt-hex");
     psbt_hex.set_f([&]() -> optional<string> {
         if(psbt.has_value()) {
             return psbt().hex();
@@ -353,6 +343,7 @@ Model::Model()
     all_nodes.push_back(&psbt_hex);
 
     // psbt-ur <- [psbt]
+    psbt_ur.set_name("psbt-ur");
     psbt_ur.set_f([&]() -> optional<string> {
         if(psbt.has_value()) {
             return psbt().ur();
@@ -364,6 +355,7 @@ Model::Model()
     all_nodes.push_back(&psbt_ur);
 
     // psbt-finalized <- [psbt]
+    psbt_finalized.set_name("psbt-finalized");
     psbt_finalized.set_f([&]() -> optional<PSBT> {
         if(psbt.has_value()) {
             return psbt().finalized();
@@ -382,6 +374,7 @@ Model::Model()
     all_nodes.push_back(&psbt_finalized);
 
     // psbt-finalized-hex <- [psbt-finalized]
+    psbt_finalized_hex.set_name("psbt-finalized-hex");
     psbt_finalized_hex.set_f([&]() -> optional<string> {
         if(psbt_finalized.has_value()) {
             return psbt_finalized().hex();
@@ -393,6 +386,7 @@ Model::Model()
     all_nodes.push_back(&psbt_finalized_hex);
 
     // psbt-finalized-ur <- [psbt-finalized]
+    psbt_finalized_ur.set_name("psbt-finalized-ur");
     psbt_finalized_ur.set_f([&]() -> optional<string> {
         if(psbt_finalized.has_value()) {
             return psbt_finalized().ur();
@@ -404,6 +398,7 @@ Model::Model()
     all_nodes.push_back(&psbt_finalized_ur);
 
     // psbt-signed <- [psbt, address-ec-key]
+    psbt_signed.set_name("psbt-signed");
     psbt_signed.set_f([&]() -> optional<PSBT> {
         if(psbt.has_value() && address_ec_key.has_value()) {
             return psbt().sign(address_ec_key());
@@ -415,6 +410,7 @@ Model::Model()
     all_nodes.push_back(&psbt_signed);
 
     // psbt-signed-hex <- [psbt-signed]
+    psbt_signed_hex.set_name("psbt-signed-hex");
     psbt_signed_hex.set_f([&]() -> optional<string> {
         if(psbt_signed.has_value()) {
             return psbt_signed().hex();
@@ -426,6 +422,7 @@ Model::Model()
     all_nodes.push_back(&psbt_signed_hex);
 
     // psbt-signed-ur <- [psbt-signed]
+    psbt_signed_ur.set_name("psbt-signed-ur");
     psbt_signed_ur.set_f([&]() -> optional<string> {
         if(psbt_signed.has_value()) {
             return psbt_signed().ur();
@@ -437,6 +434,7 @@ Model::Model()
     all_nodes.push_back(&psbt_signed_ur);
 
     // transaction <- [psbt-finalized]
+    transaction.set_name("transaction");
     transaction.set_f([&]() -> optional<Transaction> {
         if(psbt_finalized.has_value()) {
             return Transaction(psbt_finalized());
@@ -449,6 +447,7 @@ Model::Model()
     all_nodes.push_back(&transaction);
 
     // transaction-ur <- [transaction]
+    transaction_ur.set_name("transaction-ur");
     transaction_ur.set_f([&]() -> optional<string> {
         if(transaction.has_value()) {
             return transaction().ur();
@@ -458,6 +457,12 @@ Model::Model()
     });
     transaction_ur.set_to_string([](const string& s) { return s; });
     all_nodes.push_back(&transaction_ur);
+
+    int next_tag = -1;
+    for(auto node: all_nodes) {
+        node->set_tag(next_tag);
+        next_tag -= 1;
+    }
 }
 
 DataNodeProtocol* Model::find_by_name(const string& node_name) const {

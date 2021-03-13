@@ -22,6 +22,9 @@ public:
     // seed
     DataNode<ByteVector> seed;
 
+    // seed-ur <- [seed]
+    DataNode<std::string> seed_ur;
+
     // asset (default: btc)
     DataNode<Asset> asset;
 

@@ -1,6 +1,7 @@
 [submodule "deps/argp-standalone"]
 	path = deps/argp-standalone
 	url = https://github.com/BlockchainCommons/argp-standalone.git
+    ignore = dirty
 [submodule "deps/libwally-core"]
 	path = deps/libwally-core
 	url = https://github.com/BlockchainCommons/bc-libwally-core.git

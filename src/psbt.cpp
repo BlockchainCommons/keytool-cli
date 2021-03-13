@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace ur;
+using namespace ur::CborLite;
 
 static wally_psbt* parse_psbt(const string& s) {
     try {
@@ -23,7 +24,7 @@ static wally_psbt* parse_psbt(const string& s) {
         auto cbor = ur.cbor();
         auto i = cbor.begin();
         ByteVector data;
-        CborLite::decodeBytes(i, cbor.end(), data);
+        decodeBytes(i, cbor.end(), data);
         return Wally::instance.psbt_from_data(data);
     } catch(...) { }
 
@@ -55,7 +56,7 @@ string PSBT::base64() const {
 
 string PSBT::ur() const {
     ByteVector cbor;
-    CborLite::encodeBytes(cbor, data());
+    encodeBytes(cbor, data());
     return UREncoder::encode(UR("crypto-psbt", cbor));
 }
 

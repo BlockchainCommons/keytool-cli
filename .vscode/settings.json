@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "Makefile.in": "makefile",
-        "stdexcept": "cpp"
+        "stdexcept": "cpp",
+        "iosfwd": "cpp",
+        "type_traits": "cpp"
     }
 }

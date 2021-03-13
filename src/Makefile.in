@@ -52,7 +52,8 @@ OBJS = \
 	output-descriptor.o \
 	index-bound.o \
 	psbt.o \
-	transaction.o
+	transaction.o \
+	seed.o
 
 LDLIBS += -lwallycore -lsecp256k1 -largp -lbc-ur
 
@@ -85,6 +86,7 @@ output-descriptor.o: output-descriptor.hpp output-type.hpp derivation-path.hpp h
 index-bound.o: index-bound.hpp
 psbt.o: psbt.hpp utils.hpp wally-utils.hpp ec-key.hpp
 transaction.o: transaction.hpp utils.hpp wally-utils.hpp psbt.hpp
+seed.o: seed.hpp
 
 bindir = $(DESTDIR)$(prefix)/bin
 

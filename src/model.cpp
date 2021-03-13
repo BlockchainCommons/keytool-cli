@@ -19,47 +19,60 @@ static uint32_t parse_uint32(const string& s) {
 
 Model::Model()
     : seed("seed",                                                          -1)
-    , asset("asset",                                                        -2)
-    , network("network",                                                    -3)
-    , master_key("master-key",                                              -4)
-    , master_key_fingerprint("master-key-fingerprint",                      -5)
-    , output_type("output-type",                                            -6)
-    , purpose("purpose",                                                    -7)
-    , coin_type("coin-type",                                                -8)
-    , account_index("account-index",                                        -9)
-    , account_derivation_path("account-derivation-path",                    -10)
-    , account_key("account-key",                                            -11)
-    , account_pub_key("account-pub-key",                                    -12)
-    , chain_type("chain-type",                                              -13)
-    , chain_type_int("chain-type-int",                                      -14)
-    , address_index("address-index",                                        -15)
-    , address_derivation_path("address-derivation-path",                    -16)
-    , full_address_derivation_path("full-address-derivation-path",          -17)
-    , address_key("address-key",                                            -18)
-    , address_pub_key("address-pub-key",                                    -19)
-    , address_ec_key("address-ec-key",                                      -20)
-    , address_ec_key_wif("address-ec-key-wif",                              -21)
-    , address_pub_ec_key("address-pub-ec-key",                              -22)
-    , address_pkh("address-pkh",                                            -23)
-    , address_sh("address-sh",                                              -24)
-    , address_segwit("address-segwit",                                      -25)
-    , output_descriptor("output-descriptor",                                -26)
-    , psbt("psbt",                                                          -27)
-    , psbt_hex("psbt-hex",                                                  -28)
-    , psbt_ur("psbt-ur",                                                    -29)
-    , psbt_finalized("psbt-finalized",                                      -30)
-    , psbt_finalized_hex("psbt-finalized-hex",                              -31)
-    , psbt_finalized_ur("psbt-finalized-ur",                                -32)
-    , psbt_signed("psbt-signed",                                            -33)
-    , psbt_signed_hex("psbt-signed-hex",                                    -34)
-    , psbt_signed_ur("psbt-signed-ur",                                      -35)
-    , transaction("transaction",                                            -36)
-    , transaction_ur("transaction-ur",                                      -37)
+    , seed_ur("seed-ur",                                                    -2)
+    , asset("asset",                                                        -3)
+    , network("network",                                                    -4)
+    , master_key("master-key",                                              -5)
+    , master_key_fingerprint("master-key-fingerprint",                      -6)
+    , output_type("output-type",                                            -7)
+    , purpose("purpose",                                                    -8)
+    , coin_type("coin-type",                                                -9)
+    , account_index("account-index",                                        -10)
+    , account_derivation_path("account-derivation-path",                    -11)
+    , account_key("account-key",                                            -12)
+    , account_pub_key("account-pub-key",                                    -13)
+    , chain_type("chain-type",                                              -14)
+    , chain_type_int("chain-type-int",                                      -15)
+    , address_index("address-index",                                        -16)
+    , address_derivation_path("address-derivation-path",                    -17)
+    , full_address_derivation_path("full-address-derivation-path",          -18)
+    , address_key("address-key",                                            -19)
+    , address_pub_key("address-pub-key",                                    -20)
+    , address_ec_key("address-ec-key",                                      -21)
+    , address_ec_key_wif("address-ec-key-wif",                              -22)
+    , address_pub_ec_key("address-pub-ec-key",                              -23)
+    , address_pkh("address-pkh",                                            -24)
+    , address_sh("address-sh",                                              -25)
+    , address_segwit("address-segwit",                                      -26)
+    , output_descriptor("output-descriptor",                                -27)
+    , psbt("psbt",                                                          -28)
+    , psbt_hex("psbt-hex",                                                  -29)
+    , psbt_ur("psbt-ur",                                                    -30)
+    , psbt_finalized("psbt-finalized",                                      -31)
+    , psbt_finalized_hex("psbt-finalized-hex",                              -32)
+    , psbt_finalized_ur("psbt-finalized-ur",                                -33)
+    , psbt_signed("psbt-signed",                                            -34)
+    , psbt_signed_hex("psbt-signed-hex",                                    -35)
+    , psbt_signed_ur("psbt-signed-ur",                                      -36)
+    , transaction("transaction",                                            -37)
+    , transaction_ur("transaction-ur",                                      -38)
 {
     // seed
     seed.set_to_string([](const ByteVector& bytes) { return data_to_hex(bytes); });
     seed.set_from_string([](const string& hex) -> ByteVector { return hex_to_data(hex); });
     all_nodes.push_back(&seed);
+
+    // seed-ur <- [seed]
+    psbt_ur.set_f([&]() -> optional<string> {
+        if(seed.has_value()) {
+            // return seed().ur();
+            return "";
+        } else {
+            return nullopt;
+        }
+    });
+    psbt_ur.set_to_string([](const string& s) { return s; });
+    all_nodes.push_back(&seed_ur);
 
     // asset
     asset = Asset::btc();

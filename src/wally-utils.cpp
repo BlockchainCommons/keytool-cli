@@ -103,7 +103,7 @@ uint32_t Wally::flags_for_private(bool is_private) {
 
 static void print_key(const ext_key& k) {
     ostringstream result;
-    // "ext_key(chain_code: \(chain_code), parent160: \(parent160), priv_key: \(priv_key), 
+    // "ext_key(chain_code: \(chain_code), parent160: \(parent160), priv_key: \(priv_key),
     // child_num: \(child_num), hash160: \(hash160), version: \(version), pub_key: \(pub_key)"
     result << "ext_key(chain_code: ";
     result << data_to_hex(ByteVector(&k.chain_code[0], &k.chain_code[0] + 32));
@@ -137,9 +137,9 @@ HDKey Wally::bip32_key_from_parent(const HDKey& parent, uint32_t index, bool is_
     if(is_hardened) {
         index += BIP32_INITIAL_HARDENED_CHILD;
     }
-    print_key(*parent._key.get());
+    // print_key(*parent._key.get());
     assert(bip32_key_from_parent_alloc(parent._key.get(), index, flags_for_private(is_private), &out_key) == WALLY_OK);
-    print_key(*out_key);
+    // print_key(*out_key);
     return HDKey(out_key);
 }
 

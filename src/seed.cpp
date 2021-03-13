@@ -8,7 +8,7 @@ using namespace ur::CborLite;
 
 const auto cborDecodingFlags = ur::CborLite::Flag::requireMinimalEncoding;
 
-Seed::Seed(const ByteVector& data, const std::string& name, const std::string& note)
+Seed::Seed(const ByteVector& data, const string& name, const string& note)
     : _data(data)
     , _name(name)
     , _note(note)
@@ -37,7 +37,7 @@ static Seed parse_seed(const string& s) {
             int label;
             decodeInteger(pos, end, label, cborDecodingFlags);
             if(labels.find(label) != labels.end()) {
-                throw std::runtime_error("Duplicate label.");
+                throw domain_error("Duplicate label.");
             }
             labels.insert(label);
             switch (label) {
@@ -49,11 +49,11 @@ static Seed parse_seed(const string& s) {
                     size_t value;
                     ur::CborLite::decodeTagAndValue(pos, end, tag, value, cborDecodingFlags);
                     if(tag != ur::CborLite::Major::semantic) {
-                        throw std::runtime_error("Invalid date.");
+                        throw domain_error("Invalid date.");
                     }
                     switch(value) {
                         case 0: {
-                            std::string date;
+                            string date;
                             ur::CborLite::decodeText(pos, end, date, cborDecodingFlags);
                         }
                             break;
@@ -68,24 +68,75 @@ static Seed parse_seed(const string& s) {
                         }
                             break;
                         default:
-                            throw std::runtime_error("Invalid date.");
+                            throw domain_error("Invalid date.");
                     }
                 }
                     break;
-                case 3:
+                case 3: // name
+                    ur::CborLite::decodeText(pos, end, name, cborDecodingFlags);
                     break;
-                case 4:
+                case 4: // note
+                    ur::CborLite::decodeText(pos, end, note, cborDecodingFlags);
                     break;
                 default:
-                    throw std::runtime_error("Unknown label.");
+                    throw domain_error("Unknown label.");
                     break;
             }
         }
+        if(data.empty()) {
+            throw domain_error("Seed data may not be empty.");
+        }
+        return Seed(data, name, note);
     } catch(...) { }
 
     throw domain_error("Invalid ur:crypto-seed");
 }
 
-Seed::Seed(const std::string& s) {
+Seed::Seed(const Seed& seed)
+    : _data(seed.data())
+    , _name(seed.name())
+    , _note(seed.note())
+    { }
 
+Seed::Seed(const string& s)
+    : Seed(parse_seed(s))
+    { }
+
+string Seed::hex() const {
+    return ::data_to_hex(data());
+}
+
+string Seed::ur() const {
+    ByteVector cbor;
+    size_t map_size = 1;
+
+    // payload
+    ByteVector data_map_entry;
+    ur::CborLite::encodeInteger(data_map_entry, 1);
+    ur::CborLite::encodeBytes(data_map_entry, data());
+
+    // creation-date
+
+    // name
+    ByteVector name_map_entry;
+    if (!name().empty()) {
+        map_size += 1;
+        ur::CborLite::encodeInteger(name_map_entry, 3);
+        ur::CborLite::encodeText(name_map_entry, name());
+    }
+
+    // note
+    ByteVector note_map_entry;
+    if (!note().empty()) {
+        map_size += 1;
+        ur::CborLite::encodeInteger(name_map_entry, 4);
+        ur::CborLite::encodeText(name_map_entry, note());
+    }
+
+    ur::CborLite::encodeMapSize(cbor, map_size);
+    ::append(cbor, data_map_entry);
+    ::append(cbor, name_map_entry);
+    ::append(cbor, note_map_entry);
+
+    return UREncoder::encode(UR("crypto-seed", cbor));
 }

@@ -7,6 +7,7 @@
 class Seed final {
 public:
     Seed(const ByteVector& data, const std::string& name = "", const std::string& note = "");
+    Seed(const Seed& seed);
     Seed(const std::string& s); // hex or ur:crypto-seed
 
     std::string hex() const;

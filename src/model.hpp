@@ -14,13 +14,14 @@
 #include "output-descriptor.hpp"
 #include "psbt.hpp"
 #include "transaction.hpp"
+#include "seed.hpp"
 
 class Model final {
 public:
     Model();
 
     // seed
-    DataNode<ByteVector> seed;
+    DataNode<Seed> seed;
 
     // seed-ur <- [seed]
     DataNode<std::string> seed_ur;

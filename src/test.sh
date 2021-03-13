@@ -53,6 +53,27 @@ testChainTypeInt()
   assertEquals $'1' "$(${KEYTOOL} --chain-type change chain-type-int)"
 }
 
+testSeed()
+{
+  # seed <- hex
+  assertEquals $'1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550' \
+    "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 seed)"
+}
+
+testSeedUROutput()
+{
+  # seed <- hex
+  assertEquals $'ur:crypto-seed/oyadhdcxcwbbghzsqzdswzjpntuowpcwdrjlreespkdlwtotjnatldaonlgldluehfcaihgdrddevese' \
+    "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 seed-ur)"
+}
+
+testSeedURInput()
+{
+  # seed <- hex
+  assertEquals $'1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550' \
+    "$(${KEYTOOL} --seed ur:crypto-seed/oyadhdcxcwbbghzsqzdswzjpntuowpcwdrjlreespkdlwtotjnatldaonlgldluehfcaihgdrddevese seed)"
+}
+
 testMasterKey()
 {
   # master-key <- [network, seed]

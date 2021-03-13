@@ -9,8 +9,8 @@ HDKey::HDKey(ext_key* key)
     : _key(key, [](ext_key* key) { bip32_key_free(key); })
     { }
 
-HDKey::HDKey(const ByteVector& entropy, const Network& network)
-    : HDKey(Wally::instance.bip32_key_from_entropy(entropy, network))
+HDKey::HDKey(const Seed& seed, const Network& network)
+    : HDKey(Wally::instance.bip32_key_from_entropy(seed.data(), network))
     { }
 
 HDKey::HDKey(const std::string &base58)

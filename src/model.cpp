@@ -58,20 +58,19 @@ Model::Model()
     , transaction_ur("transaction-ur",                                      -38)
 {
     // seed
-    seed.set_to_string([](const ByteVector& bytes) { return data_to_hex(bytes); });
-    seed.set_from_string([](const string& hex) -> ByteVector { return hex_to_data(hex); });
+    seed.set_to_string([](const Seed& seed) { return seed.hex(); });
+    seed.set_from_string([](const string& s) -> Seed { return Seed(s); });
     all_nodes.push_back(&seed);
 
     // seed-ur <- [seed]
-    psbt_ur.set_f([&]() -> optional<string> {
+    seed_ur.set_f([&]() -> optional<string> {
         if(seed.has_value()) {
-            // return seed().ur();
-            return "";
+            return seed().ur();
         } else {
             return nullopt;
         }
     });
-    psbt_ur.set_to_string([](const string& s) { return s; });
+    seed_ur.set_to_string([](const string& s) { return s; });
     all_nodes.push_back(&seed_ur);
 
     // asset

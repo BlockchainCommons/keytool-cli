@@ -9,12 +9,13 @@
 #include "utils.hpp"
 #include "network.hpp"
 #include "derivation-path.hpp"
+#include "seed.hpp"
 
 struct ext_key;
 
 class HDKey final {
 public:
-    HDKey(const ByteVector& entropy, const Network& network);
+    HDKey(const Seed& seed, const Network& network);
     explicit HDKey(ext_key* key);
     explicit HDKey(const std::string &base58);
     HDKey(const std::string &base58, bool require_private);

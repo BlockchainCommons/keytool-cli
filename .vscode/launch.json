@@ -7,7 +7,9 @@
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/src/keytool",
-            "args": [ ],
+            "args": [
+                "--seed","1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550","seed-ur"
+            ],
             "cwd": "${workspaceFolder}/src",
             "preLaunchTask": "Build"
         }

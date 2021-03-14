@@ -42,7 +42,7 @@ public:
         return _value;
     }
 
-    T derive() {
+    T value() {
         auto t = optional_value();
         if(t.has_value()) {
             return *t;

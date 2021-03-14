@@ -96,8 +96,9 @@ Params* Params::parse( int argc, char *argv[] ) {
 
     auto node_count = p->model.all_nodes().size();
     argp_option options[node_count + 1];
+    auto nodes = p->model.all_nodes();
     for(auto i = 0; i < node_count; i++) {
-        auto node = p->model.all_nodes()[i];
+        auto node = nodes[i];
         options[i] = { node->name().c_str(), node->tag(), node->help_type().c_str(), 0, node->help_desc().c_str() };
     }
     options[node_count] = { 0 };

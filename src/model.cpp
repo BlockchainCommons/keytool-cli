@@ -17,17 +17,25 @@ static uint32_t parse_uint32(const string& s) {
     return n;
 }
 
+void Model::add_node(DataNodeProtocol* n) {
+    _all_nodes.push_back(n);
+}
+
+void Model::add_derivation(const std::string& d) {
+    _derivations.push_back(d);
+}
+
 Model::Model() {
-    // seed
+    add_derivation("seed");
     seed = new DataNode<Seed>();
-    _all_nodes.push_back(seed);
+    add_node(seed);
     seed->set_info("seed", "HEX", "Random data from which to generate a master key.");
     seed->set_to_string([](const Seed& seed) { return seed.hex(); });
     seed->set_from_string([](const string& s) -> Seed { return Seed(s); });
 
-    // seed-ur <- [seed]
+    add_derivation("seed-ur <- [seed]");
     seed_ur = new DataNode<string>();
-    _all_nodes.push_back(seed_ur);
+    add_node(seed_ur);
     seed_ur->set_info("seed-ur", "UR:CRYPTO-SEED", "A seed in UR format.");
     seed_ur->set_to_string([](const string& s) { return s; });
     seed_ur->set_derivation([&]() -> optional<string> {
@@ -38,17 +46,17 @@ Model::Model() {
         }
     });
 
-    // asset
+    add_derivation("asset");
     asset = new DataNode<Asset>();
-    _all_nodes.push_back(asset);
+    add_node(asset);
     asset->set_info("asset", "ENUM btc|btct", "A cryptocurrency asset.");
     asset->set_to_string([](const Asset& asset) { return asset.symbol(); });
     asset->set_from_string([](const string& symbol) -> Asset { return Asset::find(symbol); });
     asset->set_value(Asset::btc());
 
-    // network <- asset
+    add_derivation("network <- asset");
     network = new DataNode<Network>();
-    _all_nodes.push_back(network);
+    add_node(network);
     network->set_info("network", "ENUM mainnet|testnet", "The network.");
     network->set_to_string([](const Network& network) { return network.name(); });
     network->set_from_string([](const string& name) -> Network { return Network::find(name); });
@@ -56,9 +64,9 @@ Model::Model() {
         return asset->value().network(); 
     });
 
-    // master-key <- [network, seed]
+    add_derivation("master-key <- [network, seed]");
     master_key = new DataNode<HDKey>();
-    _all_nodes.push_back(master_key);
+    add_node(master_key);
     master_key->set_info("master-key", "XPRV", "The BIP-32 master HD key.");
     master_key->set_to_string([](const HDKey& key) { return key.to_base58(true); });
     master_key->set_from_string([](const string& prv) -> HDKey { return HDKey(prv, true); });
@@ -70,9 +78,9 @@ Model::Model() {
         }
     });
 
-    // master-key-fingerprint <- [master-key]
+    add_derivation("master-key-fingerprint <- [master-key]");
     master_key_fingerprint = new DataNode<ByteVector>();
-    _all_nodes.push_back(master_key_fingerprint);
+    add_node(master_key_fingerprint);
     master_key_fingerprint->set_info("master-key-fingerprint", "HEX", "Fingerprint of the master HD key.");
     master_key_fingerprint->set_to_string([](const ByteVector& bytes) { return data_to_hex(bytes); });
     master_key_fingerprint->set_from_string([](const string& hex) -> ByteVector { return hex_to_data(hex); });
@@ -84,17 +92,17 @@ Model::Model() {
         }
     });
 
-    // output-type (default: pkh)
+    add_derivation("output-type (default: pkh)");
     output_type = new DataNode<OutputDescriptorType>();
-    _all_nodes.push_back(output_type);
+    add_node(output_type);
     output_type->set_info("output-type", "ENUM pkh|wpkh|sh-wpkh", "The output descriptor type.");
     output_type->set_to_string([](const OutputDescriptorType& d) { return d.name(); });
     output_type->set_from_string([](const string& name) -> OutputDescriptorType { return OutputDescriptorType::find(name); });
     output_type->set_value(OutputDescriptorType::wpkh());
 
-    // purpose <- [output-type]
+    add_derivation("purpose <- [output-type]");
     purpose = new DataNode<uint32_t>();
-    _all_nodes.push_back(purpose);
+    add_node(purpose);
     purpose->set_info("purpose", "INDEX", "The purpose field of the BIP-44 derivation path.");
     purpose->set_to_string([](uint32_t n) { return to_string(n); });
     purpose->set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
@@ -102,9 +110,9 @@ Model::Model() {
         return output_type->value().purpose();
     });
 
-    // coin-type <- asset
+    add_derivation("coin-type <- asset");
     coin_type = new DataNode<uint32_t>();
-    _all_nodes.push_back(coin_type);
+    add_node(coin_type);
     coin_type->set_info("coin-type", "INDEX", "The coin type field of the BIP-44 derivation path.");
     coin_type->set_to_string([](uint32_t n) { return to_string(n); });
     coin_type->set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
@@ -112,17 +120,17 @@ Model::Model() {
         return asset->value().coin_type();
     });
 
-    // account-index
+    add_derivation("account-index");
     account_index = new DataNode<uint32_t>();
-    _all_nodes.push_back(account_index);
+    add_node(account_index);
     account_index->set_info("account-index", "INDEX", "The account field of the BIP-44 derivation path.");
     account_index->set_to_string([](uint32_t n) { return to_string(n); });
     account_index->set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
     account_index->set_value(0);
 
-    // account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
+    add_derivation("account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]");
     account_derivation_path = new DataNode<DerivationPath>();
-    _all_nodes.push_back(account_derivation_path);
+    add_node(account_derivation_path);
     account_derivation_path->set_info("account-derivation-path", "BIP32_PATH", "m/purpose'/coin-type'/accont-index'.");
     account_derivation_path->set_to_string([](const DerivationPath& path) { return to_string(path); });
     account_derivation_path->set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
@@ -136,9 +144,9 @@ Model::Model() {
         };
     });
 
-    // account-key <- [master-key, account-derivation-path]
+    add_derivation("account-key <- [master-key, account-derivation-path]");
     account_key = new DataNode<HDKey>();
-    _all_nodes.push_back(account_key);
+    add_node(account_key);
     account_key->set_info("account-key", "XPRV", "The BIP-44 account key.");
     account_key->set_to_string([](const HDKey& key) { return key.to_base58(true); });
     account_key->set_from_string([](const string& prv) -> HDKey { return HDKey(prv, true); });
@@ -150,9 +158,9 @@ Model::Model() {
         }
     });
 
-    // account-pub-key <- [account-key]
+    add_derivation("account-pub-key <- [account-key]");
     account_pub_key = new DataNode<HDKey>();
-    _all_nodes.push_back(account_pub_key);
+    add_node(account_pub_key);
     account_pub_key->set_info("account-pub-key", "XPUB", "The BIP-44 account public key.");
     account_pub_key->set_to_string([](const HDKey& key) { return key.to_base58(false); });
     account_pub_key->set_from_string([](const string& pub) -> HDKey { return HDKey(pub, false); });
@@ -164,17 +172,17 @@ Model::Model() {
         }
     });
 
-    // chain-type
+    add_derivation("chain-type");
     chain_type = new DataNode<ChainType>();
-    _all_nodes.push_back(chain_type);
+    add_node(chain_type);
     chain_type->set_info("chain-type", "ENUM internal|external|identity", "The BIP-44 chain type (change) field.");
     chain_type->set_to_string([](const ChainType& t) { return t.to_string(); });
     chain_type->set_from_string([](const string& t) -> ChainType { return ChainType::find(t); });
     chain_type->set_value(ChainType::external());
 
-    // chain-type-int <- [chain-type];
+    add_derivation("chain-type-int <- [chain-type];");
     chain_type_int = new DataNode<uint32_t>();
-    _all_nodes.push_back(chain_type_int);
+    add_node(chain_type_int);
     chain_type_int->set_info("chain-type-int", "INDEX", "The BIP-44 change field integer value.");
     chain_type_int->set_to_string([](uint32_t n) { return to_string(n); });
     chain_type_int->set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
@@ -182,17 +190,17 @@ Model::Model() {
         return chain_type->value().index();
     });
 
-    // address-index
+    add_derivation("address-index");
     address_index = new DataNode<IndexBound>();
-    _all_nodes.push_back(address_index);
+    add_node(address_index);
     address_index->set_info("address-index", "INDEX_BOUND", "The BIP-44 address_index field. '*' is allowed for output descriptors.");
     address_index->set_to_string([](IndexBound n) { return n.to_string(); });
     address_index->set_from_string([](const string& s) -> IndexBound { return parse_index_range(s); });
     address_index->set_value(0);
 
-    // address-derivation-path <- [chain-type-int, address-index]
+    add_derivation("address-derivation-path <- [chain-type-int, address-index]");
     address_derivation_path = new DataNode<DerivationPath>();
-    _all_nodes.push_back(address_derivation_path);
+    add_node(address_derivation_path);
     address_derivation_path->set_info("address-derivation-path", "BIP32_PATH", "The BIP-32 address derivation path, starting from the account-key.");
     address_derivation_path->set_to_string([](const DerivationPath& path) { return to_string(path); });
     address_derivation_path->set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
@@ -203,9 +211,9 @@ Model::Model() {
         };
     });
 
-    // full-address-derivation-path <- [account-derivation-path, address-derivation-path]
+    add_derivation("full-address-derivation-path <- [account-derivation-path, address-derivation-path]");
     full_address_derivation_path = new DataNode<DerivationPath>();
-    _all_nodes.push_back(full_address_derivation_path);
+    add_node(full_address_derivation_path);
     full_address_derivation_path->set_info("full-address-derivation-path", "BIP32_PATH", "The BIP-32 address derivation path, starting from the master-key.");
     full_address_derivation_path->set_to_string([](const DerivationPath& path) { return to_string(path); });
     full_address_derivation_path->set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
@@ -216,10 +224,10 @@ Model::Model() {
         return path;
     });
 
-    // address-key <- [master-key, full-address-derivation-path]
-    // address-key <- [account-key, address-derivation-path]
+    add_derivation("address-key <- [master-key, full-address-derivation-path]");
+    add_derivation("address-key <- [account-key, address-derivation-path]");
     address_key = new DataNode<HDKey>();
-    _all_nodes.push_back(address_key);
+    add_node(address_key);
     address_key->set_info("address-key", "XPRV", "The BIP-32 address HD key.");
     address_key->set_to_string([](const HDKey& key) { return key.to_base58(true); });
     address_key->set_from_string([](const string& prv) -> HDKey { return HDKey(prv, true); });
@@ -233,10 +241,10 @@ Model::Model() {
         }
     });
 
-    // address-pub-key <- [address-key]
-    // address-pub-key <- [account-pub-key, address-derivation-path]
+    add_derivation("address-pub-key <- [address-key]");
+    add_derivation("address-pub-key <- [account-pub-key, address-derivation-path]");
     address_pub_key = new DataNode<HDKey>();
-    _all_nodes.push_back(address_pub_key);
+    add_node(address_pub_key);
     address_pub_key->set_info("address-pub-key", "XPUB", "The BIP-32 address public HD key.");
     address_pub_key->set_to_string([](const HDKey& key) { return key.to_base58(false); });
     address_pub_key->set_from_string([](const string& pub) -> HDKey { return HDKey(pub, false); });
@@ -250,10 +258,10 @@ Model::Model() {
         }
     });
 
-    // address-ec-key <- [address-key]
-    // address-ec-key <- [address-ec-key-wif, network]
+    add_derivation("address-ec-key <- [address-key]");
+    add_derivation("address-ec-key <- [address-ec-key-wif, network]");
     address_ec_key = new DataNode<ECPrivateKey>();
-    _all_nodes.push_back(address_ec_key);
+    add_node(address_ec_key);
     address_ec_key->set_info("address-ec-key", "ECPRV", "The address EC key.");
     address_ec_key->set_to_string([](const ECPrivateKey& key) { return key.to_hex(); });
     address_ec_key->set_from_string([](const string& k) -> ECPrivateKey { return ECPrivateKey(hex_to_data(k)); });
@@ -267,9 +275,9 @@ Model::Model() {
         }
     });
 
-    // address-ec-key-wif <- [address-ec-key, network]
+    add_derivation("address-ec-key-wif <- [address-ec-key, network]");
     address_ec_key_wif = new DataNode<string>();
-    _all_nodes.push_back(address_ec_key_wif);
+    add_node(address_ec_key_wif);
     address_ec_key_wif->set_info("address-ec-key-wif", "WIF", "The address EC key in WIF format.");
     address_ec_key_wif->set_to_string([](const string& s) { return s; });
     address_ec_key_wif->set_from_string([](const string& wif) -> string { return wif; });
@@ -281,10 +289,10 @@ Model::Model() {
         }
     });
 
-    // address-pub-ec-key <- [address-ec-key]
-    // address-pub-ec-key <- [address-pub-key]
+    add_derivation("address-pub-ec-key <- [address-ec-key]");
+    add_derivation("address-pub-ec-key <- [address-pub-key]");
     address_pub_ec_key = new DataNode<ECCompressedPublicKey>();
-    _all_nodes.push_back(address_pub_ec_key);
+    add_node(address_pub_ec_key);
     address_pub_ec_key->set_info("address-pub-ec-key", "ECPUB", "The compressed public EC key.");
     address_pub_ec_key->set_to_string([](const ECCompressedPublicKey& key) { return key.to_hex(); });
     address_pub_ec_key->set_from_string([](const string& k) -> ECCompressedPublicKey { return ECCompressedPublicKey(hex_to_data(k)); });
@@ -298,9 +306,9 @@ Model::Model() {
         }
     });
 
-    // address-pkh <- [address-pub-ec-key, asset]
+    add_derivation("address-pkh <- [address-pub-ec-key, asset]");
     address_pkh = new DataNode<string>();
-    _all_nodes.push_back(address_pkh);
+    add_node(address_pkh);
     address_pkh->set_info("address-pkh", "ADDRESS", "The pay-to-public-key-hash address.");
     address_pkh->set_to_string([](const string& s) { return s; });
     address_pkh->set_from_string([](const string& a) -> string { return a; });
@@ -312,9 +320,9 @@ Model::Model() {
         }
     });
 
-    // address-sh <- [address-pub-ec-key, asset]
+    add_derivation("address-sh <- [address-pub-ec-key, asset]");
     address_sh = new DataNode<string>();
-    _all_nodes.push_back(address_sh);
+    add_node(address_sh);
     address_sh->set_info("address-sh", "ADDRESS", "The pay-to-script-hash address.");
     address_sh->set_to_string([](const string& s) { return s; });
     address_sh->set_from_string([](const string& a) -> string { return a; });
@@ -326,9 +334,9 @@ Model::Model() {
         }
     });
 
-    // address-segwit <- [address-pub-key, network]
+    add_derivation("address-segwit <- [address-pub-key, network]");
     address_segwit = new DataNode<string>();
-    _all_nodes.push_back(address_segwit);
+    add_node(address_segwit);
     address_segwit->set_info("address-segwit", "ADDRESS", "The segwit address.");
     address_segwit->set_to_string([](const string& s) { return s; });
     address_segwit->set_from_string([](const string& a) -> string { return a; });
@@ -340,9 +348,9 @@ Model::Model() {
         }
     });
 
-    // output-descriptor <- [output_type, account_derivation_path, address_derivation_path, account_pub_key]
+    add_derivation("output-descriptor <- [output_type, account_derivation_path, address_derivation_path, account_pub_key]");
     output_descriptor = new DataNode<OutputDescriptor>();
-    _all_nodes.push_back(output_descriptor);
+    add_node(output_descriptor);
     output_descriptor->set_info("output-descriptor", "OUTPUT_DESCRIPTOR", "A single-signature output descriptor.");
     output_descriptor->set_to_string([](const OutputDescriptor& o) -> string { return o.to_string(); });
     output_descriptor->set_derivation([&]() -> optional<OutputDescriptor> {
@@ -353,16 +361,16 @@ Model::Model() {
         }
     });
 
-    // psbt
+    add_derivation("psbt");
     psbt = new DataNode<PSBT>();
-    _all_nodes.push_back(psbt);
+    add_node(psbt);
     psbt->set_info("psbt", "BASE64 | HEX | UR:CRYPTO-PSBT", "A partially signed Bitcoin transaction (PSBT).");
     psbt->set_to_string([](const PSBT& p) { return p.base64(); });
     psbt->set_from_string([](const string& s) -> PSBT { return PSBT(s); });
 
-    // psbt-hex <- [psbt]
+    add_derivation("psbt-hex <- [psbt]");
     psbt_hex = new DataNode<string>();
-    _all_nodes.push_back(psbt_hex);
+    add_node(psbt_hex);
     psbt_hex->set_info("psbt-hex", "HEX", "PSBT in hex format.");
     psbt_hex->set_to_string([](const string& s) { return s; });
     psbt_hex->set_derivation([&]() -> optional<string> {
@@ -373,9 +381,9 @@ Model::Model() {
         }
     });
 
-    // psbt-ur <- [psbt]
+    add_derivation("psbt-ur <- [psbt]");
     psbt_ur = new DataNode<string>();
-    _all_nodes.push_back(psbt_ur);
+    add_node(psbt_ur);
     psbt_ur->set_info("psbt-ur", "UR:CRYPTO-PSBT", "A PSBT in UR format.");
     psbt_ur->set_to_string([](const string& s) { return s; });
     psbt_ur->set_derivation([&]() -> optional<string> {
@@ -386,9 +394,9 @@ Model::Model() {
         }
     });
 
-    // psbt-finalized <- [psbt]
+    add_derivation("psbt-finalized <- [psbt]");
     psbt_finalized = new DataNode<PSBT>();
-    _all_nodes.push_back(psbt_finalized);
+    add_node(psbt_finalized);
     psbt_finalized->set_info("psbt-finalized", "BASE64 | HEX | UR:CRYPTO-PSBT", "The finalized PSBT.");
     psbt_finalized->set_to_string([](const PSBT& p) { return p.base64(); });
     psbt_finalized->set_from_string([](const string& s) -> PSBT {
@@ -406,9 +414,9 @@ Model::Model() {
         }
     });
 
-    // psbt-finalized-hex <- [psbt-finalized]
+    add_derivation("psbt-finalized-hex <- [psbt-finalized]");
     psbt_finalized_hex = new DataNode<string>();
-    _all_nodes.push_back(psbt_finalized_hex);
+    add_node(psbt_finalized_hex);
     psbt_finalized_hex->set_info("psbt-finalized-hex", "HEX", "Finalized PSBT in hex format.");
     psbt_finalized_hex->set_to_string([](const string& s) { return s; });
     psbt_finalized_hex->set_derivation([&]() -> optional<string> {
@@ -419,9 +427,9 @@ Model::Model() {
         }
     });
 
-    // psbt-finalized-ur <- [psbt-finalized]
+    add_derivation("psbt-finalized-ur <- [psbt-finalized]");
     psbt_finalized_ur = new DataNode<string>();
-    _all_nodes.push_back(psbt_finalized_ur);
+    add_node(psbt_finalized_ur);
     psbt_finalized_ur->set_info("psbt-finalized-ur", "UR:CRYPTO-PSBT", "Finalized PSBT in UR format.");
     psbt_finalized_ur->set_to_string([](const string& s) { return s; });
     psbt_finalized_ur->set_derivation([&]() -> optional<string> {
@@ -432,9 +440,9 @@ Model::Model() {
         }
     });
 
-    // psbt-signed <- [psbt, address-ec-key]
+    add_derivation("psbt-signed <- [psbt, address-ec-key]");
     psbt_signed = new DataNode<PSBT>();
-    _all_nodes.push_back(psbt_signed);
+    add_node(psbt_signed);
     psbt_signed->set_info("psbt-signed", "BASE64 | HEX | UR:CRYPTO-PSBT", "A PBST signed by address-key.");
     psbt_signed->set_to_string([](const PSBT& p) { return p.base64(); });
     psbt_signed->set_derivation([&]() -> optional<PSBT> {
@@ -445,9 +453,9 @@ Model::Model() {
         }
     });
 
-    // psbt-signed-hex <- [psbt-signed]
+    add_derivation("psbt-signed-hex <- [psbt-signed]");
     psbt_signed_hex = new DataNode<string>();
-    _all_nodes.push_back(psbt_signed_hex);
+    add_node(psbt_signed_hex);
     psbt_signed_hex->set_info("psbt-signed-hex", "HEX", "Signed PSBT in hex format.");
     psbt_signed_hex->set_to_string([](const string& s) { return s; });
     psbt_signed_hex->set_derivation([&]() -> optional<string> {
@@ -458,9 +466,9 @@ Model::Model() {
         }
     });
 
-    // psbt-signed-ur <- [psbt-signed]
+    add_derivation("psbt-signed-ur <- [psbt-signed]");
     psbt_signed_ur = new DataNode<string>();
-    _all_nodes.push_back(psbt_signed_ur);
+    add_node(psbt_signed_ur);
     psbt_signed_ur->set_info("psbt-signed-ur", "UR:CRYPTO-PSBT", "Signed PSBT in UR format.");
     psbt_signed_ur->set_to_string([](const string& s) { return s; });
     psbt_signed_ur->set_derivation([&]() -> optional<string> {
@@ -471,9 +479,9 @@ Model::Model() {
         }
     });
 
-    // transaction <- [psbt-finalized]
+    add_derivation("transaction <- [psbt-finalized]");
     transaction = new DataNode<Transaction>();
-    _all_nodes.push_back(transaction);
+    add_node(transaction);
     transaction->set_info("transaction", "HEX | UR:CRYPTO-TX", "The raw Bitcoin transaction.");
     transaction->set_to_string([](const Transaction& t) { return t.hex(); });
     transaction->set_from_string([](const string& s) -> Transaction { return Transaction(s); });
@@ -485,9 +493,9 @@ Model::Model() {
         }
     });
 
-    // transaction-ur <- [transaction]
+    add_derivation("transaction-ur <- [transaction]");
     transaction_ur = new DataNode<string>();
-    _all_nodes.push_back(transaction_ur);
+    add_node(transaction_ur);
     transaction_ur->set_info("transaction-ur", "UR:CRYPTO-TX", "The raw Bitcoin transaction in UR format.");
     transaction_ur->set_to_string([](const string& s) { return s; });
     transaction_ur->set_derivation([&]() -> optional<string> {

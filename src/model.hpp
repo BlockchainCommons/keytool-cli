@@ -69,6 +69,10 @@ private:
     DataNode<std::string> *transaction_ur;
 
     std::vector<DataNodeProtocol*> _all_nodes;
+    std::vector<std::string> _derivations;
+
+    void add_node(DataNodeProtocol*);
+    void add_derivation(const std::string& d);
 };
 
 #endif // KEYTOOL_MODEL_HPP

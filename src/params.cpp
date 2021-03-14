@@ -86,57 +86,24 @@ static int parse_opt(int key, char* arg, struct argp_state* state) {
     return 0;
 }
 
-struct argp_option options[] = {
-    {"seed",                            -1, "HEX", 0, "Random data from which to generate a master key."},
-    {"seed-ur",                         -2, "HEX", 0, "Random data from which to generate a master key."},
-    {"asset",                           -3, "ENUM btc|btct", 0, "A cryptocurrency asset."},
-    {"network",                         -4, "ENUM mainnet|testnet", 0, "The network."},
-    {"master-key",                      -5, "XPRV", 0, "The BIP-32 master HD key."},
-    {"master-key-fingerprint",          -6, "HEX", 0, "Fingerprint of the master HD key."},
-    {"output-type",                     -7, "ENUM pkh|wpkh|sh-wpkh", 0, "The output descriptor type."},
-    {"purpose",                         -8, "INDEX", 0, "The purpose field of the BIP-44 derivation path."},
-    {"coin-type",                       -9, "INDEX", 0, "The coin type field of the BIP-44 derivation path."},
-    {"account-index",                   -10, "INDEX", 0, "The account field of the BIP-44 derivation path."},
-    {"account-derivation-path",         -11, "BIP32_PATH", 0, "m/purpose'/coin-type'/accont-index'."},
-    {"account-key",                     -12, "XPRV", 0, "The BIP-44 account key."},
-    {"account-pub-key",                 -13, "XPUB", 0, "The BIP-44 account public key."},
-    {"chain-type",                      -14, "ENUM internal|external|identity", 0, "The BIP-44 chain type (change) field."},
-    {"chain-type-int",                  -15, "INDEX", 0, "The BIP-44 change field integer value."},
-    {"address-index",                   -16, "INDEX_BOUND", 0, "The BIP-44 address_index field. '*' is allowed for output descriptors."},
-    {"address-derivation-path",         -17, "BIP32_PATH", 0, "The BIP-32 address derivation path, starting from the account-key."},
-    {"full-address-derivation-path",    -18, "BIP32_PATH", 0, "The BIP-32 address derivation path, starting from the master-key."},
-    {"address-key",                     -19, "XPRV", 0, "The BIP-32 address HD key."},
-    {"address-pub-key",                 -20, "XPUB", 0, "The BIP-32 address public HD key."},
-    {"address-ec-key",                  -21, "ECPRV", 0, "The address EC key."},
-    {"address-ec-key-wif",              -22, "WIF", 0, "The address EC key in WIF format."},
-    {"address-pub-ec-key",              -23, "ECPUB", 0, "The compressed public EC key."},
-    {"address-pkh",                     -24, "ADDRESS", 0, "The pay-to-public-key-hash address."},
-    {"address-sh",                      -25, "ADDRESS", 0, "The pay-to-script-hash address."},
-    {"address-segwit",                  -26, "ADDRESS", 0, "The segwit address."},
-    {"output-descriptor",               -27, "OUTPUT_DESCRIPTOR", 0, "A single-signature output descriptor."},
-    {"psbt",                            -28, "BASE64 | HEX | UR:CRYPTO-PSBT", 0, "A partially signed Bitcoin transaction (PSBT)."},
-    {"psbt-hex",                        -29, "HEX", 0, "PSBT in hex format."},
-    {"psbt-ur",                         -30, "UR:CRYPTO-PSBT", 0, "PSBT in UR format."},
-    {"psbt-finalized",                  -31, "BASE64 | HEX | UR:CRYPTO-PSBT", 0, "The finalized PSBT."},
-    {"psbt-finalized-hex",              -32, "HEX", 0, "Finalized PSBT in hex format."},
-    {"psbt-finalized-ur",               -33, "UR:CRYPTO-PSBT", 0, "Finalized PSBT in UR format."},
-    {"psbt-signed",                     -34, "BASE64 | HEX | UR:CRYPTO-PSBT", 0, "A PBST signed by address-key."},
-    {"psbt-signed-hex",                 -35, "HEX", 0, "Signed PSBT in hex format."},
-    {"psbt-signed-ur",                  -36, "UR:CRYPTO-PSBT", 0, "Signed PSBT in UR format."},
-    {"transaction",                     -37, "HEX | UR:CRYPTO-TX", 0, "The raw Bitcoin transaction."},
-    {"transaction-ur",                  -38, "UR:CRYPTO-TX", 0, "The raw Bitcoin transaction in UR format."},
-
-    { 0 }
-};
-
 auto argp_program_version = PACKAGE_VERSION;
-const char* argp_program_bug_address = "ChristopherA@BlockchainCommons.com. © 2020 Blockchain Commons";
+const char* argp_program_bug_address = "ChristopherA@BlockchainCommons.com. © 2021 Blockchain Commons";
 
-auto doc = "Derives cryptocurrency keys and addresses.";
-struct argp argp = { options, parse_opt, "INPUT", doc };
+auto doc = "Derives cryptocurrency keys, addresses, and signatures.";
 
 Params* Params::parse( int argc, char *argv[] ) {
     auto p = new Params();
+
+    auto node_count = p->model.all_nodes().size();
+    argp_option options[node_count + 1];
+    for(auto i = 0; i < node_count; i++) {
+        auto node = p->model.all_nodes()[i];
+        options[i] = { node->name().c_str(), node->tag(), node->help_type().c_str(), 0, node->help_desc().c_str() };
+    }
+    options[node_count] = { 0 };
+
+    struct argp argp = { options, parse_opt, "INPUT", doc };
+
     argp_parse( &argp, argc, argv, 0, 0, p );
     return p;
 }

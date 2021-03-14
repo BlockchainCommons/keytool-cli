@@ -24,6 +24,9 @@ public:
     DataNodeProtocol* find_by_tag(int node_tag) const;
     bool is_valid_name(const std::string& node_name) const;
     bool can_derive(const std::string& node_name) const;
+    const std::vector<DataNodeProtocol*>& all_nodes() const {
+        return _all_nodes;
+    }
 
 private:
     DataNode<Seed> *seed;
@@ -65,7 +68,7 @@ private:
     DataNode<Transaction> *transaction;
     DataNode<std::string> *transaction_ur;
 
-    std::vector<DataNodeProtocol*> all_nodes;
+    std::vector<DataNodeProtocol*> _all_nodes;
 };
 
 #endif // KEYTOOL_MODEL_HPP

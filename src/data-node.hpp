@@ -11,6 +11,8 @@ class DataNodeProtocol {
 public:
     virtual const std::string& name() const = 0;
     virtual int tag() const = 0;
+    virtual const std::string& help_type() const = 0;
+    virtual const std::string& help_desc() const = 0;
     virtual void set_name(const std::string& name) = 0;
     virtual void set_tag(int tag) = 0;
     virtual std::optional<std::string> to_string() = 0;
@@ -25,6 +27,8 @@ public:
 
     virtual const std::string& name() const override { return _name; }
     virtual int tag() const override { return _tag; }
+    virtual const std::string& help_type() const override { return _help_type; }
+    virtual const std::string& help_desc() const override { return _help_desc; }
 
     virtual void set_name(const std::string& name) override { _name = name; }
     virtual void set_tag(int tag) override { _tag = tag; }
@@ -80,12 +84,14 @@ public:
 
 private:
     std::string _name;
+    std::string _help_type;
+    std::string _help_desc;
     int _tag;
     bool _tried;
     std::optional<T> _value;
-    std::function<std::optional<T>(void)> _derivation;
     std::function<std::string(const T&)> _to_string;
     std::function<T(const std::string&)> _from_string;
+    std::function<std::optional<T>(void)> _derivation;
 };
 
 #endif // KEYTOOL_DATA_NODE_HPP

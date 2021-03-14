@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <stdexcept>
+#include <iostream>
 
 class DataNodeProtocol {
 public:
@@ -41,7 +42,9 @@ public:
         if(!_tried) {
             _tried = true;
             if(!_value.has_value() && _derivation) {
+                //std::cout << "deriving: " << name() << std::endl;
                 _value = _derivation();
+                //std::cout << "done: " << name() << std::endl;
             }
         }
         return _value;

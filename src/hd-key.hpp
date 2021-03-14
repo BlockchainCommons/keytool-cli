@@ -15,7 +15,7 @@ struct ext_key;
 
 class HDKey final {
 public:
-    HDKey(const Seed& seed, const Network& network);
+    HDKey(const ByteVector& seed, const Network& network);
     explicit HDKey(ext_key* key);
     explicit HDKey(const std::string &base58);
     HDKey(const std::string &base58, bool require_private);

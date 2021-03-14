@@ -32,8 +32,10 @@ public:
     }
 
 private:
-    DataNode<Seed> *seed;
-    DataNode<std::string> *seed_ur;
+    DataNode<ByteVector> *seed;
+    DataNode<std::string> *seed_name;
+    DataNode<std::string> *seed_note;
+    DataNode<Seed> *seed_ur;
     DataNode<Asset> *asset;
     DataNode<Network> *network;
     DataNode<HDKey> *master_key;

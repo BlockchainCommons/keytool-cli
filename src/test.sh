@@ -62,16 +62,28 @@ testSeed()
 
 testSeedUROutput()
 {
-  # seed <- hex
+  # seed-ur <- seed
   assertEquals $'ur:crypto-seed/oyadhdcxcwbbghzsqzdswzjpntuowpcwdrjlreespkdlwtotjnatldaonlgldluehfcaihgdrddevese' \
     "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 seed-ur)"
 }
 
 testSeedURInput()
 {
-  # seed <- hex
+  # seed <- seed-ur
   assertEquals $'1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550' \
-    "$(${KEYTOOL} --seed ur:crypto-seed/oyadhdcxcwbbghzsqzdswzjpntuowpcwdrjlreespkdlwtotjnatldaonlgldluehfcaihgdrddevese seed)"
+    "$(${KEYTOOL} --seed-ur ur:crypto-seed/oyadhdcxcwbbghzsqzdswzjpntuowpcwdrjlreespkdlwtotjnatldaonlgldluehfcaihgdrddevese seed)"
+}
+
+testReadSeedURMetadata()
+{
+  assertEquals $'59f2293a5bce7d4de59e71b4207ac5d2\nDark Purple Aqua Love\nThis is a seed note.' \
+    "$(${KEYTOOL} --seed-ur ur:crypto-seed/otadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmknzsnbwy seed seed-name seed-note)"
+}
+
+testWriteSeedURMetadata()
+{
+  assertEquals $'ur:crypto-seed/otadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmknzsnbwy' \
+    "$(${KEYTOOL} --seed 59f2293a5bce7d4de59e71b4207ac5d2 --seed-name 'Dark Purple Aqua Love' --seed-note 'This is a seed note.' seed-ur)"
 }
 
 testMasterKey()
@@ -88,12 +100,18 @@ testMasterKeyFingerprint()
     "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 master-key-fingerprint)"
 }
 
-testAccountDerivationPath()
+testAccountDerivationPath1()
 {
   # account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
   assertEquals $'m/84h/0h/0h' "$(${KEYTOOL} account-derivation-path)"
+}
+
+testAccountDerivationPath2()
+{
+  # account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
   assertEquals $'9abcdef0/84h/0h/0h' "$(${KEYTOOL} --master-key-fingerprint 9abcdef0 account-derivation-path)"
 }
+
 
 testAccountKey()
 {

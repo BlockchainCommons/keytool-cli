@@ -13,7 +13,8 @@ public:
     virtual int tag() const = 0;
     virtual const std::string& help_type() const = 0;
     virtual const std::string& help_desc() const = 0;
-    virtual void set_name(const std::string& name) = 0;
+
+    virtual void set_info(const std::string& name, const std::string& type, const std::string& desc) = 0;
     virtual void set_tag(int tag) = 0;
     virtual std::optional<std::string> to_string() = 0;
     virtual void from_string(const std::string& s) = 0;
@@ -30,7 +31,7 @@ public:
     virtual const std::string& help_type() const override { return _help_type; }
     virtual const std::string& help_desc() const override { return _help_desc; }
 
-    virtual void set_name(const std::string& name) override { _name = name; }
+    virtual void set_info(const std::string& name, const std::string& type, const std::string& desc) override { _name = name; _help_type = type; _help_desc = desc; }
     virtual void set_tag(int tag) override { _tag = tag; }
     void set_derivation(std::function<std::optional<T>(void)> derivation) { _derivation = derivation; }
     void set_to_string(std::function<std::string(const T&)> t) { _to_string = t; }

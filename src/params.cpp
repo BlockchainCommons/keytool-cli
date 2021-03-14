@@ -94,14 +94,28 @@ auto doc = "Derives cryptocurrency keys, addresses, and signatures.";
 Params* Params::parse( int argc, char *argv[] ) {
     auto p = new Params();
 
-    auto node_count = p->model.all_nodes().size();
-    argp_option options[node_count + 1];
     auto nodes = p->model.all_nodes();
+    auto node_count = nodes.size();
+    auto derivations = p->model.derivations();
+    auto derivations_count = derivations.size();
+    auto options_count = node_count + derivations_count + 2;
+    argp_option options[options_count];
+    auto option_index = 0;
     for(auto i = 0; i < node_count; i++) {
         auto node = nodes[i];
-        options[i] = { node->name().c_str(), node->tag(), node->help_type().c_str(), 0, node->help_desc().c_str() };
+        options[option_index++] = { node->name().c_str(), node->tag(), node->help_type().c_str(), 0, node->help_desc().c_str() };
     }
-    options[node_count] = { 0 };
+    
+    options[option_index++] = { nullptr, 0, nullptr, OPTION_DOC | OPTION_NO_USAGE, "DERIVATIONS: " };
+
+    for(auto i = 0; i < derivations_count; i++) {
+        auto derivation = derivations[i];
+        auto len = derivation.length() + 1;
+        char* s = (char*)malloc(len);
+        memcpy(s, derivation.c_str(), len);
+        options[option_index++] = { nullptr, 0, nullptr, OPTION_DOC | OPTION_NO_USAGE, s };
+    }
+    options[option_index] = { 0 };
 
     struct argp argp = { options, parse_opt, "INPUT", doc };
 

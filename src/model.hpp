@@ -27,6 +27,9 @@ public:
     const std::vector<DataNodeProtocol*>& all_nodes() const {
         return _all_nodes;
     }
+    const std::vector<std::string>& derivations() const { 
+        return _derivations;
+    }
 
 private:
     DataNode<Seed> *seed;

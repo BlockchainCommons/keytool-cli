@@ -54,7 +54,7 @@ Model::Model() {
     asset->set_from_string([](const string& symbol) -> Asset { return Asset::find(symbol); });
     asset->set_value(Asset::btc());
 
-    add_derivation("network <- asset");
+    add_derivation("network <- [asset]");
     network = new DataNode<Network>();
     add_node(network);
     network->set_info("network", "ENUM mainnet|testnet", "The network.");
@@ -120,7 +120,7 @@ Model::Model() {
         return asset->value().coin_type();
     });
 
-    add_derivation("account-index");
+    add_derivation("account-index (default: 0)");
     account_index = new DataNode<uint32_t>();
     add_node(account_index);
     account_index->set_info("account-index", "INDEX", "The account field of the BIP-44 derivation path.");
@@ -172,7 +172,7 @@ Model::Model() {
         }
     });
 
-    add_derivation("chain-type");
+    add_derivation("chain-type (default: external)");
     chain_type = new DataNode<ChainType>();
     add_node(chain_type);
     chain_type->set_info("chain-type", "ENUM internal|external|identity", "The BIP-44 chain type (change) field.");
@@ -190,7 +190,7 @@ Model::Model() {
         return chain_type->value().index();
     });
 
-    add_derivation("address-index");
+    add_derivation("address-index (default: 0)");
     address_index = new DataNode<IndexBound>();
     add_node(address_index);
     address_index->set_info("address-index", "INDEX_BOUND", "The BIP-44 address_index field. '*' is allowed for output descriptors.");

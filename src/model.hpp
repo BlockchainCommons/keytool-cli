@@ -20,130 +20,52 @@ class Model final {
 public:
     Model();
 
-    // seed
-    DataNode<Seed> seed;
-
-    // seed-ur <- [seed]
-    DataNode<std::string> seed_ur;
-
-    // asset (default: btc)
-    DataNode<Asset> asset;
-
-    // network <- [asset]
-    DataNode<Network> network;
-
-    // master-key <- [network, seed]
-    DataNode<HDKey> master_key;
-
-    // master-key-fingerprint <- [master-key]
-    DataNode<ByteVector> master_key_fingerprint;
-
-    // output-type (default: wpkh)
-    DataNode<OutputDescriptorType> output_type;
-
-    // purpose <- [output-type]
-    DataNode<uint32_t> purpose;
-
-    // coin-type <- [asset]
-    DataNode<uint32_t> coin_type;
-
-    // account-index (default: 0)
-    DataNode<uint32_t> account_index;
-
-    // account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
-    DataNode<DerivationPath> account_derivation_path;
-
-    // account-key <- [master-key, account-derivation-path]
-    DataNode<HDKey> account_key;
-
-    // account-pub-key <- [account-key]
-    DataNode<HDKey> account_pub_key;
-
-    // chain-type (default: external)
-    DataNode<ChainType> chain_type;
-
-    // chain-type-int <- [chain-type];
-    DataNode<uint32_t> chain_type_int;
-
-    // address-index (default: 0)
-    DataNode<IndexBound> address_index;
-
-    // address-derivation-path <- [chain-type-int, address-index]
-    DataNode<DerivationPath> address_derivation_path;
-
-    // full-address-derivation-path <- [account-derivation-path, address-derivation-path]
-    DataNode<DerivationPath> full_address_derivation_path;
-
-    // address-key <- [master-key, full-address-derivation-path]
-    // address-key <- [account-key, address-derivation-path]
-    DataNode<HDKey> address_key;
-
-    // address-pub-key <- [address-key]
-    // address-pub-key <- [account-pub-key, address-derivation-path]
-    DataNode<HDKey> address_pub_key;
-
-    // address-ec-key <- [address-key]
-    // address-ec-key <- [address-ec-key-wif, network]
-    DataNode<ECPrivateKey> address_ec_key;
-
-    // address-ec-key-wif <- [address-ec-key, network]
-    DataNode<std::string> address_ec_key_wif;
-
-    // address-pub-ec-key <- [address-ec-key]
-    // address-pub-ec-key <- [address-pub-key]
-    DataNode<ECCompressedPublicKey> address_pub_ec_key;
-
-    // address-pkh <- [address-pub-ec-key, asset]
-    DataNode<std::string> address_pkh;
-
-    // address-sh <- [address-pub-ec-key, asset]
-    DataNode<std::string> address_sh;
-
-    // address-segwit <- [address-pub-key, network]
-    DataNode<std::string> address_segwit;
-
-    // output-descriptor <- [output-type, account-derivation-path, address-derivation-path, account-pub-key]
-    DataNode<OutputDescriptor> output_descriptor;
-
-    // psbt
-    DataNode<PSBT> psbt;
-
-    // psbt-hex <- [psbt]
-    DataNode<std::string> psbt_hex;
-
-    // psbt-ur <- [psbt]
-    DataNode<std::string> psbt_ur;
-
-    // psbt-finalized <- [psbt]
-    DataNode<PSBT> psbt_finalized;
-
-    // psbt-finalized-hex <- [psbt-finalized]
-    DataNode<std::string> psbt_finalized_hex;
-
-    // psbt-finalized-ur <- [psbt-finalized]
-    DataNode<std::string> psbt_finalized_ur;
-
-    // psbt-signed <- [psbt, address-ec-key]
-    DataNode<PSBT> psbt_signed;
-
-    // psbt-signed-hex <- [psbt-signed]
-    DataNode<std::string> psbt_signed_hex;
-
-    // psbt-signed-ur <- [psbt-signed]
-    DataNode<std::string> psbt_signed_ur;
-
-    // transaction <- [psbt-finalized]
-    DataNode<Transaction> transaction;
-
-    // transaction-ur <- [transaction]
-    DataNode<std::string> transaction_ur;
-
-    std::vector<DataNodeProtocol*> all_nodes;
-
     DataNodeProtocol* find_by_name(const std::string& node_name) const;
     DataNodeProtocol* find_by_tag(int node_tag) const;
     bool is_valid_name(const std::string& node_name) const;
     bool can_derive(const std::string& node_name) const;
+
+private:
+    DataNode<Seed> *seed;
+    DataNode<std::string> *seed_ur;
+    DataNode<Asset> *asset;
+    DataNode<Network> *network;
+    DataNode<HDKey> *master_key;
+    DataNode<ByteVector> *master_key_fingerprint;
+    DataNode<OutputDescriptorType> *output_type;
+    DataNode<uint32_t> *purpose;
+    DataNode<uint32_t> *coin_type;
+    DataNode<uint32_t> *account_index;
+    DataNode<DerivationPath> *account_derivation_path;
+    DataNode<HDKey> *account_key;
+    DataNode<HDKey> *account_pub_key;
+    DataNode<ChainType> *chain_type;
+    DataNode<uint32_t> *chain_type_int;
+    DataNode<IndexBound> *address_index;
+    DataNode<DerivationPath> *address_derivation_path;
+    DataNode<DerivationPath> *full_address_derivation_path;
+    DataNode<HDKey> *address_key;
+    DataNode<HDKey> *address_pub_key;
+    DataNode<ECPrivateKey> *address_ec_key;
+    DataNode<std::string> *address_ec_key_wif;
+    DataNode<ECCompressedPublicKey> *address_pub_ec_key;
+    DataNode<std::string> *address_pkh;
+    DataNode<std::string> *address_sh;
+    DataNode<std::string> *address_segwit;
+    DataNode<OutputDescriptor> *output_descriptor;
+    DataNode<PSBT> *psbt;
+    DataNode<std::string> *psbt_hex;
+    DataNode<std::string> *psbt_ur;
+    DataNode<PSBT> *psbt_finalized;
+    DataNode<std::string> *psbt_finalized_hex;
+    DataNode<std::string> *psbt_finalized_ur;
+    DataNode<PSBT> *psbt_signed;
+    DataNode<std::string> *psbt_signed_hex;
+    DataNode<std::string> *psbt_signed_ur;
+    DataNode<Transaction> *transaction;
+    DataNode<std::string> *transaction_ur;
+
+    std::vector<DataNodeProtocol*> all_nodes;
 };
 
 #endif // KEYTOOL_MODEL_HPP

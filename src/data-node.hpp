@@ -42,6 +42,18 @@ public:
         return _value;
     }
 
+    T derive() {
+        auto t = value();
+        if(t.has_value()) {
+            return *t;
+        } else {
+            std::string message = "Cannot derive " + name();
+            throw std::domain_error(message);
+        }
+    }
+
+    void set_value(const T& value) { _value = value; }
+
     virtual bool has_value() override {
         return value().has_value();
     }
@@ -60,23 +72,11 @@ public:
             throw std::domain_error("Input not accepted for " + name());
         }
         try {
-            *this = _from_string(s);
+            this->set_value(_from_string(s));
         } catch(std::exception &e) {
             throw std::domain_error("Invalid input for " + name() + ": " + e.what());
         }
     }
-
-    T operator() () {
-        auto t = value();
-        if(t.has_value()) {
-            return *t;
-        } else {
-            std::string message = "Cannot derive " + name();
-            throw std::domain_error(message);
-        }
-    }
-
-    void operator= (const T& value) { _value = value; }
 
 private:
     std::string _name;

@@ -86,6 +86,10 @@
         "vector": "cpp",
         "*.ipp": "cpp",
         "hash_map": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "__functional_base_03": "cpp",
+        "__memory": "cpp",
+        "memory_resource": "cpp",
+        "*.inc": "cpp"
     }
 }

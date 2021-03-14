@@ -32,7 +32,7 @@ public:
     void set_to_string(std::function<std::string(const T&)> t) { _to_string = t; }
     void set_from_string(std::function<T(const std::string& s)> t) { _from_string = t; }
 
-    std::optional<T> value() {
+    std::optional<T> optional_value() {
         if(!_tried) {
             _tried = true;
             if(!_value.has_value() && _f) {
@@ -43,7 +43,7 @@ public:
     }
 
     T derive() {
-        auto t = value();
+        auto t = optional_value();
         if(t.has_value()) {
             return *t;
         } else {
@@ -55,11 +55,11 @@ public:
     void set_value(const T& value) { _value = value; }
 
     virtual bool has_value() override {
-        return value().has_value();
+        return optional_value().has_value();
     }
 
     virtual std::optional<std::string> to_string() override {
-        auto t = value();
+        auto t = optional_value();
         if(t.has_value()) {
             return _to_string(*t);
         } else {

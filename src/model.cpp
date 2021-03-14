@@ -20,15 +20,16 @@ static uint32_t parse_uint32(const string& s) {
 Model::Model() {
     // seed
     seed = new DataNode<Seed>();
+    all_nodes.push_back(seed);
     seed->set_name("seed");
     seed->set_to_string([](const Seed& seed) { return seed.hex(); });
     seed->set_from_string([](const string& s) -> Seed { return Seed(s); });
-    all_nodes.push_back(seed);
 
     // seed-ur <- [seed]
     seed_ur = new DataNode<string>();
+    all_nodes.push_back(seed_ur);
     seed_ur->set_name("seed-ur");
-    seed_ur->set_f([&]() -> optional<string> {
+    seed_ur->set_derivation([&]() -> optional<string> {
         if(seed->has_value()) {
             return seed->value().ur();
         } else {
@@ -36,7 +37,6 @@ Model::Model() {
         }
     });
     seed_ur->set_to_string([](const string& s) { return s; });
-    all_nodes.push_back(seed_ur);
 
     // asset
     asset = new DataNode<Asset>();
@@ -50,7 +50,7 @@ Model::Model() {
     network = new DataNode<Network>();
     all_nodes.push_back(network);
     network->set_name("network");
-    network->set_f([&]() { return asset->value().network(); });
+    network->set_derivation([&]() { return asset->value().network(); });
     network->set_to_string([](const Network& network) { return network.name(); });
     network->set_from_string([](const string& name) -> Network { return Network::find(name); });
 
@@ -58,7 +58,7 @@ Model::Model() {
     master_key = new DataNode<HDKey>();
     all_nodes.push_back(master_key);
     master_key->set_name("master-key");
-    master_key->set_f([&]() -> optional<HDKey> {
+    master_key->set_derivation([&]() -> optional<HDKey> {
         if(seed->has_value() && network->has_value()) {
             return HDKey(seed->value(), network->value());
         } else {
@@ -72,7 +72,7 @@ Model::Model() {
     master_key_fingerprint = new DataNode<ByteVector>();
     all_nodes.push_back(master_key_fingerprint);
     master_key_fingerprint->set_name("master-key-fingerprint");
-    master_key_fingerprint->set_f([&]() -> optional<ByteVector> {
+    master_key_fingerprint->set_derivation([&]() -> optional<ByteVector> {
         if(master_key->has_value()) {
             return master_key->value().fingerprint();
         } else {
@@ -94,7 +94,7 @@ Model::Model() {
     purpose = new DataNode<uint32_t>();
     all_nodes.push_back(purpose);
     purpose->set_name("purpose");
-    purpose->set_f([&]() {
+    purpose->set_derivation([&]() {
         return output_type->value().purpose();
     });
     purpose->set_to_string([](uint32_t n) { return to_string(n); });
@@ -104,7 +104,7 @@ Model::Model() {
     coin_type = new DataNode<uint32_t>();
     all_nodes.push_back(coin_type);
     coin_type->set_name("coin-type");
-    coin_type->set_f([&]() {
+    coin_type->set_derivation([&]() {
         return asset->value().coin_type();
     });
     coin_type->set_to_string([](uint32_t n) { return to_string(n); });
@@ -122,7 +122,7 @@ Model::Model() {
     account_derivation_path = new DataNode<DerivationPath>();
     all_nodes.push_back(account_derivation_path);
     account_derivation_path->set_name("account-derivation-path");
-    account_derivation_path->set_f([&]() {
+    account_derivation_path->set_derivation([&]() {
         DerivationPathElement m = master_key_fingerprint->has_value() ? DerivationPathElement(master_key_fingerprint->value()) : DerivationPathElement();
         return DerivationPath {
             m,
@@ -138,7 +138,7 @@ Model::Model() {
     account_key = new DataNode<HDKey>();
     all_nodes.push_back(account_key);
     account_key->set_name("account-key");
-    account_key->set_f([&]() -> optional<HDKey> {
+    account_key->set_derivation([&]() -> optional<HDKey> {
         if(master_key->has_value()) {
             return master_key->value().derive(account_derivation_path->value(), true);
         } else {
@@ -152,7 +152,7 @@ Model::Model() {
     account_pub_key = new DataNode<HDKey>();
     all_nodes.push_back(account_pub_key);
     account_pub_key->set_name("account-pub-key");
-    account_pub_key->set_f([&]() -> optional<HDKey> {
+    account_pub_key->set_derivation([&]() -> optional<HDKey> {
         if(account_key->has_value()) {
             return account_key->value().to_public();
         } else {
@@ -174,7 +174,7 @@ Model::Model() {
     chain_type_int = new DataNode<uint32_t>();
     all_nodes.push_back(chain_type_int);
     chain_type_int->set_name("chain-type-int");
-    chain_type_int->set_f([&]() {
+    chain_type_int->set_derivation([&]() {
         return chain_type->value().index();
     });
     chain_type_int->set_to_string([](uint32_t n) { return to_string(n); });
@@ -192,7 +192,7 @@ Model::Model() {
     address_derivation_path = new DataNode<DerivationPath>();
     all_nodes.push_back(address_derivation_path);
     address_derivation_path->set_name("address-derivation-path");
-    address_derivation_path->set_f([&]() {
+    address_derivation_path->set_derivation([&]() {
         return DerivationPath {
             DerivationPathElement(chain_type_int->value(), false),
             DerivationPathElement(address_index->value(), false)
@@ -205,7 +205,7 @@ Model::Model() {
     full_address_derivation_path = new DataNode<DerivationPath>();
     all_nodes.push_back(full_address_derivation_path);
     full_address_derivation_path->set_name("full-address-derivation-path");
-    full_address_derivation_path->set_f([&]() {
+    full_address_derivation_path->set_derivation([&]() {
         auto path = account_derivation_path->value();
         auto address_path = address_derivation_path->value();
         path.insert(path.end(), address_path.begin(), address_path.end());
@@ -219,7 +219,7 @@ Model::Model() {
     address_key = new DataNode<HDKey>();
     all_nodes.push_back(address_key);
     address_key->set_name("address-key");
-    address_key->set_f([&]() -> optional<HDKey> {
+    address_key->set_derivation([&]() -> optional<HDKey> {
         if(master_key->has_value() && full_address_derivation_path->has_value()) {
             return master_key->value().derive(full_address_derivation_path->value(), true);
         } else if(account_key->has_value() && address_derivation_path->has_value()) {
@@ -236,7 +236,7 @@ Model::Model() {
     address_pub_key = new DataNode<HDKey>();
     all_nodes.push_back(address_pub_key);
     address_pub_key->set_name("address-pub-key");
-    address_pub_key->set_f([&]() -> optional<HDKey> {
+    address_pub_key->set_derivation([&]() -> optional<HDKey> {
         if(address_key->has_value()) {
             return address_key->value().to_public();
         } else if(account_pub_key->has_value() && address_derivation_path->has_value()) {
@@ -253,7 +253,7 @@ Model::Model() {
     address_ec_key = new DataNode<ECPrivateKey>();
     all_nodes.push_back(address_ec_key);
     address_ec_key->set_name("address-ec-key");
-    address_ec_key->set_f([&]() -> optional<ECPrivateKey> {
+    address_ec_key->set_derivation([&]() -> optional<ECPrivateKey> {
         if(address_key->has_value()) {
             return Wally::instance.bip32_key_to_ec_private(address_key->value());
         } else if(address_ec_key_wif->has_value()) {
@@ -269,7 +269,7 @@ Model::Model() {
     address_ec_key_wif = new DataNode<string>();
     all_nodes.push_back(address_ec_key_wif);
     address_ec_key_wif->set_name("address-ec-key-wif");
-    address_ec_key_wif->set_f([&]() -> optional<string> {
+    address_ec_key_wif->set_derivation([&]() -> optional<string> {
         if(address_ec_key->has_value()) {
             return Wally::instance.ec_key_to_wif(address_ec_key->value(), network->value());
         } else {
@@ -284,7 +284,7 @@ Model::Model() {
     address_pub_ec_key = new DataNode<ECCompressedPublicKey>();
     all_nodes.push_back(address_pub_ec_key);
     address_pub_ec_key->set_name("address-pub-ec-key");
-    address_pub_ec_key->set_f([&]() -> optional<ECCompressedPublicKey> {
+    address_pub_ec_key->set_derivation([&]() -> optional<ECCompressedPublicKey> {
         if(address_pub_key->has_value()) {
             return Wally::instance.bip32_key_to_ec_public(address_pub_key->value());
         } else if(address_ec_key->has_value()) {
@@ -300,7 +300,7 @@ Model::Model() {
     address_pkh = new DataNode<string>();
     all_nodes.push_back(address_pkh);
     address_pkh->set_name("address-pkh");
-    address_pkh->set_f([&]() -> optional<string> {
+    address_pkh->set_derivation([&]() -> optional<string> {
         if(address_pub_ec_key->has_value()) {
             return Wally::instance.to_address(address_pub_ec_key->value(), asset->value(), false);
         } else {
@@ -314,7 +314,7 @@ Model::Model() {
     address_sh = new DataNode<string>();
     all_nodes.push_back(address_sh);
     address_sh->set_name("address-sh");
-    address_sh->set_f([&]() -> optional<string> {
+    address_sh->set_derivation([&]() -> optional<string> {
         if(address_pub_ec_key->has_value()) {
             return Wally::instance.to_address(address_pub_ec_key->value(), asset->value(), true);
         } else {
@@ -328,7 +328,7 @@ Model::Model() {
     address_segwit = new DataNode<string>();
     all_nodes.push_back(address_segwit);
     address_segwit->set_name("address-segwit");
-    address_segwit->set_f([&]() -> optional<string> {
+    address_segwit->set_derivation([&]() -> optional<string> {
         if(address_pub_key->has_value()) {
             return Wally::instance.to_segwit_address(address_pub_key->value(), network->value());
         } else {
@@ -342,7 +342,7 @@ Model::Model() {
     output_descriptor = new DataNode<OutputDescriptor>();
     all_nodes.push_back(output_descriptor);
     output_descriptor->set_name("output-descriptor");
-    output_descriptor->set_f([&]() -> optional<OutputDescriptor> {
+    output_descriptor->set_derivation([&]() -> optional<OutputDescriptor> {
         if(output_type->has_value() && account_derivation_path->has_value(), address_derivation_path->has_value() && account_pub_key->has_value()) {
             return OutputDescriptor(output_type->value(), account_derivation_path->value(), address_derivation_path->value(), account_pub_key->value());
         } else {
@@ -362,7 +362,7 @@ Model::Model() {
     psbt_hex = new DataNode<string>();
     all_nodes.push_back(psbt_hex);
     psbt_hex->set_name("psbt-hex");
-    psbt_hex->set_f([&]() -> optional<string> {
+    psbt_hex->set_derivation([&]() -> optional<string> {
         if(psbt->has_value()) {
             return psbt->value().hex();
         } else {
@@ -375,7 +375,7 @@ Model::Model() {
     psbt_ur = new DataNode<string>();
     all_nodes.push_back(psbt_ur);
     psbt_ur->set_name("psbt-ur");
-    psbt_ur->set_f([&]() -> optional<string> {
+    psbt_ur->set_derivation([&]() -> optional<string> {
         if(psbt->has_value()) {
             return psbt->value().ur();
         } else {
@@ -388,7 +388,7 @@ Model::Model() {
     psbt_finalized = new DataNode<PSBT>();
     all_nodes.push_back(psbt_finalized);
     psbt_finalized->set_name("psbt-finalized");
-    psbt_finalized->set_f([&]() -> optional<PSBT> {
+    psbt_finalized->set_derivation([&]() -> optional<PSBT> {
         if(psbt->has_value()) {
             return psbt->value().finalized();
         } else {
@@ -408,7 +408,7 @@ Model::Model() {
     psbt_finalized_hex = new DataNode<string>();
     all_nodes.push_back(psbt_finalized_hex);
     psbt_finalized_hex->set_name("psbt-finalized-hex");
-    psbt_finalized_hex->set_f([&]() -> optional<string> {
+    psbt_finalized_hex->set_derivation([&]() -> optional<string> {
         if(psbt_finalized->has_value()) {
             return psbt_finalized->value().hex();
         } else {
@@ -421,7 +421,7 @@ Model::Model() {
     psbt_finalized_ur = new DataNode<string>();
     all_nodes.push_back(psbt_finalized_ur);
     psbt_finalized_ur->set_name("psbt-finalized-ur");
-    psbt_finalized_ur->set_f([&]() -> optional<string> {
+    psbt_finalized_ur->set_derivation([&]() -> optional<string> {
         if(psbt_finalized->has_value()) {
             return psbt_finalized->value().ur();
         } else {
@@ -434,7 +434,7 @@ Model::Model() {
     psbt_signed = new DataNode<PSBT>();
     all_nodes.push_back(psbt_signed);
     psbt_signed->set_name("psbt-signed");
-    psbt_signed->set_f([&]() -> optional<PSBT> {
+    psbt_signed->set_derivation([&]() -> optional<PSBT> {
         if(psbt->has_value() && address_ec_key->has_value()) {
             return psbt->value().sign(address_ec_key->value());
         } else {
@@ -447,7 +447,7 @@ Model::Model() {
     psbt_signed_hex = new DataNode<string>();
     all_nodes.push_back(psbt_signed_hex);
     psbt_signed_hex->set_name("psbt-signed-hex");
-    psbt_signed_hex->set_f([&]() -> optional<string> {
+    psbt_signed_hex->set_derivation([&]() -> optional<string> {
         if(psbt_signed->has_value()) {
             return psbt_signed->value().hex();
         } else {
@@ -460,7 +460,7 @@ Model::Model() {
     psbt_signed_ur = new DataNode<string>();
     all_nodes.push_back(psbt_signed_ur);
     psbt_signed_ur->set_name("psbt-signed-ur");
-    psbt_signed_ur->set_f([&]() -> optional<string> {
+    psbt_signed_ur->set_derivation([&]() -> optional<string> {
         if(psbt_signed->has_value()) {
             return psbt_signed->value().ur();
         } else {
@@ -473,7 +473,7 @@ Model::Model() {
     transaction = new DataNode<Transaction>();
     all_nodes.push_back(transaction);
     transaction->set_name("transaction");
-    transaction->set_f([&]() -> optional<Transaction> {
+    transaction->set_derivation([&]() -> optional<Transaction> {
         if(psbt_finalized->has_value()) {
             return Transaction(psbt_finalized->value());
         } else {
@@ -487,7 +487,7 @@ Model::Model() {
     transaction_ur = new DataNode<string>();
     all_nodes.push_back(transaction_ur);
     transaction_ur->set_name("transaction-ur");
-    transaction_ur->set_f([&]() -> optional<string> {
+    transaction_ur->set_derivation([&]() -> optional<string> {
         if(transaction->has_value()) {
             return transaction->value().ur();
         } else {

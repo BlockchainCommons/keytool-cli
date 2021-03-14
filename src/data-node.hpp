@@ -28,15 +28,15 @@ public:
 
     virtual void set_name(const std::string& name) override { _name = name; }
     virtual void set_tag(int tag) override { _tag = tag; }
-    void set_f(std::function<std::optional<T>(void)> f) { _f = f; }
+    void set_derivation(std::function<std::optional<T>(void)> derivation) { _derivation = derivation; }
     void set_to_string(std::function<std::string(const T&)> t) { _to_string = t; }
     void set_from_string(std::function<T(const std::string& s)> t) { _from_string = t; }
 
     std::optional<T> optional_value() {
         if(!_tried) {
             _tried = true;
-            if(!_value.has_value() && _f) {
-                _value = _f();
+            if(!_value.has_value() && _derivation) {
+                _value = _derivation();
             }
         }
         return _value;
@@ -83,7 +83,7 @@ private:
     int _tag;
     bool _tried;
     std::optional<T> _value;
-    std::function<std::optional<T>(void)> _f;
+    std::function<std::optional<T>(void)> _derivation;
     std::function<std::string(const T&)> _to_string;
     std::function<T(const std::string&)> _from_string;
 };

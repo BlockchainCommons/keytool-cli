@@ -17,12 +17,18 @@
 
 using namespace std;
 
-string data_to_hex(const ByteVector& in) {
+string byte_to_hex(uint8_t byte) {
     auto hex = "0123456789abcdef";
     string result;
+    result.append(1, hex[(byte >> 4) & 0xF]);
+    result.append(1, hex[byte & 0xF]);
+    return result;
+}
+
+string data_to_hex(const ByteVector& in) {
+    string result;
     for(auto c: in) {
-        result.append(1, hex[(c >> 4) & 0xF]);
-        result.append(1, hex[c & 0xF]);
+        result.append(byte_to_hex(c));
     }
     return result;
 }

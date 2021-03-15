@@ -23,6 +23,7 @@ typedef std::vector<std::string> StringVector;
 
 std::string data_to_hex(const ByteVector& in);
 uint8_t hex_digit_to_bin(char hex);
+std::string byte_to_hex(uint8_t byte);
 
 ByteVector hex_to_data(const std::string& hex);
 
@@ -97,5 +98,7 @@ static inline std::string trim_copy(std::string s) {
 
 std::string data_to_base64(const ByteVector& data);
 ByteVector base64_to_data(std::string const& data);
+
+ByteVector make_uuid();
 
 #endif // KEYTOOL_UTILS_HPP

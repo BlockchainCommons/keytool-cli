@@ -37,13 +37,14 @@ all: $(toolname)
 
 OBJS = \
 	keytool.o \
+	uuid.o \
+	randombytes.o \
+	model.o \
 	utils.o \
 	params.o \
 	wally-utils.o \
-	randombytes.o \
 	network.o \
 	asset.o \
-	model.o \
 	hd-key.o \
 	derivation-path.o \
 	chain-type.o \
@@ -87,6 +88,7 @@ index-bound.o: index-bound.hpp
 psbt.o: psbt.hpp utils.hpp wally-utils.hpp ec-key.hpp
 transaction.o: transaction.hpp utils.hpp wally-utils.hpp psbt.hpp
 seed.o: seed.hpp
+uuid.o: uuid.hpp
 
 bindir = $(DESTDIR)$(prefix)/bin
 

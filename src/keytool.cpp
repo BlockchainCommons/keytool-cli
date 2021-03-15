@@ -7,12 +7,37 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <iomanip>
 
 #include "params.hpp"
+#include "timestamp.hpp"
 
 using namespace std;
 
 int main( int argc, char *argv[] ) {
+    auto t = Timestamp("2014-11-12T19:12:14.505Z");
+    cout << t << endl;
+    auto t2 = Timestamp("2014-11-12T19:12:14.505-07:00");
+    cout << t2 << endl;
+    auto t3 = Timestamp("2014-11-12");
+    cout << t3 << endl;
+    auto t4 = Timestamp();
+    cout << t4 << endl;
+    cout << t4.millis_since_epoch() << endl;
+    cout << setprecision(15) << t4.secs_since_epoch() << endl;
+//    cout << t2 << endl;
+
+    // auto t = Timestamp();
+    // auto local = t.iso8601_local();
+    // cout << local << endl;
+    // auto t2 = Timestamp(local);
+    // cout << t2.iso8601_local() << endl;
+    // cout << (t.iso8601_local() == t2.iso8601_local() ? "true" : "false") << endl;
+
+    // auto utc = t.iso8601();
+    // cout << utc << endl;
+
+
     try {
         auto p = Params::parse(argc, argv);
         p->process();

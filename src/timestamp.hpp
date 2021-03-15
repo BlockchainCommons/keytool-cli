@@ -8,7 +8,7 @@
 class Timestamp final {
 public:
     Timestamp();
-    // Timestamp(double secs_since_epoch);
+    Timestamp(double secs_since_epoch);
     Timestamp(const std::string& iso8601);
 
     const std::chrono::system_clock::time_point time() const { return _time; }
@@ -17,8 +17,8 @@ public:
     int64_t millis_since_epoch() const;
     double secs_since_epoch() const;
 
-    // const void encode_cbor(ByteVector &buf) const;
-    // static Timestamp decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end);
+    const void encode_cbor(ByteVector &buf) const;
+    static Timestamp decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end);
 
     template<typename ostream>
     inline friend ostream &operator<<( ostream &os, const Timestamp &self ) {

@@ -23,8 +23,19 @@ int main( int argc, char *argv[] ) {
     cout << t3 << endl;
     auto t4 = Timestamp();
     cout << t4 << endl;
-    cout << t4.millis_since_epoch() << endl;
-    cout << setprecision(15) << t4.secs_since_epoch() << endl;
+    auto millis = t4.millis_since_epoch();
+    cout << millis << endl;
+    auto secs = t4.secs_since_epoch();
+    cout << setprecision(15) << secs << endl;
+    auto t5 = Timestamp(secs);
+    cout << t5 << endl;
+    ByteVector cbor;
+    t5.encode_cbor(cbor);
+    cout << data_to_hex(cbor) << endl;
+    auto pos = cbor.begin();
+    auto t6 = Timestamp::decode_cbor(pos, cbor.end());
+    cout << t6 << endl;
+
 //    cout << t2 << endl;
 
     // auto t = Timestamp();

@@ -245,3 +245,19 @@ DataNode<HDKey>* setup_address_pub_key(Model& model) {
     });
     return node;
 }
+
+DataNode<OutputDescriptor>* setup_output_descriptor(Model& model) {
+    auto node = new DataNode<OutputDescriptor>();
+    model.add_node(node);
+    node->set_info("output-descriptor", "OUTPUT_DESCRIPTOR", "A single-signature output descriptor.");
+    node->set_to_string([](const OutputDescriptor& o) -> string { return o.to_string(); });
+    model.add_derivation("output-descriptor <- [output_type, account_derivation_path, address_derivation_path, account_pub_key]");
+    node->set_derivation([&]() -> optional<OutputDescriptor> {
+        if(model.output_type->has_value() && model.account_derivation_path->has_value(), model.address_derivation_path->has_value() && model.account_pub_key->has_value()) {
+            return OutputDescriptor(model.output_type->value(), model.account_derivation_path->value(), model.address_derivation_path->value(), model.account_pub_key->value());
+        } else {
+            return nullopt;
+        }
+    });
+    return node;
+}

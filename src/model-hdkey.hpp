@@ -9,6 +9,7 @@
 #include "derivation-path.hpp"
 #include "chain-type.hpp"
 #include "index-bound.hpp"
+#include "output-descriptor.hpp"
 #include <string>
 
 class Model;
@@ -29,5 +30,6 @@ DataNode<DerivationPath>* setup_address_derivation_path(Model& model);
 DataNode<DerivationPath>* setup_full_address_derivation_path(Model& model);
 DataNode<HDKey>* setup_address_key(Model& model);
 DataNode<HDKey>* setup_address_pub_key(Model& model);
+DataNode<OutputDescriptor>* setup_output_descriptor(Model& model);
 
 #endif

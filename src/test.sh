@@ -92,6 +92,12 @@ testSeedDigest()
     "$(${KEYTOOL} --seed 59f2293a5bce7d4de59e71b4207ac5d2 seed-digest)"
 }
 
+testRequestID()
+{
+  assertEquals $'abca5901-7419-4a37-9473-a55f434ebc27' \
+    "$(${KEYTOOL} --request-id ABCA5901-7419-4A37-9473-A55F434EBC27 request-id)"
+}
+
 testMasterKey()
 {
   # master-key <- [network, seed]

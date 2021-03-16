@@ -15,6 +15,7 @@
 #include "psbt.hpp"
 #include "transaction.hpp"
 #include "seed.hpp"
+#include "uuid.hpp"
 
 class Model final {
 public:
@@ -40,6 +41,7 @@ public:
     DataNode<std::string> *seed_note;
     DataNode<Seed> *seed_ur;
     DataNode<ByteVector> *seed_digest;
+    DataNode<UUID> *request_id;
 
     // ec-key
     DataNode<Asset> *asset;

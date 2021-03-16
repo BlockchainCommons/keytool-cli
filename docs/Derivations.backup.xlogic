@@ -285,7 +285,7 @@
     <displaySettings addEntityAsSuccessor="false" annotationToBrowse="false" bias="Bias.start" confidenceVisible="false" edgeNotesVisible="false" edgeWeightsVisible="false" entityIdVisible="false"
         noteNumbersVisible="false" orientation="Orientation.leftToRight" projectManagementVisible="false"/>
     <documentInfo author="" comments="" keywords="" title=""/>
-    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="42.0" zoom="0.654"/>
+    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="368.0" zoom="0.654"/>
     <chartSettings classVisible="true" classWidth="90" completionVisible="true" effortVisible="true" finishDateVisible="true" resourceVisible="true" resourceWidth="60" startDateVisible="true" titleWidth="104"/>
     <inspectorSettings visibility="true" width="284">
         <inspector title="element" visibility="minimized"/>
@@ -310,7 +310,7 @@
             <operatorFamily class="com.flyinglogic.decisiongraph.DecisionGraphOperatorFamily"/>
             <graph majorVersion="1" minorVersion="0" supportsGroups="true">
                 <vertices>
-                    <vertex eid="89" outEdgeOrder="357 370">
+                    <vertex eid="89" outEdgeOrder="357 370 368">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">seed</attribute>
@@ -724,11 +724,6 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="288" grouped="112 98 131 182 278 89 110 95 115 214 232 280 242 218 210 317 318 356 358 360 362 364 366 369 371 373 375 377 379 382 384">
-                        <attributes>
-                            <attribute class="java.lang.String" key="title">Key Material</attribute>
-                        </attributes>
-                    </vertex>
                     <vertex eid="289">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
@@ -1039,7 +1034,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="356" outEdgeOrder="363 365 367 378">
+                    <vertex eid="356" inEdgeOrder="383 390" outEdgeOrder="378 387 388 389">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">seed-ur</attribute>
@@ -1081,51 +1076,6 @@
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
                                 <entityClass name="Text" uuid="acac2bf7-b05d-438d-8e89-f36c0312a58b"/>
-                            </attribute>
-                        </attributes>
-                    </vertex>
-                    <vertex eid="362">
-                        <attributes>
-                            <attribute class="java.lang.String" key="type">entity</attribute>
-                            <attribute class="java.lang.String" key="title">seed-name</attribute>
-                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
-                                <fuzzyBoolean true="0.5"/>
-                            </attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.FuzzyOrVertexOperator" key="forwardOperator">
-                                <fuzzyOr/>
-                            </attribute>
-                            <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="Text" uuid="acac2bf7-b05d-438d-8e89-f36c0312a58b"/>
-                            </attribute>
-                        </attributes>
-                    </vertex>
-                    <vertex eid="364">
-                        <attributes>
-                            <attribute class="java.lang.String" key="type">entity</attribute>
-                            <attribute class="java.lang.String" key="title">seed-note</attribute>
-                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
-                                <fuzzyBoolean true="0.5"/>
-                            </attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.FuzzyOrVertexOperator" key="forwardOperator">
-                                <fuzzyOr/>
-                            </attribute>
-                            <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="Text" uuid="acac2bf7-b05d-438d-8e89-f36c0312a58b"/>
-                            </attribute>
-                        </attributes>
-                    </vertex>
-                    <vertex eid="366">
-                        <attributes>
-                            <attribute class="java.lang.String" key="type">entity</attribute>
-                            <attribute class="java.lang.String" key="title">seed</attribute>
-                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
-                                <fuzzyBoolean true="0.5"/>
-                            </attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.FuzzyOrVertexOperator" key="forwardOperator">
-                                <fuzzyOr/>
-                            </attribute>
-                            <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="Hex" uuid="2294c7a1-5093-40c4-8290-e784c2ebd866"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1222,19 +1172,24 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="384">
+                    <vertex eid="386" grouped="356 373 358 360 89 382 369 375 377 379 371">
                         <attributes>
-                            <attribute class="java.lang.String" key="type">entity</attribute>
-                            <attribute class="java.lang.String" key="title">seed-ur</attribute>
-                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
-                                <fuzzyBoolean true="0.5"/>
-                            </attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.FuzzyOrVertexOperator" key="forwardOperator">
-                                <fuzzyOr/>
-                            </attribute>
-                            <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-seed" uuid="7d72a849-dd01-439a-ab54-be3f86ee2c59"/>
-                            </attribute>
+                            <attribute class="java.lang.String" key="title">Seed</attribute>
+                        </attributes>
+                    </vertex>
+                    <vertex eid="391" grouped="129 257 289 97 98 232 297 299 236 301 238 112 113 242 245 214 248 218 286 222 95 131 110 291 294 210">
+                        <attributes>
+                            <attribute class="java.lang.String" key="title">HDKey</attribute>
+                        </attributes>
+                    </vertex>
+                    <vertex eid="392" grouped="337 115 278 182 183 280 284 220 317 318 335 99 255">
+                        <attributes>
+                            <attribute class="java.lang.String" key="title">ECKey</attribute>
+                        </attributes>
+                    </vertex>
+                    <vertex eid="393" grouped="352 324 340 309 310 326 342 312 344 346 348 350">
+                        <attributes>
+                            <attribute class="java.lang.String" key="title">PSBT</attribute>
                         </attributes>
                     </vertex>
                 </vertices>
@@ -1999,40 +1954,7 @@
                             <attribute class="java.lang.Integer" key="noteNumber">2</attribute>
                         </attributes>
                     </edge>
-                    <edge eid="363" source="356" target="362">
-                        <attributes>
-                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
-                                <multiply/>
-                            </attribute>
-                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
-                                <fuzzyBoolean true="0.5"/>
-                            </attribute>
-                        </attributes>
-                    </edge>
-                    <edge eid="365" source="356" target="364">
-                        <attributes>
-                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
-                                <multiply/>
-                            </attribute>
-                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
-                                <fuzzyBoolean true="0.5"/>
-                            </attribute>
-                        </attributes>
-                    </edge>
-                    <edge eid="367" source="356" target="366">
-                        <attributes>
-                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
-                                <multiply/>
-                            </attribute>
-                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
-                                <fuzzyBoolean true="0.5"/>
-                            </attribute>
-                        </attributes>
-                    </edge>
-                    <edge eid="368" source="366" target="214">
+                    <edge eid="368" source="89" target="214">
                         <attributes>
                             <attribute class="java.lang.Double" key="weight">1.0</attribute>
                             <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
@@ -2135,15 +2057,28 @@
                             </attribute>
                         </attributes>
                     </edge>
-                    <edge eid="385" source="377" target="384">
+                    <edge eid="387" source="356" target="358">
                         <attributes>
                             <attribute class="java.lang.Double" key="weight">1.0</attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
-                                <multiply/>
-                            </attribute>
-                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
-                                <fuzzyBoolean true="0.5"/>
-                            </attribute>
+                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
+                        </attributes>
+                    </edge>
+                    <edge eid="388" source="356" target="360">
+                        <attributes>
+                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
+                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
+                        </attributes>
+                    </edge>
+                    <edge eid="389" source="356" target="89">
+                        <attributes>
+                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
+                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
+                        </attributes>
+                    </edge>
+                    <edge eid="390" source="377" target="356">
+                        <attributes>
+                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
+                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
                         </attributes>
                     </edge>
                 </edges>

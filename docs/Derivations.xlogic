@@ -285,7 +285,7 @@
     <displaySettings addEntityAsSuccessor="false" annotationToBrowse="false" bias="Bias.start" confidenceVisible="false" edgeNotesVisible="false" edgeWeightsVisible="false" entityIdVisible="false"
         noteNumbersVisible="false" orientation="Orientation.leftToRight" projectManagementVisible="false"/>
     <documentInfo author="" comments="" keywords="" title=""/>
-    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="368.0" zoom="0.654"/>
+    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="0.0" zoom="0.654"/>
     <chartSettings classVisible="true" classWidth="90" completionVisible="true" effortVisible="true" finishDateVisible="true" resourceVisible="true" resourceWidth="60" startDateVisible="true" titleWidth="104"/>
     <inspectorSettings visibility="true" width="284">
         <inspector title="element" visibility="minimized"/>
@@ -1701,7 +1701,7 @@
                             <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
                             <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
                             <attribute class="java.lang.String" key="note">optional</attribute>
-                            <attribute class="java.lang.Integer" key="noteNumber">4</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">3</attribute>
                         </attributes>
                     </edge>
                     <edge eid="308" source="297" target="248">
@@ -1936,7 +1936,7 @@
                             <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
                             <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
                             <attribute class="java.lang.String" key="note">optional</attribute>
-                            <attribute class="java.lang.Integer" key="noteNumber">3</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">2</attribute>
                         </attributes>
                     </edge>
                     <edge eid="361" source="360" target="382">
@@ -1951,7 +1951,7 @@
                             <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
                             <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
                             <attribute class="java.lang.String" key="note">optional</attribute>
-                            <attribute class="java.lang.Integer" key="noteNumber">2</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">1</attribute>
                         </attributes>
                     </edge>
                     <edge eid="368" source="89" target="214">
@@ -1985,10 +1985,7 @@
                             <attribute class="com.arciem.FuzzyBoolean" key="confidence">
                                 <fuzzyBoolean true="0.5"/>
                             </attribute>
-                            <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
-                            <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
-                            <attribute class="java.lang.String" key="note">optional</attribute>
-                            <attribute class="java.lang.Integer" key="noteNumber">1</attribute>
+                            <attribute class="java.lang.Boolean" key="noteVisible">false</attribute>
                         </attributes>
                     </edge>
                     <edge eid="374" source="373" target="375">

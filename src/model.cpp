@@ -23,6 +23,7 @@ Model::Model() {
     seed_note = setup_seed_note(*this);
     seed_ur = setup_seed_ur(*this);
     seed_digest = setup_seed_digest(*this);
+    request_id = setup_request_id(*this);
 
     // ec-key
     asset = setup_asset(*this);

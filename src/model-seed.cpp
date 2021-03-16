@@ -100,3 +100,14 @@ DataNode<ByteVector>* setup_seed_digest(Model& model) {
     });
     return node;
 }
+
+DataNode<UUID>* setup_request_id(Model& model) {
+    auto node = new DataNode<UUID>();
+    model.add_node(node);
+    node->set_info("request-id", "UUID (default: unique)", "The ID of the request and response.");
+    node->set_to_string([](const UUID& uuid) { return uuid.str(); });
+    node->set_from_string([](const string& s) -> UUID { return UUID(s); });
+    model.add_derivation("request-id (default: unique)");
+    node->set_value(UUID());
+    return node;
+}

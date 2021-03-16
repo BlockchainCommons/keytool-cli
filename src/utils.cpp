@@ -192,3 +192,16 @@ const ByteVector sha256(const ByteVector &buf) {
     sha256_Raw(buf.data(), buf.size(), digest);
     return ByteVector(digest, digest + SHA256_DIGEST_LENGTH);
 }
+
+uint32_t parse_uint32(const string& s) {
+    int n;
+    try {
+        n = stoi(s, nullptr, 0);
+    } catch(exception &e) {
+        throw domain_error("Expected integer >= 0.");
+    }
+    if(n < 0) {
+        throw domain_error("Expected integer >= 0.");
+    }
+    return n;
+}

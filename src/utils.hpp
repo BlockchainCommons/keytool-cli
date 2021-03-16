@@ -103,4 +103,6 @@ ByteVector make_uuid();
 
 const ByteVector sha256(const ByteVector &buf);
 
+uint32_t parse_uint32(const std::string& s);
+
 #endif // KEYTOOL_UTILS_HPP

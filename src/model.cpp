@@ -8,19 +8,6 @@
 
 using namespace std;
 
-static uint32_t parse_uint32(const string& s) {
-    int n;
-    try {
-        n = stoi(s, nullptr, 0);
-    } catch(exception &e) {
-        throw domain_error("Expected integer >= 0.");
-    }
-    if(n < 0) {
-        throw domain_error("Expected integer >= 0.");
-    }
-    return n;
-}
-
 void Model::add_node(DataNodeProtocol* n) {
     _all_nodes.push_back(n);
 }
@@ -30,93 +17,25 @@ void Model::add_derivation(const std::string& d) {
 }
 
 Model::Model() {
+    // seed
     seed = setup_seed(*this);
     seed_name = setup_seed_name(*this);
     seed_note = setup_seed_note(*this);
     seed_ur = setup_seed_ur(*this);
     seed_digest = setup_seed_digest(*this);
+
+    // ec-key
     asset = setup_asset(*this);
     network = setup_network(*this);
 
-    master_key = new DataNode<HDKey>();
-    add_node(master_key);
-    master_key->set_info("master-key", "XPRV", "The BIP-32 master HD key.");
-    master_key->set_to_string([](const HDKey& key) { return key.to_base58(true); });
-    master_key->set_from_string([](const string& prv) -> HDKey { return HDKey(prv, true); });
-    add_derivation("master-key <- [network, seed]");
-    master_key->set_derivation([&]() -> optional<HDKey> {
-        if(seed->has_value() && network->has_value()) {
-            return HDKey(seed->value(), network->value());
-        } else {
-            return nullopt;
-        }
-    });
-
-    master_key_fingerprint = new DataNode<ByteVector>();
-    add_node(master_key_fingerprint);
-    master_key_fingerprint->set_info("master-key-fingerprint", "HEX", "Fingerprint of the master HD key.");
-    master_key_fingerprint->set_to_string([](const ByteVector& bytes) { return data_to_hex(bytes); });
-    master_key_fingerprint->set_from_string([](const string& hex) -> ByteVector { return hex_to_data(hex); });
-    add_derivation("master-key-fingerprint <- [master-key]");
-    master_key_fingerprint->set_derivation([&]() -> optional<ByteVector> {
-        if(master_key->has_value()) {
-            return master_key->value().fingerprint();
-        } else {
-            return nullopt;
-        }
-    });
-
-    output_type = new DataNode<OutputDescriptorType>();
-    add_node(output_type);
-    output_type->set_info("output-type", "ENUM pkh|wpkh|sh-wpkh", "The output descriptor type.");
-    output_type->set_to_string([](const OutputDescriptorType& d) { return d.name(); });
-    output_type->set_from_string([](const string& name) -> OutputDescriptorType { return OutputDescriptorType::find(name); });
-    add_derivation("output-type (default: wpkh)");
-    output_type->set_value(OutputDescriptorType::wpkh());
-
-    purpose = new DataNode<uint32_t>();
-    add_node(purpose);
-    purpose->set_info("purpose", "INDEX", "The purpose field of the BIP-44 derivation path.");
-    purpose->set_to_string([](uint32_t n) { return to_string(n); });
-    purpose->set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
-    add_derivation("purpose <- [output-type]");
-    purpose->set_derivation([&]() {
-        return output_type->value().purpose();
-    });
-
-    coin_type = new DataNode<uint32_t>();
-    add_node(coin_type);
-    coin_type->set_info("coin-type", "INDEX", "The coin type field of the BIP-44 derivation path.");
-    coin_type->set_to_string([](uint32_t n) { return to_string(n); });
-    coin_type->set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
-    add_derivation("coin-type <- asset");
-    coin_type->set_derivation([&]() {
-        return asset->value().coin_type();
-    });
-
-    account_index = new DataNode<uint32_t>();
-    add_node(account_index);
-    account_index->set_info("account-index", "INDEX", "The account field of the BIP-44 derivation path.");
-    account_index->set_to_string([](uint32_t n) { return to_string(n); });
-    account_index->set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
-    add_derivation("account-index (default: 0)");
-    account_index->set_value(0);
-
-    account_derivation_path = new DataNode<DerivationPath>();
-    add_node(account_derivation_path);
-    account_derivation_path->set_info("account-derivation-path", "BIP32_PATH", "m/purpose'/coin-type'/accont-index'.");
-    account_derivation_path->set_to_string([](const DerivationPath& path) { return to_string(path); });
-    account_derivation_path->set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
-    add_derivation("account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]");
-    account_derivation_path->set_derivation([&]() {
-        DerivationPathElement m = master_key_fingerprint->has_value() ? DerivationPathElement(master_key_fingerprint->value()) : DerivationPathElement();
-        return DerivationPath {
-            m,
-            DerivationPathElement(purpose->value(), true),
-            DerivationPathElement(coin_type->value(), true),
-            DerivationPathElement(account_index->value(), true)
-        };
-    });
+    // hd-key
+    master_key = setup_master_key(*this);
+    master_key_fingerprint = setup_master_key_fingerprint(*this);
+    output_type = setup_output_type(*this);
+    purpose = setup_purpose(*this);
+    coin_type = setup_coin_type(*this);
+    account_index = setup_account_index(*this);
+    account_derivation_path = setup_account_derivation_path(*this);
 
     account_key = new DataNode<HDKey>();
     add_node(account_key);

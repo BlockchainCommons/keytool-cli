@@ -15,5 +15,6 @@ DataNode<std::string>* setup_seed_note(Model& model);
 DataNode<Seed>* setup_seed_ur(Model& model);
 DataNode<ByteVector>* setup_seed_digest(Model& model);
 DataNode<UUID>* setup_request_id(Model& model);
+DataNode<std::string>* setup_request_description(Model& model);
 
 #endif

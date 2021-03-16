@@ -42,6 +42,7 @@ public:
     DataNode<Seed> *seed_ur;
     DataNode<ByteVector> *seed_digest;
     DataNode<UUID> *request_id;
+    DataNode<std::string> *request_description;
 
     // ec-key
     DataNode<Asset> *asset;

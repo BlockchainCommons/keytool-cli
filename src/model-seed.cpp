@@ -111,3 +111,14 @@ DataNode<UUID>* setup_request_id(Model& model) {
     node->set_value(UUID());
     return node;
 }
+
+DataNode<string>* setup_request_description(Model& model) {
+    auto node = new DataNode<string>();
+    model.add_node(node);
+    node->set_info("request-description", "TEXT", "An informational note about the request.");
+    node->set_to_string([](const string& s) { return s; });
+    node->set_from_string([](const string& s) -> string { return s; });
+    model.add_derivation("request-description (default: empty)");
+    node->set_value("");
+    return node;
+}

@@ -285,7 +285,7 @@
     <displaySettings addEntityAsSuccessor="false" annotationToBrowse="false" bias="Bias.start" confidenceVisible="false" edgeNotesVisible="false" edgeWeightsVisible="false" entityIdVisible="false"
         noteNumbersVisible="false" orientation="Orientation.leftToRight" projectManagementVisible="false"/>
     <documentInfo author="" comments="" keywords="" title=""/>
-    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="0.0" zoom="0.654"/>
+    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="104.0" zoom="0.654"/>
     <chartSettings classVisible="true" classWidth="90" completionVisible="true" effortVisible="true" finishDateVisible="true" resourceVisible="true" resourceWidth="60" startDateVisible="true" titleWidth="104"/>
     <inspectorSettings visibility="true" width="284">
         <inspector title="element" visibility="minimized"/>
@@ -1079,7 +1079,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="369">
+                    <vertex eid="369" outEdgeOrder="398 399 400">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">seed-request</attribute>
@@ -1094,7 +1094,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="371" outEdgeOrder="372 381">
+                    <vertex eid="371" inEdgeOrder="400 401" outEdgeOrder="372 381">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">request-id</attribute>
@@ -1109,7 +1109,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="373">
+                    <vertex eid="373" inEdgeOrder="370 399">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">seed-digest</attribute>
@@ -1124,7 +1124,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="375" inEdgeOrder="372 374">
+                    <vertex eid="375" inEdgeOrder="372 374 397">
                         <attributes>
                             <attribute class="java.lang.String" key="type">junctor</attribute>
                             <attribute class="com.flyinglogic.logicgraph.operator.FuzzyAndVertexOperator" key="forwardOperator">
@@ -1135,7 +1135,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="377">
+                    <vertex eid="377" outEdgeOrder="390 401">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">seed-response</attribute>
@@ -1172,7 +1172,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="386" grouped="356 373 358 360 89 382 369 375 377 379 371">
+                    <vertex eid="386" grouped="356 373 358 360 89 382 369 375 377 379 371 396">
                         <attributes>
                             <attribute class="java.lang.String" key="title">Seed</attribute>
                         </attributes>
@@ -1190,6 +1190,21 @@
                     <vertex eid="393" grouped="352 324 340 309 310 326 342 312 344 346 348 350">
                         <attributes>
                             <attribute class="java.lang.String" key="title">PSBT</attribute>
+                        </attributes>
+                    </vertex>
+                    <vertex eid="396">
+                        <attributes>
+                            <attribute class="java.lang.String" key="type">entity</attribute>
+                            <attribute class="java.lang.String" key="title">request-description</attribute>
+                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
+                                <fuzzyBoolean true="0.5"/>
+                            </attribute>
+                            <attribute class="com.flyinglogic.logicgraph.operator.FuzzyOrVertexOperator" key="forwardOperator">
+                                <fuzzyOr/>
+                            </attribute>
+                            <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
+                                <entityClass name="Text" uuid="acac2bf7-b05d-438d-8e89-f36c0312a58b"/>
+                            </attribute>
                         </attributes>
                     </vertex>
                 </vertices>
@@ -1701,7 +1716,7 @@
                             <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
                             <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
                             <attribute class="java.lang.String" key="note">optional</attribute>
-                            <attribute class="java.lang.Integer" key="noteNumber">3</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">4</attribute>
                         </attributes>
                     </edge>
                     <edge eid="308" source="297" target="248">
@@ -1936,7 +1951,7 @@
                             <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
                             <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
                             <attribute class="java.lang.String" key="note">optional</attribute>
-                            <attribute class="java.lang.Integer" key="noteNumber">2</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">3</attribute>
                         </attributes>
                     </edge>
                     <edge eid="361" source="360" target="382">
@@ -1951,7 +1966,7 @@
                             <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
                             <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
                             <attribute class="java.lang.String" key="note">optional</attribute>
-                            <attribute class="java.lang.Integer" key="noteNumber">1</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">2</attribute>
                         </attributes>
                     </edge>
                     <edge eid="368" source="89" target="214">
@@ -2073,6 +2088,45 @@
                         </attributes>
                     </edge>
                     <edge eid="390" source="377" target="356">
+                        <attributes>
+                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
+                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
+                        </attributes>
+                    </edge>
+                    <edge eid="397" source="396" target="375">
+                        <attributes>
+                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
+                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
+                                <multiply/>
+                            </attribute>
+                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
+                                <fuzzyBoolean true="0.5"/>
+                            </attribute>
+                            <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
+                            <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
+                            <attribute class="java.lang.String" key="note">optional</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">1</attribute>
+                        </attributes>
+                    </edge>
+                    <edge eid="398" source="369" target="396">
+                        <attributes>
+                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
+                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
+                        </attributes>
+                    </edge>
+                    <edge eid="399" source="369" target="373">
+                        <attributes>
+                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
+                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
+                        </attributes>
+                    </edge>
+                    <edge eid="400" source="369" target="371">
+                        <attributes>
+                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
+                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
+                        </attributes>
+                    </edge>
+                    <edge eid="401" source="377" target="371">
                         <attributes>
                             <attribute class="java.lang.Double" key="weight">1.0</attribute>
                             <attribute class="java.lang.Boolean" key="backEdge">true</attribute>

@@ -36,120 +36,15 @@ Model::Model() {
     coin_type = setup_coin_type(*this);
     account_index = setup_account_index(*this);
     account_derivation_path = setup_account_derivation_path(*this);
-
-    account_key = new DataNode<HDKey>();
-    add_node(account_key);
-    account_key->set_info("account-key", "XPRV", "The BIP-44 account key.");
-    account_key->set_to_string([](const HDKey& key) { return key.to_base58(true); });
-    account_key->set_from_string([](const string& prv) -> HDKey { return HDKey(prv, true); });
-    add_derivation("account-key <- [master-key, account-derivation-path]");
-    account_key->set_derivation([&]() -> optional<HDKey> {
-        if(master_key->has_value()) {
-            return master_key->value().derive(account_derivation_path->value(), true);
-        } else {
-            return nullopt;
-        }
-    });
-
-    account_pub_key = new DataNode<HDKey>();
-    add_node(account_pub_key);
-    account_pub_key->set_info("account-pub-key", "XPUB", "The BIP-44 account public key.");
-    account_pub_key->set_to_string([](const HDKey& key) { return key.to_base58(false); });
-    account_pub_key->set_from_string([](const string& pub) -> HDKey { return HDKey(pub, false); });
-    add_derivation("account-pub-key <- [account-key]");
-    account_pub_key->set_derivation([&]() -> optional<HDKey> {
-        if(account_key->has_value()) {
-            return account_key->value().to_public();
-        } else {
-            return nullopt;
-        }
-    });
-
-    chain_type = new DataNode<ChainType>();
-    add_node(chain_type);
-    chain_type->set_info("chain-type", "ENUM internal|external|identity", "The BIP-44 chain type (change) field.");
-    chain_type->set_to_string([](const ChainType& t) { return t.to_string(); });
-    chain_type->set_from_string([](const string& t) -> ChainType { return ChainType::find(t); });
-    add_derivation("chain-type (default: external)");
-    chain_type->set_value(ChainType::external());
-
-    chain_type_int = new DataNode<uint32_t>();
-    add_node(chain_type_int);
-    chain_type_int->set_info("chain-type-int", "INDEX", "The BIP-44 change field integer value.");
-    chain_type_int->set_to_string([](uint32_t n) { return to_string(n); });
-    chain_type_int->set_from_string([](const string& n) -> uint32_t { return parse_uint32(n); });
-    add_derivation("chain-type-int <- [chain-type];");
-    chain_type_int->set_derivation([&]() {
-        return chain_type->value().index();
-    });
-
-    address_index = new DataNode<IndexBound>();
-    add_node(address_index);
-    address_index->set_info("address-index", "INDEX_BOUND", "The BIP-44 address_index field. '*' is allowed for output descriptors.");
-    address_index->set_to_string([](IndexBound n) { return n.to_string(); });
-    address_index->set_from_string([](const string& s) -> IndexBound { return parse_index_range(s); });
-    add_derivation("address-index (default: 0)");
-    address_index->set_value(0);
-
-    address_derivation_path = new DataNode<DerivationPath>();
-    add_node(address_derivation_path);
-    address_derivation_path->set_info("address-derivation-path", "BIP32_PATH", "The BIP-32 address derivation path, starting from the account-key.");
-    address_derivation_path->set_to_string([](const DerivationPath& path) { return to_string(path); });
-    address_derivation_path->set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
-    add_derivation("address-derivation-path <- [chain-type-int, address-index]");
-    address_derivation_path->set_derivation([&]() {
-        return DerivationPath {
-            DerivationPathElement(chain_type_int->value(), false),
-            DerivationPathElement(address_index->value(), false)
-        };
-    });
-
-    full_address_derivation_path = new DataNode<DerivationPath>();
-    add_node(full_address_derivation_path);
-    full_address_derivation_path->set_info("full-address-derivation-path", "BIP32_PATH", "The BIP-32 address derivation path, starting from the master-key.");
-    full_address_derivation_path->set_to_string([](const DerivationPath& path) { return to_string(path); });
-    full_address_derivation_path->set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
-    add_derivation("full-address-derivation-path <- [account-derivation-path, address-derivation-path]");
-    full_address_derivation_path->set_derivation([&]() {
-        auto path = account_derivation_path->value();
-        auto address_path = address_derivation_path->value();
-        path.insert(path.end(), address_path.begin(), address_path.end());
-        return path;
-    });
-
-    address_key = new DataNode<HDKey>();
-    add_node(address_key);
-    address_key->set_info("address-key", "XPRV", "The BIP-32 address HD key.");
-    address_key->set_to_string([](const HDKey& key) { return key.to_base58(true); });
-    address_key->set_from_string([](const string& prv) -> HDKey { return HDKey(prv, true); });
-    add_derivation("address-key <- [master-key, full-address-derivation-path]");
-    add_derivation("address-key <- [account-key, address-derivation-path]");
-    address_key->set_derivation([&]() -> optional<HDKey> {
-        if(master_key->has_value() && full_address_derivation_path->has_value()) {
-            return master_key->value().derive(full_address_derivation_path->value(), true);
-        } else if(account_key->has_value() && address_derivation_path->has_value()) {
-            return account_key->value().derive(address_derivation_path->value(), true);
-        } else {
-            return nullopt;
-        }
-    });
-
-    address_pub_key = new DataNode<HDKey>();
-    add_node(address_pub_key);
-    address_pub_key->set_info("address-pub-key", "XPUB", "The BIP-32 address public HD key.");
-    address_pub_key->set_to_string([](const HDKey& key) { return key.to_base58(false); });
-    address_pub_key->set_from_string([](const string& pub) -> HDKey { return HDKey(pub, false); });
-    add_derivation("address-pub-key <- [address-key]");
-    add_derivation("address-pub-key <- [account-pub-key, address-derivation-path]");
-    address_pub_key->set_derivation([&]() -> optional<HDKey> {
-        if(address_key->has_value()) {
-            return address_key->value().to_public();
-        } else if(account_pub_key->has_value() && address_derivation_path->has_value()) {
-            return account_pub_key->value().derive(address_derivation_path->value(), false);
-        } else {
-            return nullopt;
-        }
-    });
+    account_key = setup_account_key(*this);
+    account_pub_key = setup_account_pub_key(*this);
+    chain_type = setup_chain_type(*this);
+    chain_type_int = setup_chain_type_int(*this);
+    address_index = setup_address_index(*this);
+    address_derivation_path = setup_address_derivation_path(*this);
+    full_address_derivation_path = setup_full_address_derivation_path(*this);
+    address_key = setup_address_key(*this);
+    address_pub_key = setup_address_pub_key(*this);
 
     address_ec_key = new DataNode<ECPrivateKey>();
     add_node(address_ec_key);

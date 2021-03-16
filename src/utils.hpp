@@ -101,4 +101,6 @@ ByteVector base64_to_data(std::string const& data);
 
 ByteVector make_uuid();
 
+const ByteVector sha256(const ByteVector &buf);
+
 #endif // KEYTOOL_UTILS_HPP

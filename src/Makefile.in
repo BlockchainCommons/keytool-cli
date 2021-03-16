@@ -44,12 +44,15 @@ OBJS = \
 	index-bound.o \
 	keytool.o \
 	model.o \
+	model-seed.o \
 	network.o \
 	output-descriptor.o \
 	output-type.o \
 	params.o \
 	psbt.o \
 	randombytes.o \
+	request.o \
+	response.o \
 	seed.o \
 	timestamp.o \
 	transaction.o \
@@ -78,13 +81,16 @@ ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
 hd-key.o: hd-key.hpp utils.hpp network.hpp wally-utils.hpp derivation-path.hpp seed.hpp
 index-bound.o: index-bound.hpp
 keytool.o: params.hpp
-model.o: model.hpp data-node.hpp asset.hpp hd-key.hpp ec-key.hpp utils.hpp wally-utils.hpp derivation-path.hpp chain-type.hpp output-type.hpp index-bound.hpp output-descriptor.hpp psbt.hpp transaction.hpp seed.hpp
+model.o: model.hpp data-node.hpp asset.hpp hd-key.hpp ec-key.hpp utils.hpp wally-utils.hpp derivation-path.hpp chain-type.hpp output-type.hpp index-bound.hpp output-descriptor.hpp psbt.hpp transaction.hpp seed.hpp model-seed.hpp
+model-seed.o: model-seed.hpp data-node.hpp utils.hpp seed.hpp model.hpp
 network.o: network.hpp
 output-descriptor.o: output-descriptor.hpp output-type.hpp derivation-path.hpp hd-key.hpp
 output-type.o: output-type.hpp
 params.o: params.hpp utils.hpp config.h model.hpp
 psbt.o: psbt.hpp utils.hpp wally-utils.hpp ec-key.hpp
 randombytes.o: randombytes.h
+request.o: request.hpp uuid.hpp utils.hpp
+response.o: response.hpp
 seed.o: seed.hpp
 timestamp.o: timestamp.hpp date.h
 transaction.o: transaction.hpp utils.hpp wally-utils.hpp psbt.hpp

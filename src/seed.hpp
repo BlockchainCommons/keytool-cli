@@ -17,6 +17,8 @@ public:
     const std::string& name() const { return _name; }
     const std::string& note() const { return _note; }
 
+    ByteVector digest() const;
+
 private:
     ByteVector _data;
     std::string _name;

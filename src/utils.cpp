@@ -186,3 +186,9 @@ ByteVector base64_to_data(string const& data) {
     }
     return decoded;
 }
+
+const ByteVector sha256(const ByteVector &buf) {
+    uint8_t digest[SHA256_DIGEST_LENGTH];
+    sha256_Raw(buf.data(), buf.size(), digest);
+    return ByteVector(digest, digest + SHA256_DIGEST_LENGTH);
+}

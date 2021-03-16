@@ -27,15 +27,18 @@ public:
     const std::vector<DataNodeProtocol*>& all_nodes() const {
         return _all_nodes;
     }
-    const std::vector<std::string>& derivations() const { 
+    const std::vector<std::string>& derivations() const {
         return _derivations;
     }
 
-private:
+    void add_node(DataNodeProtocol*);
+    void add_derivation(const std::string& d);
+
     DataNode<ByteVector> *seed;
     DataNode<std::string> *seed_name;
     DataNode<std::string> *seed_note;
     DataNode<Seed> *seed_ur;
+    DataNode<ByteVector> *seed_digest;
     DataNode<Asset> *asset;
     DataNode<Network> *network;
     DataNode<HDKey> *master_key;
@@ -73,11 +76,9 @@ private:
     DataNode<Transaction> *transaction;
     DataNode<std::string> *transaction_ur;
 
+private:
     std::vector<DataNodeProtocol*> _all_nodes;
     std::vector<std::string> _derivations;
-
-    void add_node(DataNodeProtocol*);
-    void add_derivation(const std::string& d);
 };
 
 #endif // KEYTOOL_MODEL_HPP

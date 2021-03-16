@@ -1,0 +1,4 @@
+#ifndef KEYTOOL_RESPONSE_HPP
+#define KEYTOOL_RESPONSE_HPP
+
+#endif

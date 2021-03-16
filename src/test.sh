@@ -86,6 +86,12 @@ testWriteSeedURMetadata()
     "$(${KEYTOOL} --seed 59f2293a5bce7d4de59e71b4207ac5d2 --seed-name 'Dark Purple Aqua Love' --seed-note 'This is a seed note.' seed-ur)"
 }
 
+testSeedDigest()
+{
+  assertEquals $'ffa11a8b90954fc89ae625779ca11b8f0227573a2f8b4ed85d96ddf901a72cea' \
+    "$(${KEYTOOL} --seed 59f2293a5bce7d4de59e71b4207ac5d2 seed-digest)"
+}
+
 testMasterKey()
 {
   # master-key <- [network, seed]

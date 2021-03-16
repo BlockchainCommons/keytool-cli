@@ -47,24 +47,24 @@ static Seed parse_seed(const string& s) {
                 case 2: { // creation-date
                     ur::CborLite::Tag tag;
                     size_t value;
-                    ur::CborLite::decodeTagAndValue(pos, end, tag, value, cborDecodingFlags);
+                    decodeTagAndValue(pos, end, tag, value, cborDecodingFlags);
                     if(tag != ur::CborLite::Major::semantic) {
                         throw domain_error("Invalid date.");
                     }
                     switch(value) {
                         case 0: {
                             string date;
-                            ur::CborLite::decodeText(pos, end, date, cborDecodingFlags);
+                            decodeText(pos, end, date, cborDecodingFlags);
                         }
                             break;
                         case 1: {
                             double date;
-                            ur::CborLite::decodeDoubleFloat(pos, end, date, cborDecodingFlags);
+                            decodeDoubleFloat(pos, end, date, cborDecodingFlags);
                         }
                             break;
                         case 100: {
                             int date;
-                            ur::CborLite::decodeInteger(pos, end, date, cborDecodingFlags);
+                            decodeInteger(pos, end, date, cborDecodingFlags);
                         }
                             break;
                         default:
@@ -73,10 +73,10 @@ static Seed parse_seed(const string& s) {
                 }
                     break;
                 case 3: // name
-                    ur::CborLite::decodeText(pos, end, name, cborDecodingFlags);
+                    decodeText(pos, end, name, cborDecodingFlags);
                     break;
                 case 4: // note
-                    ur::CborLite::decodeText(pos, end, note, cborDecodingFlags);
+                    decodeText(pos, end, note, cborDecodingFlags);
                     break;
                 default:
                     throw domain_error("Unknown label.");
@@ -107,13 +107,12 @@ string Seed::hex() const {
 }
 
 string Seed::ur() const {
-    ByteVector cbor;
     size_t map_size = 1;
 
     // payload
     ByteVector data_map_entry;
-    ur::CborLite::encodeInteger(data_map_entry, 1);
-    ur::CborLite::encodeBytes(data_map_entry, data());
+    encodeInteger(data_map_entry, 1);
+    encodeBytes(data_map_entry, data());
 
     // creation-date
 
@@ -121,22 +120,27 @@ string Seed::ur() const {
     ByteVector name_map_entry;
     if (!name().empty()) {
         map_size += 1;
-        ur::CborLite::encodeInteger(name_map_entry, 3);
-        ur::CborLite::encodeText(name_map_entry, name());
+        encodeInteger(name_map_entry, 3);
+        encodeText(name_map_entry, name());
     }
 
     // note
     ByteVector note_map_entry;
     if (!note().empty()) {
         map_size += 1;
-        ur::CborLite::encodeInteger(name_map_entry, 4);
-        ur::CborLite::encodeText(name_map_entry, note());
+        encodeInteger(name_map_entry, 4);
+        encodeText(name_map_entry, note());
     }
 
-    ur::CborLite::encodeMapSize(cbor, map_size);
+    ByteVector cbor;
+    encodeMapSize(cbor, map_size);
     ::append(cbor, data_map_entry);
     ::append(cbor, name_map_entry);
     ::append(cbor, note_map_entry);
 
     return UREncoder::encode(UR("crypto-seed", cbor));
+}
+
+ByteVector Seed::digest() const {
+    return ::sha256(_data);
 }

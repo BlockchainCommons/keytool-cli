@@ -1,4 +1,5 @@
 #include "model.hpp"
+#include "model-seed.hpp"
 
 #include <algorithm>
 
@@ -26,64 +27,11 @@ void Model::add_derivation(const std::string& d) {
 }
 
 Model::Model() {
-    add_derivation("seed <- [seed-ur]");
-    seed = new DataNode<ByteVector>();
-    add_node(seed);
-    seed->set_info("seed", "HEX", "Random data from which to generate a master key.");
-    seed->set_to_string([](const ByteVector& data) { return data_to_hex(data); });
-    seed->set_from_string([](const string& s) -> ByteVector { return hex_to_data(s); });
-    seed->set_derivation([&]() -> optional<ByteVector> {
-        if(seed_ur->has_value()) {
-            return seed_ur->value().data();
-        } else {
-            return nullopt;
-        }
-    });
-
-    add_derivation("seed-name <- [seed-ur]");
-    seed_name = new DataNode<string>();
-    add_node(seed_name);
-    seed_name->set_info("seed-name", "TEXT", "The name of the seed.");
-    seed_name->set_to_string([](const string& s) { return s; });
-    seed_name->set_from_string([](const string& s) -> string { return s; });
-    seed_name->set_derivation([&]() -> optional<string> {
-        if(seed_ur->has_value()) {
-            return seed_ur->value().name();
-        } else {
-            return nullopt;
-        }
-    });
-
-    add_derivation("seed-note <- [seed-ur]");
-    seed_note = new DataNode<string>();
-    add_node(seed_note);
-    seed_note->set_info("seed-note", "TEXT", "An informational note about the seed.");
-    seed_note->set_to_string([](const string& s) { return s; });
-    seed_note->set_from_string([](const string& s) -> string { return s; });
-    seed_note->set_derivation([&]() -> optional<string> {
-        if(seed_ur->has_value()) {
-            return seed_ur->value().note();
-        } else {
-            return nullopt;
-        }
-    });
-
-    add_derivation("seed-ur <- [seed, seed-name (optional), seed-note (optional)]");
-    seed_ur = new DataNode<Seed>();
-    add_node(seed_ur);
-    seed_ur->set_info("seed-ur", "UR:CRYPTO-SEED", "A seed in UR format.");
-    seed_ur->set_to_string([](const Seed& seed) { return seed.ur(); });
-    seed_ur->set_from_string([](const string& s) -> Seed { return Seed(s); });
-    seed_ur->set_derivation([&]() -> optional<Seed> {
-        if(seed->has_value()) {
-            auto data = seed->value();
-            auto name = seed_name->has_value() ? seed_name->value() : "";
-            auto note = seed_note->has_value() ? seed_note->value() : "";
-            return Seed(data, name, note);
-        } else {
-            return nullopt;
-        }
-    });
+    seed = setup_seed(*this);
+    seed_name = setup_seed_name(*this);
+    seed_note = setup_seed_note(*this);
+    seed_ur = setup_seed_ur(*this);
+    seed_digest = setup_seed_digest(*this);
 
     add_derivation("asset");
     asset = new DataNode<Asset>();
@@ -99,8 +47,8 @@ Model::Model() {
     network->set_info("network", "ENUM mainnet|testnet", "The network.");
     network->set_to_string([](const Network& network) { return network.name(); });
     network->set_from_string([](const string& name) -> Network { return Network::find(name); });
-    network->set_derivation([&]() { 
-        return asset->value().network(); 
+    network->set_derivation([&]() {
+        return asset->value().network();
     });
 
     add_derivation("master-key <- [network, seed]");

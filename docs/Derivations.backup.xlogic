@@ -191,10 +191,23 @@
             </entityClass>
             <entityClass>
                 <attributes>
-                    <attribute class="java.util.UUID" key="uuid">a184a9df-22e2-4703-a57c-b13b4adcea7f</attribute>
-                    <attribute class="java.lang.String" key="name">ur:crypto-psbt</attribute>
+                    <attribute class="java.util.UUID" key="uuid">612ee652-9aea-4292-9c5b-49a543aa8cdd</attribute>
+                    <attribute class="java.lang.String" key="name">Transaction</attribute>
                     <attribute class="com.arciem.graphics.ColorRGB" key="color">
-                        <colorRGB blue="0.6000000238418579" green="0.6000000238418579" red="0.0"/>
+                        <colorRGB blue="0.6352941393852234" green="0.6470588445663452" red="0.4000000059604645"/>
+                    </attribute>
+                    <attribute class="java.lang.Double" key="edgeWeight">1.0</attribute>
+                    <attribute class="java.lang.Boolean" key="milestone">false</attribute>
+                    <attribute class="java.lang.Boolean" key="builtIn">false</attribute>
+                    <attribute class="java.lang.String" key="assignment">ResourceAssignment.fixedeffort</attribute>
+                </attributes>
+            </entityClass>
+            <entityClass>
+                <attributes>
+                    <attribute class="java.util.UUID" key="uuid">2f4ffc24-2bc9-498c-ae38-3a6d3ab03f15</attribute>
+                    <attribute class="java.lang.String" key="name">UUID</attribute>
+                    <attribute class="com.arciem.graphics.ColorRGB" key="color">
+                        <colorRGB blue="1.0" green="0.800000011920929" red="0.800000011920929"/>
                     </attribute>
                     <attribute class="java.lang.Double" key="edgeWeight">1.0</attribute>
                     <attribute class="java.lang.Boolean" key="milestone">false</attribute>
@@ -243,32 +256,6 @@
             </entityClass>
             <entityClass>
                 <attributes>
-                    <attribute class="java.util.UUID" key="uuid">2f4ffc24-2bc9-498c-ae38-3a6d3ab03f15</attribute>
-                    <attribute class="java.lang.String" key="name">UUID</attribute>
-                    <attribute class="com.arciem.graphics.ColorRGB" key="color">
-                        <colorRGB blue="1.0" green="0.800000011920929" red="0.800000011920929"/>
-                    </attribute>
-                    <attribute class="java.lang.Double" key="edgeWeight">1.0</attribute>
-                    <attribute class="java.lang.Boolean" key="milestone">false</attribute>
-                    <attribute class="java.lang.Boolean" key="builtIn">false</attribute>
-                    <attribute class="java.lang.String" key="assignment">ResourceAssignment.fixedeffort</attribute>
-                </attributes>
-            </entityClass>
-            <entityClass>
-                <attributes>
-                    <attribute class="java.util.UUID" key="uuid">df41317d-7f7e-4127-bac9-cdfbcc0ba5e7</attribute>
-                    <attribute class="java.lang.String" key="name">Digest</attribute>
-                    <attribute class="com.arciem.graphics.ColorRGB" key="color">
-                        <colorRGB blue="0.800000011920929" green="1.0" red="1.0"/>
-                    </attribute>
-                    <attribute class="java.lang.Double" key="edgeWeight">1.0</attribute>
-                    <attribute class="java.lang.Boolean" key="milestone">false</attribute>
-                    <attribute class="java.lang.Boolean" key="builtIn">false</attribute>
-                    <attribute class="java.lang.String" key="assignment">ResourceAssignment.fixedeffort</attribute>
-                </attributes>
-            </entityClass>
-            <entityClass>
-                <attributes>
                     <attribute class="java.util.UUID" key="uuid">a13d05b7-44ef-4d09-85c5-ce3c1773b433</attribute>
                     <attribute class="java.lang.String" key="name">ur:crypto-response</attribute>
                     <attribute class="com.arciem.graphics.ColorRGB" key="color">
@@ -282,10 +269,10 @@
             </entityClass>
             <entityClass>
                 <attributes>
-                    <attribute class="java.util.UUID" key="uuid">612ee652-9aea-4292-9c5b-49a543aa8cdd</attribute>
-                    <attribute class="java.lang.String" key="name">Transaction</attribute>
+                    <attribute class="java.util.UUID" key="uuid">a184a9df-22e2-4703-a57c-b13b4adcea7f</attribute>
+                    <attribute class="java.lang.String" key="name">ur:crypto-psbt</attribute>
                     <attribute class="com.arciem.graphics.ColorRGB" key="color">
-                        <colorRGB blue="0.6352941393852234" green="0.6470588445663452" red="0.4000000059604645"/>
+                        <colorRGB blue="0.6000000238418579" green="0.6000000238418579" red="0.0"/>
                     </attribute>
                     <attribute class="java.lang.Double" key="edgeWeight">1.0</attribute>
                     <attribute class="java.lang.Boolean" key="milestone">false</attribute>
@@ -298,7 +285,7 @@
     <displaySettings addEntityAsSuccessor="false" annotationToBrowse="false" bias="Bias.start" confidenceVisible="false" edgeNotesVisible="false" edgeWeightsVisible="false" entityIdVisible="false"
         noteNumbersVisible="false" orientation="Orientation.leftToRight" projectManagementVisible="false"/>
     <documentInfo author="" comments="" keywords="" title=""/>
-    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="77.0" zoom="0.654"/>
+    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="42.0" zoom="0.654"/>
     <chartSettings classVisible="true" classWidth="90" completionVisible="true" effortVisible="true" finishDateVisible="true" resourceVisible="true" resourceWidth="60" startDateVisible="true" titleWidth="104"/>
     <inspectorSettings visibility="true" width="284">
         <inspector title="element" visibility="minimized"/>
@@ -1183,7 +1170,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="Digest" uuid="df41317d-7f7e-4127-bac9-cdfbcc0ba5e7"/>
+                                <entityClass name="Hex" uuid="2294c7a1-5093-40c4-8290-e784c2ebd866"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1759,7 +1746,7 @@
                             <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
                             <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
                             <attribute class="java.lang.String" key="note">optional</attribute>
-                            <attribute class="java.lang.Integer" key="noteNumber">3</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">4</attribute>
                         </attributes>
                     </edge>
                     <edge eid="308" source="297" target="248">
@@ -1994,7 +1981,7 @@
                             <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
                             <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
                             <attribute class="java.lang.String" key="note">optional</attribute>
-                            <attribute class="java.lang.Integer" key="noteNumber">2</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">3</attribute>
                         </attributes>
                     </edge>
                     <edge eid="361" source="360" target="382">
@@ -2009,7 +1996,7 @@
                             <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
                             <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
                             <attribute class="java.lang.String" key="note">optional</attribute>
-                            <attribute class="java.lang.Integer" key="noteNumber">1</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">2</attribute>
                         </attributes>
                     </edge>
                     <edge eid="363" source="356" target="362">
@@ -2076,6 +2063,10 @@
                             <attribute class="com.arciem.FuzzyBoolean" key="confidence">
                                 <fuzzyBoolean true="0.5"/>
                             </attribute>
+                            <attribute class="java.lang.Boolean" key="noteVisible">true</attribute>
+                            <attribute class="com.arciem.CDATAElement" key="noteHTML"><![CDATA[<html><body>optional</body></html>]]></attribute>
+                            <attribute class="java.lang.String" key="note">optional</attribute>
+                            <attribute class="java.lang.Integer" key="noteNumber">1</attribute>
                         </attributes>
                     </edge>
                     <edge eid="374" source="373" target="375">

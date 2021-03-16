@@ -4,7 +4,6 @@
 #include "data-node.hpp"
 #include "utils.hpp"
 #include "seed.hpp"
-
 #include <string>
 
 class Model;

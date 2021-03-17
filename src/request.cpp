@@ -113,12 +113,12 @@ string Request::ur() const {
     ByteVector body_map_entry;
     encodeInteger(body_map_entry, 2);
     auto body = *_body;
-    if(holds_alternative<SeedRequestBody>(body)) {
-        get<SeedRequestBody>(body).encode_cbor(body_map_entry);
-    } else if(holds_alternative<KeyRequestBody>(body)) {
-        get<KeyRequestBody>(body).encode_cbor(body_map_entry);
-    } else if(holds_alternative<PSBTSignatureRequestBody>(body)) {
-        get<PSBTSignatureRequestBody>(body).encode_cbor(body_map_entry);
+    if(is_seed_request()) {
+        seed_request().encode_cbor(body_map_entry);
+    } else if(is_key_request()) {
+        key_request().encode_cbor(body_map_entry);
+    } else if(is_psbt_signature_request()) {
+        psbt_signature_request().encode_cbor(body_map_entry);
     } else {
         throw runtime_error("Unknown request.");
     }

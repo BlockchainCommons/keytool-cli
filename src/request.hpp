@@ -51,6 +51,14 @@ public:
     const std::string& description() const { return _description; }
     const UUID& id() const { return *_id; }
 
+    bool is_seed_request() const { return std::holds_alternative<SeedRequestBody>(body()); }
+    bool is_key_request() const { return std::holds_alternative<KeyRequestBody>(body()); }
+    bool is_psbt_signature_request() const { return std::holds_alternative<PSBTSignatureRequestBody>(body()); }
+
+    const SeedRequestBody& seed_request() const { return std::get<SeedRequestBody>(body()); }
+    const KeyRequestBody& key_request() const { return std::get<KeyRequestBody>(body()); }
+    const PSBTSignatureRequestBody& psbt_signature_request() const { return std::get<PSBTSignatureRequestBody>(body()); }
+
     std::string ur() const;
 
 private:

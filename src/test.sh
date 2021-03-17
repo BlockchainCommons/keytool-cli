@@ -106,7 +106,7 @@ testRequestDescription()
 
 testSeedRequest()
 {
-  assertEquals $'Information about this request.' \
+  assertEquals $'ur:crypto-request/otadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaadwkhdcxzmoycylumhmdgwspnyvadaktnsoycwmyaodihgftdllugltphlmtutytadosdwwdaxksctgajtiyjljpjnhsjyinjljtcxhsidjlkpjycxjyisinjkcxjpihjskpihjkjydmetdriyes' \
     "$(${KEYTOOL} --request-id abca5901-7419-4a37-9473-a55f434ebc27 --seed 59f2293a5bce7d4de59e71b4207ac5d2 --request-description 'Information about this request.' seed-request)"
 }
 

@@ -94,10 +94,9 @@ Request::Request(const string& s) {
         if(!(_id.has_value() && _body.has_value())) {
             throw domain_error("Invalid request.");
         }
-        return;
-    } catch(...) { }
-
-    throw domain_error("Invalid ur:crypto-request.");
+    } catch(...) {
+        throw domain_error("Invalid ur:crypto-request.");
+    }
 }
 
 string Request::ur() const {

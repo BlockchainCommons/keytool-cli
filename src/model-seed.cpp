@@ -122,3 +122,23 @@ DataNode<string>* setup_request_description(Model& model) {
     node->set_value("");
     return node;
 }
+
+DataNode<Request>* setup_seed_request(Model& model) {
+    auto node = new DataNode<Request>();
+    model.add_node(node);
+    node->set_info("seed-request", "UR:CRYPTO-REQUEST", "A request for a seed with the given digest.");
+    node->set_to_string([](const Request& request) { return request.ur(); });
+    node->set_from_string([](const string& s) -> Request { return Request(s); });
+    model.add_derivation("seed-request <- [seed-digest request-id request-description]");
+    node->set_derivation([&]() -> optional<Request> {
+        if(model.seed_digest->has_value()) {
+            auto body = SeedRequestBody(model.seed_digest->value());
+            auto description = model.request_description->value();
+            auto id = model.request_id->value();
+            return Request(body, description, id);
+        } else {
+            return nullopt;
+        }
+    });
+    return node;
+}

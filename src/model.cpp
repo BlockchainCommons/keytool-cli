@@ -25,6 +25,7 @@ Model::Model() {
     seed_digest = setup_seed_digest(*this);
     request_id = setup_request_id(*this);
     request_description = setup_request_description(*this);
+    seed_request = setup_seed_request(*this);
 
     // ec-key
     asset = setup_asset(*this);

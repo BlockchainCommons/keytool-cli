@@ -16,6 +16,7 @@
 #include "transaction.hpp"
 #include "seed.hpp"
 #include "uuid.hpp"
+#include "request.hpp"
 
 class Model final {
 public:
@@ -43,6 +44,7 @@ public:
     DataNode<ByteVector> *seed_digest;
     DataNode<UUID> *request_id;
     DataNode<std::string> *request_description;
+    DataNode<Request> *seed_request;
 
     // ec-key
     DataNode<Asset> *asset;

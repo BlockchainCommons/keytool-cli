@@ -53,6 +53,12 @@
             "problemMatcher": []
         },
         {
+            "label": "Clean, Configure, Build, Test",
+            "type": "shell",
+            "command": "source set_build_paths.sh && make clean && ./configure && make check",
+            "problemMatcher": []
+        },
+        {
             "label": "Install",
             "type": "shell",
             "command": "sudo make install",

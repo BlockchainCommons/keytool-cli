@@ -1,14 +1,105 @@
 #include "request.hpp"
 #include <bc-ur/bc-ur.hpp>
+#include <set>
+#include <optional>
 
 using namespace std;
 using namespace ur;
 using namespace ur::CborLite;
 
-Request::Request(const string& description, const UUID& id)
-    : _id(id)
+static const auto cborDecodingFlags = ur::CborLite::Flag::requireMinimalEncoding;
+
+void SeedRequestBody::encode_cbor(ByteVector& cbor) const {
+    encodeTagAndValue(cbor, Major::semantic, Tag(500));
+    encodeBytes(cbor, digest());
+}
+
+SeedRequestBody SeedRequestBody::decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end) {
+    auto digest = ByteVector();
+    decodeBytes(pos, end, digest, cborDecodingFlags);
+    if(digest.size() != 32) {
+        throw domain_error("Invalid seed request.");
+    }
+    return SeedRequestBody(digest);
+}
+
+void KeyRequestBody::encode_cbor(ByteVector& cbor) const {
+}
+
+KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end) {
+    return KeyRequestBody();
+}
+
+void PSBTSignatureRequestBody::encode_cbor(ByteVector& cbor) const {
+}
+
+PSBTSignatureRequestBody PSBTSignatureRequestBody::decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end) {
+    return PSBTSignatureRequestBody();
+}
+
+Request::Request(RequestBodyVariant body, const string& description, const UUID& id)
+    : _body(body)
     , _description(description)
+    , _id(id)
 { }
+
+Request::Request(const string& s) {
+    try {
+        auto ur = URDecoder::decode(s);
+        if(ur.type() != "crypto-request") {
+            throw domain_error("Unexpected UR type: " + ur.type() + ". Expected crypto-request.");
+        }
+        auto cbor = ur.cbor();
+        auto pos = cbor.begin();
+        auto end = cbor.end();
+        size_t map_len;
+        decodeMapSize(pos, end, map_len, cborDecodingFlags);
+        set<int> labels;
+        optional<UUID> id = nullopt;
+        auto description = string();
+        for(auto index = 0; index < map_len; index++) {
+            int label;
+            decodeInteger(pos, end, label, cborDecodingFlags);
+            if(labels.find(label) != labels.end()) {
+                throw domain_error("Duplicate label.");
+            }
+            labels.insert(label);
+            switch (label) {
+                case 1: // id
+                    id = UUID::decode_cbor(pos, end);
+                    break;
+                case 2: { // body
+                    Tag major_tag;
+                    Tag minor_tag;
+                    decodeTagAndValue(pos, end, major_tag, minor_tag, cborDecodingFlags);
+                    if(major_tag != Major::semantic) {
+                        throw domain_error("Invalid request.");
+                    }
+                    if(minor_tag == 500) {
+                        _body = SeedRequestBody::decode_cbor(pos, end);
+                    } else if(minor_tag == 501) {
+                        _body = KeyRequestBody::decode_cbor(pos, end);
+                    } else if(minor_tag == 502) {
+                        _body = PSBTSignatureRequestBody::decode_cbor(pos, end);
+                    } else {
+                        throw domain_error("Unknown request.");
+                    }
+                } break;
+                case 3: // description
+                    decodeText(pos, end, description, cborDecodingFlags);
+                    break;
+                default:
+                    throw domain_error("Unknown label.");
+                    break;
+            }
+        }
+        if(!(_id.has_value() && _body.has_value())) {
+            throw domain_error("Invalid request.");
+        }
+    } catch(...) { }
+
+    throw domain_error("Invalid ur:crypto-request.");
+}
 
 string Request::ur() const {
     size_t map_size = 2;
@@ -21,14 +112,23 @@ string Request::ur() const {
     // body
     ByteVector body_map_entry;
     encodeInteger(body_map_entry, 2);
-    encode_body(body_map_entry);
+    auto body = *_body;
+    if(holds_alternative<SeedRequestBody>(body)) {
+        get<SeedRequestBody>(body).encode_cbor(body_map_entry);
+    } else if(holds_alternative<KeyRequestBody>(body)) {
+        get<KeyRequestBody>(body).encode_cbor(body_map_entry);
+    } else if(holds_alternative<PSBTSignatureRequestBody>(body)) {
+        get<PSBTSignatureRequestBody>(body).encode_cbor(body_map_entry);
+    } else {
+        throw runtime_error("Unknown request.");
+    }
 
     // description
     ByteVector description_map_entry;
     if(!description().empty()) {
         map_size += 1;
         encodeInteger(description_map_entry, 3);
-        encodeText(body_map_entry, description());
+        encodeText(description_map_entry, description());
     }
 
     ByteVector cbor;
@@ -38,14 +138,4 @@ string Request::ur() const {
     ::append(cbor, description_map_entry);
 
     return UREncoder::encode(UR("crypto-request", cbor));
-}
-
-SeedRequest::SeedRequest(const ByteVector& digest, const string& description, const UUID& id)
-    : Request(description, id)
-    , _digest(digest)
-{ }
-
-void SeedRequest::encode_body(ByteVector& cbor) const {
-    encodeTagAndValue(cbor, Major::semantic, Tag(500));
-    encodeBytes(cbor, digest());
 }

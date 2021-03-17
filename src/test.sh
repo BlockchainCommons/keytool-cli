@@ -98,6 +98,18 @@ testRequestID()
     "$(${KEYTOOL} --request-id ABCA5901-7419-4A37-9473-A55F434EBC27 request-id)"
 }
 
+testRequestDescription()
+{
+  assertEquals $'Information about this request.' \
+    "$(${KEYTOOL} --request-description 'Information about this request.' request-description)"
+}
+
+testSeedRequest()
+{
+  assertEquals $'Information about this request.' \
+    "$(${KEYTOOL} --request-id abca5901-7419-4a37-9473-a55f434ebc27 --seed 59f2293a5bce7d4de59e71b4207ac5d2 --request-description 'Information about this request.' seed-request)"
+}
+
 testMasterKey()
 {
   # master-key <- [network, seed]

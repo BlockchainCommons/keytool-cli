@@ -4,43 +4,59 @@
 #include "uuid.hpp"
 #include "utils.hpp"
 #include <string>
+#include <variant>
+#include <optional>
 
-class Request {
+class SeedRequestBody final {
 public:
-    Request(const std::string& description = "", const UUID& id = UUID());
-
-    const UUID& id() const { return _id; }
-    const std::string& description() const { return _description; }
-
-    std::string ur() const;
-
-protected:
-    virtual void encode_body(ByteVector& cbor) const = 0;
-
-private:
-    UUID _id;
-    std::string _description;
-};
-
-class SeedRequest: public Request {
-public:
-    SeedRequest(const ByteVector& digest, const std::string& description, const UUID& id = UUID());
+    SeedRequestBody(const ByteVector& digest) : _digest(digest) { }
 
     const ByteVector& digest() const { return _digest; }
 
-protected:
-    virtual void encode_body(ByteVector& cbor) const override;
+    void encode_cbor(ByteVector& cbor) const;
+    static SeedRequestBody decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end);
 
 private:
     ByteVector _digest;
 };
 
-class KeyRequest: public Request {
+class KeyRequestBody final {
+public:
+    KeyRequestBody() { }
 
+    void encode_cbor(ByteVector& cbor) const;
+    static KeyRequestBody decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end);
+
+private:
 };
 
-class PSBTSignatureRequest: public Request {
+class PSBTSignatureRequestBody final {
+public:
+    PSBTSignatureRequestBody() { }
 
+    void encode_cbor(ByteVector& cbor) const;
+    static PSBTSignatureRequestBody decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end);
+
+private:
+};
+
+typedef std::variant<SeedRequestBody, KeyRequestBody, PSBTSignatureRequestBody> RequestBodyVariant;
+
+class Request final {
+public:
+    Request(RequestBodyVariant body, const std::string& description = "", const UUID& id = UUID());
+    Request(const std::string& ur);
+
+    const RequestBodyVariant& body() const { return *_body; }
+    const std::string& description() const { return _description; }
+    const UUID& id() const { return *_id; }
+
+    std::string ur() const;
+
+private:
+    std::optional<UUID> _id;
+    std::string _description;
+    std::optional<RequestBodyVariant> _body;
 };
 
 #endif

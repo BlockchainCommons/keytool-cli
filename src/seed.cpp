@@ -89,7 +89,7 @@ static Seed parse_seed(const string& s) {
         return Seed(data, name, note);
     } catch(...) { }
 
-    throw domain_error("Invalid ur:crypto-seed");
+    throw domain_error("Invalid ur:crypto-seed.");
 }
 
 Seed::Seed(const Seed& seed)

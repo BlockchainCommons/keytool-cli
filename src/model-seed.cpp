@@ -91,9 +91,12 @@ DataNode<ByteVector>* setup_seed_digest(Model& model) {
         return data;
     });
     model.add_derivation("seed-digest <- [seed]");
+    model.add_derivation("seed-digest <- [seed-request]");
     node->set_derivation([&]() -> optional<ByteVector> {
         if(model.seed->has_value()) {
             return sha256(model.seed->value());
+        } else if(model.seed_request->has_value()) {
+            return model.seed_request->value().seed_request().digest();
         } else {
             return nullopt;
         }
@@ -107,8 +110,14 @@ DataNode<UUID>* setup_request_id(Model& model) {
     node->set_info("request-id", "UUID (default: unique)", "The ID of the request and response.");
     node->set_to_string([](const UUID& uuid) { return uuid.str(); });
     node->set_from_string([](const string& s) -> UUID { return UUID(s); });
-    model.add_derivation("request-id (default: unique)");
-    node->set_value(UUID());
+    model.add_derivation("request-id <- [seed-request] (default: unique)");
+    node->set_derivation([&]() -> optional<UUID> {
+        if(model.seed_request->has_value()) {
+            return model.seed_request->value().id();
+        } else {
+            return UUID();
+        }
+    });
     return node;
 }
 
@@ -118,8 +127,14 @@ DataNode<string>* setup_request_description(Model& model) {
     node->set_info("request-description", "TEXT", "An informational note about the request.");
     node->set_to_string([](const string& s) { return s; });
     node->set_from_string([](const string& s) -> string { return s; });
-    model.add_derivation("request-description (default: empty)");
-    node->set_value("");
+    model.add_derivation("request-description <- [seed-request] (default: empty)");
+    node->set_derivation([&]() -> optional<string> {
+        if(model.seed_request->has_value()) {
+            return model.seed_request->value().description();
+        } else {
+            return "";
+        }
+    });
     return node;
 }
 

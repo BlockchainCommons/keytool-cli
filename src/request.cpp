@@ -55,8 +55,6 @@ Request::Request(const string& s) {
         size_t map_len;
         decodeMapSize(pos, end, map_len, cborDecodingFlags);
         set<int> labels;
-        optional<UUID> id = nullopt;
-        auto description = string();
         for(auto index = 0; index < map_len; index++) {
             int label;
             decodeInteger(pos, end, label, cborDecodingFlags);
@@ -66,7 +64,7 @@ Request::Request(const string& s) {
             labels.insert(label);
             switch (label) {
                 case 1: // id
-                    id = UUID::decode_cbor(pos, end);
+                    _id = UUID::decode_cbor(pos, end);
                     break;
                 case 2: { // body
                     Tag major_tag;
@@ -86,7 +84,7 @@ Request::Request(const string& s) {
                     }
                 } break;
                 case 3: // description
-                    decodeText(pos, end, description, cborDecodingFlags);
+                    decodeText(pos, end, _description, cborDecodingFlags);
                     break;
                 default:
                     throw domain_error("Unknown label.");
@@ -96,6 +94,7 @@ Request::Request(const string& s) {
         if(!(_id.has_value() && _body.has_value())) {
             throw domain_error("Invalid request.");
         }
+        return;
     } catch(...) { }
 
     throw domain_error("Invalid ur:crypto-request.");

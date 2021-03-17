@@ -110,6 +110,12 @@ testSeedRequest()
     "$(${KEYTOOL} --request-id abca5901-7419-4a37-9473-a55f434ebc27 --seed 59f2293a5bce7d4de59e71b4207ac5d2 --request-description 'Information about this request.' seed-request)"
 }
 
+testReadSeedRequest()
+{
+  assertEquals $'abca5901-7419-4a37-9473-a55f434ebc27\nInformation about this request.\nffa11a8b90954fc89ae625779ca11b8f0227573a2f8b4ed85d96ddf901a72cea' \
+    "$(${KEYTOOL} --seed-request ur:crypto-request/otadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaadwkhdcxzmoycylumhmdgwspnyvadaktnsoycwmyaodihgftdllugltphlmtutytadosdwwdaxksctgajtiyjljpjnhsjyinjljtcxhsidjlkpjycxjyisinjkcxjpihjskpihjkjydmetdriyes request-id request-description seed-digest)"
+}
+
 testMasterKey()
 {
   # master-key <- [network, seed]

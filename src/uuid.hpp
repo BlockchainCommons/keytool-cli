@@ -14,7 +14,7 @@ public:
     const std::string str() const;
 
     const void encode_cbor(ByteVector &buf) const;
-    static UUID decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end);
+    static UUID decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
     template<typename ostream>
     inline friend ostream &operator<<( ostream &os, const UUID &self ) {

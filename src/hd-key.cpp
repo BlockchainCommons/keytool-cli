@@ -92,3 +92,28 @@ ostream& operator<< (ostream& os, const HDKey& key) {
         return os << key.to_base58(false);
     }
 }
+
+HDKey HDKey::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    // TODO
+    throw runtime_error("Unimplemented.");
+}
+
+HDKey HDKey::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    // TODO
+    throw runtime_error("Unimplemented.");
+}
+
+string HDKey::ur() const {
+    // TODO
+    throw runtime_error("Unimplemented.");
+}
+
+ByteVector HDKey::cbor() const {
+    // TODO
+    throw runtime_error("Unimplemented.");
+}
+
+ByteVector HDKey::tagged_cbor() const {
+    // TODO
+    throw runtime_error("Unimplemented.");
+}

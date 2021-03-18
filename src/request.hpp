@@ -14,7 +14,7 @@ public:
     const ByteVector& digest() const { return _digest; }
 
     void encode_cbor(ByteVector& cbor) const;
-    static SeedRequestBody decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end);
+    static SeedRequestBody decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
 private:
     ByteVector _digest;
@@ -25,7 +25,7 @@ public:
     KeyRequestBody() { }
 
     void encode_cbor(ByteVector& cbor) const;
-    static KeyRequestBody decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end);
+    static KeyRequestBody decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
 private:
 };
@@ -35,7 +35,7 @@ public:
     PSBTSignatureRequestBody() { }
 
     void encode_cbor(ByteVector& cbor) const;
-    static PSBTSignatureRequestBody decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end);
+    static PSBTSignatureRequestBody decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
 private:
 };

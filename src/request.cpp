@@ -1,7 +1,6 @@
 #include "request.hpp"
 #include <bc-ur/bc-ur.hpp>
 #include <set>
-#include <optional>
 
 using namespace std;
 using namespace ur;
@@ -14,7 +13,7 @@ void SeedRequestBody::encode_cbor(ByteVector& cbor) const {
     encodeBytes(cbor, digest());
 }
 
-SeedRequestBody SeedRequestBody::decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end) {
+SeedRequestBody SeedRequestBody::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     auto digest = ByteVector();
     decodeBytes(pos, end, digest, cborDecodingFlags);
     if(digest.size() != 32) {
@@ -24,17 +23,23 @@ SeedRequestBody SeedRequestBody::decode_cbor(ByteVector::iterator& pos, ByteVect
 }
 
 void KeyRequestBody::encode_cbor(ByteVector& cbor) const {
+    // TODO
+    throw runtime_error("Unimplemented.");
 }
 
-KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end) {
-    return KeyRequestBody();
+KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    // TODO
+    throw runtime_error("Unimplemented.");
 }
 
 void PSBTSignatureRequestBody::encode_cbor(ByteVector& cbor) const {
+    // TODO
+    throw runtime_error("Unimplemented.");
 }
 
-PSBTSignatureRequestBody PSBTSignatureRequestBody::decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end) {
-    return PSBTSignatureRequestBody();
+PSBTSignatureRequestBody PSBTSignatureRequestBody::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    // TODO
+    throw runtime_error("Unimplemented.");
 }
 
 Request::Request(RequestBodyVariant body, const string& description, const UUID& id)
@@ -49,7 +54,7 @@ Request::Request(const string& s) {
         if(ur.type() != "crypto-request") {
             throw domain_error("Unexpected UR type: " + ur.type() + ". Expected crypto-request.");
         }
-        auto cbor = ur.cbor();
+        auto& cbor = ur.cbor();
         auto pos = cbor.begin();
         auto end = cbor.end();
         size_t map_len;

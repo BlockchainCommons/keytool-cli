@@ -96,7 +96,7 @@ params.o: params.hpp utils.hpp config.h model.hpp
 psbt.o: psbt.hpp utils.hpp wally-utils.hpp ec-key.hpp
 randombytes.o: randombytes.h
 request.o: request.hpp uuid.hpp utils.hpp
-response.o: response.hpp
+response.o: response.hpp uuid.hpp seed.hpp hd-key.hpp utils.hpp
 seed.o: seed.hpp
 timestamp.o: timestamp.hpp date.h
 transaction.o: transaction.hpp utils.hpp wally-utils.hpp psbt.hpp

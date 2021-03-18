@@ -60,7 +60,7 @@ const void UUID::encode_cbor(ByteVector &buf) const {
     ur::CborLite::encodeBytes(buf, data());
 }
 
-UUID UUID::decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end) {
+UUID UUID::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     ur::CborLite::Tag major_tag;
     ur::CborLite::Tag minor_tag;
     ur::CborLite::decodeTagAndValue(pos, end, major_tag, minor_tag, cborDecodingFlags);

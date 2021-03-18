@@ -18,7 +18,7 @@ public:
     double secs_since_epoch() const;
 
     const void encode_cbor(ByteVector &buf) const;
-    static Timestamp decode_cbor(ByteVector::iterator& pos, ByteVector::iterator end);
+    static Timestamp decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
     template<typename ostream>
     inline friend ostream &operator<<( ostream &os, const Timestamp &self ) {

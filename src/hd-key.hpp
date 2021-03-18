@@ -19,6 +19,8 @@ public:
     explicit HDKey(ext_key* key);
     explicit HDKey(const std::string &base58);
     HDKey(const std::string &base58, bool require_private);
+    static HDKey decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
+    static HDKey decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
     bool is_private() const;
 
@@ -31,6 +33,10 @@ public:
 
     std::string to_base58(bool is_private) const;
     std::string to_base58() const;
+
+    std::string ur() const;
+    ByteVector cbor() const;
+    ByteVector tagged_cbor() const;
 
     friend class Wally;
 

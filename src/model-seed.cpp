@@ -1,6 +1,7 @@
 #include "model-seed.hpp"
 #include "model.hpp"
 #include <optional>
+#include <iostream>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ DataNode<ByteVector>* setup_seed(Model& model) {
 
     model.add_derivation("seed <- [seed-ur]");
     node->set_derivation([&]() -> optional<ByteVector> {
-        if(model.seed_ur->has_value()) {
+        if(model.seed_ur->has_assigned_value()) {
             return model.seed_ur->value().data();
         } else {
             return nullopt;
@@ -31,7 +32,7 @@ DataNode<string>* setup_seed_name(Model& model) {
 
     model.add_derivation("seed-name <- [seed-ur]");
     node->set_derivation([&]() -> optional<string> {
-        if(model.seed_ur->has_value()) {
+        if(model.seed_ur->has_assigned_value()) {
             return model.seed_ur->value().name();
         } else {
             return nullopt;
@@ -49,7 +50,7 @@ DataNode<string>* setup_seed_note(Model& model) {
 
     model.add_derivation("seed-note <- [seed-ur]");
     node->set_derivation([&]() -> optional<string> {
-        if(model.seed_ur->has_value()) {
+        if(model.seed_ur->has_assigned_value()) {
             return model.seed_ur->value().note();
         } else {
             return nullopt;
@@ -66,7 +67,9 @@ DataNode<Seed>* setup_seed_ur(Model& model) {
     node->set_to_string([](const Seed& seed) { return seed.ur(); });
     node->set_from_string([](const string& s) -> Seed { return Seed(s); });
     node->set_derivation([&]() -> optional<Seed> {
-        if(model.seed->has_value()) {
+        if(model.seed_response->has_assigned_value()) {
+            return model.seed_response->value().seed_response();
+        } else if(model.seed->has_value()) {
             auto data = model.seed->value();
             auto name = model.seed_name->has_value() ? model.seed_name->value() : "";
             auto note = model.seed_note->has_value() ? model.seed_note->value() : "";
@@ -93,10 +96,10 @@ DataNode<ByteVector>* setup_seed_digest(Model& model) {
     model.add_derivation("seed-digest <- [seed]");
     model.add_derivation("seed-digest <- [seed-request]");
     node->set_derivation([&]() -> optional<ByteVector> {
-        if(model.seed->has_value()) {
-            return sha256(model.seed->value());
-        } else if(model.seed_request->has_value()) {
+        if(model.seed_request->has_assigned_value()) {
             return model.seed_request->value().seed_request().digest();
+        } else if(model.seed->has_value()) {
+            return sha256(model.seed->value());
         } else {
             return nullopt;
         }
@@ -112,8 +115,10 @@ DataNode<UUID>* setup_request_id(Model& model) {
     node->set_from_string([](const string& s) -> UUID { return UUID(s); });
     model.add_derivation("request-id <- [seed-request] (default: unique)");
     node->set_derivation([&]() -> optional<UUID> {
-        if(model.seed_request->has_value()) {
+        if(model.seed_request->has_assigned_value()) {
             return model.seed_request->value().id();
+        } else if(model.seed_response->has_assigned_value()) {
+            return model.seed_response->value().id();
         } else {
             return UUID();
         }
@@ -151,6 +156,25 @@ DataNode<Request>* setup_seed_request(Model& model) {
             auto description = model.request_description->value();
             auto id = model.request_id->value();
             return Request(body, description, id);
+        } else {
+            return nullopt;
+        }
+    });
+    return node;
+}
+
+DataNode<Response>* setup_seed_response(Model& model) {
+    auto node = new DataNode<Response>();
+    model.add_node(node);
+    node->set_info("seed-response", "UR:CRYPTO-RESPONSE", "A response containing the requested seed.");
+    node->set_to_string([](const Response& response) { return response.ur(); });
+    node->set_from_string([](const string& s) -> Response { return Response(s); });
+    model.add_derivation("seed-response <- [request-id, seed-ur]");
+    node->set_derivation([&]() -> optional<Response> {
+        if(model.seed_ur->has_value()) {
+            auto body = model.seed_ur->value();
+            auto id = model.request_id->value();
+            return Response(body, id);
         } else {
             return nullopt;
         }

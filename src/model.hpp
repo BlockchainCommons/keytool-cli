@@ -17,6 +17,7 @@
 #include "seed.hpp"
 #include "uuid.hpp"
 #include "request.hpp"
+#include "response.hpp"
 
 class Model final {
 public:
@@ -45,6 +46,7 @@ public:
     DataNode<UUID> *request_id;
     DataNode<std::string> *request_description;
     DataNode<Request> *seed_request;
+    DataNode<Response> *seed_response;
 
     // ec-key
     DataNode<Asset> *asset;

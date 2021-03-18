@@ -116,6 +116,27 @@ testReadSeedRequest()
     "$(${KEYTOOL} --seed-request ur:crypto-request/otadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaadwkhdcxzmoycylumhmdgwspnyvadaktnsoycwmyaodihgftdllugltphlmtutytadosdwwdaxksctgajtiyjljpjnhsjyinjljtcxhsidjlkpjycxjyisinjkcxjpihjskpihjkjydmetdriyes request-id request-description seed-digest)"
 }
 
+testSeedResponse1()
+{
+  assertEquals $'ur:crypto-response/oeadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaaddwoyadgdhkwzdtfthptokigtvwnnjsqzcxknsktdhltklans' \
+    "$(${KEYTOOL} --request-id abca5901-7419-4a37-9473-a55f434ebc27 --seed 59f2293a5bce7d4de59e71b4207ac5d2 seed-response)"
+}
+
+testSeedResponse2()
+{
+  assertEquals $'ur:crypto-response/oeadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaaddwotadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmjliatbcn' \
+    "$(${KEYTOOL} --seed-request ur:crypto-request/otadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaadwkhdcxzmoycylumhmdgwspnyvadaktnsoycwmyaodihgftdllugltphlmtutytadosdwwdaxksctgajtiyjljpjnhsjyinjljtcxhsidjlkpjycxjyisinjkcxjpihjskpihjkjydmetdriyes \
+  --seed-ur ur:crypto-seed/otadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmknzsnbwy \
+  seed-response)"
+}
+
+testReadSeedResponse()
+{
+  assertEquals $'ur:crypto-seed/otadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmknzsnbwy\nabca5901-7419-4a37-9473-a55f434ebc27\n59f2293a5bce7d4de59e71b4207ac5d2\nDark Purple Aqua Love\nThis is a seed note.' \
+    "$(${KEYTOOL} --seed-response ur:crypto-response/oeadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaaddwotadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmjliatbcn \
+    seed-ur request-id seed seed-name seed-note)"
+}
+
 testMasterKey()
 {
   # master-key <- [network, seed]

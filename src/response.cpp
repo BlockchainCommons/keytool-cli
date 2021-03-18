@@ -70,6 +70,7 @@ string Response::ur() const {
     // id
     ByteVector id_map_entry;
     encodeInteger(id_map_entry, 1);
+    id().encode_cbor(id_map_entry);
 
     // body
     ByteVector body_map_entry;

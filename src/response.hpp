@@ -8,10 +8,9 @@
 #include <variant>
 #include <optional>
 
-typedef HDKey KeyResponseBody;
 typedef ByteVector PSBTSignatureResponseBody;
 
-typedef std::variant<Seed, KeyResponseBody, PSBTSignatureResponseBody> ResponseBodyVariant;
+typedef std::variant<Seed, HDKey, PSBTSignatureResponseBody> ResponseBodyVariant;
 
 class Response final {
 public:
@@ -22,11 +21,11 @@ public:
     const UUID& id() const { return *_id; }
 
     bool is_seed_response() const { return std::holds_alternative<Seed>(body()); }
-    bool is_key_response() const { return std::holds_alternative<KeyResponseBody>(body()); }
+    bool is_key_response() const { return std::holds_alternative<HDKey>(body()); }
     bool is_psbt_signature_response() const { return std::holds_alternative<PSBTSignatureResponseBody>(body()); }
 
     const Seed& seed_response() const { return std::get<Seed>(body()); }
-    const KeyResponseBody& key_response() const { return std::get<KeyResponseBody>(body()); }
+    const HDKey& key_response() const { return std::get<HDKey>(body()); }
     const PSBTSignatureResponseBody& psbt_signature_response() const { return std::get<PSBTSignatureResponseBody>(body()); }
 
     std::string ur() const;

@@ -88,7 +88,7 @@ model.o: model.hpp data-node.hpp asset.hpp hd-key.hpp ec-key.hpp utils.hpp wally
 model-eckey.o: model-eckey.hpp data-node.hpp utils.hpp model.hpp asset.hpp network.hpp ec-key.hpp
 model-hdkey.o: model-hdkey.hpp data-node.hpp utils.hpp model.hpp hd-key.hpp output-type.hpp derivation-path.hpp chain-type.hpp index-bound.hpp output-descriptor.hpp
 model-psbt.o: model-psbt.hpp data-node.hpp utils.hpp model.hpp psbt.hpp transaction.hpp
-model-seed.o: model-seed.hpp data-node.hpp utils.hpp model.hpp seed.hpp uuid.hpp request.hpp
+model-seed.o: model-seed.hpp data-node.hpp utils.hpp model.hpp seed.hpp uuid.hpp request.hpp response.hpp
 network.o: network.hpp
 output-descriptor.o: output-descriptor.hpp output-type.hpp derivation-path.hpp hd-key.hpp
 output-type.o: output-type.hpp

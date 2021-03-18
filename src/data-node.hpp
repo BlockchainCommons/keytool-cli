@@ -20,6 +20,7 @@ public:
     virtual std::optional<std::string> to_string() = 0;
     virtual void from_string(const std::string& s) = 0;
     virtual bool has_value() = 0;
+    virtual bool has_assigned_value() = 0;
 };
 
 template <typename T>
@@ -42,9 +43,9 @@ public:
         if(!_tried) {
             _tried = true;
             if(!_value.has_value() && _derivation) {
-                //std::cout << "deriving: " << name() << std::endl;
+                // std::cout << "deriving: " << name() << std::endl;
                 _value = _derivation();
-                //std::cout << "done: " << name() << std::endl;
+                // std::cout << "done: " << name() << std::endl;
             }
         }
         return _value;
@@ -64,6 +65,10 @@ public:
 
     virtual bool has_value() override {
         return optional_value().has_value();
+    }
+
+    virtual bool has_assigned_value() override {
+        return _value.has_value();
     }
 
     virtual std::optional<std::string> to_string() override {

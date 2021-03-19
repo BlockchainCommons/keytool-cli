@@ -6,17 +6,11 @@
 #include "utils.hpp"
 #include "asset.hpp"
 #include "network.hpp"
+#include "derivation-path.hpp"
 
 enum KeyType {
     private_key,
     public_key
-};
-
-struct UseInfo {
-    Asset asset;
-    Network network;
-
-    UseInfo(Asset asset, Network network);
 };
 
 class HDKey2 final {
@@ -26,7 +20,11 @@ public:
         bool is_master,
         KeyType key_type,
         const ByteVector& key_data,
-        std::optional<ByteVector> chain_code
+        std::optional<ByteVector> chain_code,
+        const Asset& asset,
+        std::optional<DerivationPath> origin,
+        std::optional<DerivationPath> children,
+        std::optional<uint32_t> parent_fingerprint
     );
 
     const std::string& name() const { return _name; }
@@ -34,6 +32,10 @@ public:
     KeyType key_type() const { return _key_type; }
     const ByteVector& key_data() const { return _key_data; }
     std::optional<ByteVector> chain_code() const { return _chain_code; }
+    const Asset& asset() const { return _asset; }
+    std::optional<DerivationPath> origin() const { return _origin; }
+    std::optional<DerivationPath> children() const { return _children; }
+    std::optional<uint32_t> parent_fingerprint() const { return _parent_fingerprint; }
 
 private:
     std::string _name;
@@ -41,6 +43,10 @@ private:
     KeyType _key_type;
     ByteVector _key_data;
     std::optional<ByteVector> _chain_code;
+    Asset _asset;
+    std::optional<DerivationPath> _origin;
+    std::optional<DerivationPath> _children;
+    std::optional<uint32_t> _parent_fingerprint;
 };
 
 #endif

@@ -298,7 +298,7 @@
     <displaySettings addEntityAsSuccessor="false" annotationToBrowse="false" bias="Bias.start" confidenceVisible="false" edgeNotesVisible="false" edgeWeightsVisible="false" entityIdVisible="false"
         noteNumbersVisible="false" orientation="Orientation.leftToRight" projectManagementVisible="false"/>
     <documentInfo author="" comments="" keywords="" title=""/>
-    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="0.0" zoom="0.654"/>
+    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="0.0" zoom="0.565"/>
     <chartSettings classVisible="true" classWidth="90" completionVisible="true" effortVisible="true" finishDateVisible="true" resourceVisible="true" resourceWidth="60" startDateVisible="true" titleWidth="104"/>
     <inspectorSettings visibility="true" width="284">
         <inspector title="element" visibility="minimized"/>

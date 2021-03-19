@@ -8,8 +8,6 @@
 
 using namespace std;
 
-static const auto cborDecodingFlags = ur::CborLite::Flag::requireMinimalEncoding;
-
 UUID::UUID() {
     random_device rd;
     uniform_int_distribution<uint8_t> dist(0, 255);

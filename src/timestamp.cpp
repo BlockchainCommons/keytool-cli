@@ -7,8 +7,6 @@
 using namespace std;
 using namespace std::chrono;
 
-static const auto cborDecodingFlags = ur::CborLite::Flag::requireMinimalEncoding;
-
 Timestamp::Timestamp() {
     _time = time_point_cast<milliseconds>(system_clock::now());
 }

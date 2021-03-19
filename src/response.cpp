@@ -6,8 +6,6 @@ using namespace std;
 using namespace ur;
 using namespace ur::CborLite;
 
-static const auto cborDecodingFlags = ur::CborLite::Flag::requireMinimalEncoding;
-
 Response::Response(ResponseBodyVariant body, const UUID& id)
     : _body(body)
     , _id(id)

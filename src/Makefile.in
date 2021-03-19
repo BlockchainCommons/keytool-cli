@@ -38,6 +38,7 @@ all: $(toolname)
 OBJS = \
 	asset.o \
 	chain-type.o \
+	child-index.o \
 	derivation-path.o \
 	ec-key.o \
 	hd-key.o \
@@ -80,6 +81,7 @@ $(toolname): $(OBJS)
 
 asset.o: asset.hpp network.hpp
 chain-type.o: chain-type.hpp
+child-index.o: child-index.hpp utils.hpp
 derivation-path.o: derivation-path.hpp utils.hpp index-bound.hpp
 ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
 hd-key.o: hd-key.hpp utils.hpp network.hpp wally-utils.hpp derivation-path.hpp seed.hpp

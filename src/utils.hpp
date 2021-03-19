@@ -17,6 +17,9 @@
 #include <algorithm>
 #include <cctype>
 #include <locale>
+#include <bc-ur/bc-ur.hpp>
+
+static const auto cborDecodingFlags = ur::CborLite::Flag::requireMinimalEncoding;
 
 typedef std::vector<uint8_t> ByteVector;
 typedef std::vector<std::string> StringVector;

@@ -6,8 +6,6 @@ using namespace std;
 using namespace ur;
 using namespace ur::CborLite;
 
-static const auto cborDecodingFlags = ur::CborLite::Flag::requireMinimalEncoding;
-
 void SeedRequestBody::encode_cbor(ByteVector& cbor) const {
     encodeTagAndValue(cbor, Major::semantic, Tag(500));
     encodeBytes(cbor, digest());

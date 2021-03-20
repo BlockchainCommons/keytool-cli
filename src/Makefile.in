@@ -40,6 +40,7 @@ OBJS = \
 	chain-type.o \
 	child-index.o \
 	child-index-range.o \
+	child-index-wildcard.o \
 	derivation-path.o \
 	ec-key.o \
 	hd-key.o \
@@ -84,6 +85,7 @@ asset.o: asset.hpp network.hpp
 chain-type.o: chain-type.hpp
 child-index.o: child-index.hpp utils.hpp
 child-index-range.o: child-index-range.hpp utils.hpp child-index.hpp
+child-index-wildcard.o: child-index-wildcard.hpp utils.hpp
 derivation-path.o: derivation-path.hpp utils.hpp index-bound.hpp
 ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
 hd-key.o: hd-key.hpp utils.hpp network.hpp wally-utils.hpp derivation-path.hpp seed.hpp

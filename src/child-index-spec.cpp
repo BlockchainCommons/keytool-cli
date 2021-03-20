@@ -38,3 +38,15 @@ void ChildIndexSpec::encode_cbor(ByteVector& cbor) const {
         wildcard().encode_cbor(cbor);
     }
 }
+
+std::ostream& operator<< (std::ostream& os, const ChildIndexSpec& rhs) {
+    if(rhs.is_index()) {
+        return os << rhs.index();
+    } else if(rhs.is_range()) {
+        return os << rhs.range();
+    } else if(rhs.is_wildcard()) {
+        return os << rhs.wildcard();
+    } else {
+        throw runtime_error("Unknown child index spec.");
+    }
+}

@@ -33,4 +33,6 @@ private:
     ChildIndexSpecValue _value;
 };
 
+std::ostream& operator<< (std::ostream& os, const ChildIndexSpec& rhs);
+
 #endif

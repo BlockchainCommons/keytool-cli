@@ -11,13 +11,15 @@ ChildIndexWildcard::ChildIndexWildcard() { }
 std::optional<ChildIndexWildcard> ChildIndexWildcard::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     auto tag = undefined;
     size_t array_size;
-    decodeTagAndValue(pos, end, tag, array_size, cborDecodingFlags);
+    auto p = pos;
+    decodeTagAndValue(p, end, tag, array_size, cborDecodingFlags);
     if(tag != Major::array) {
         return nullopt;
     }
     if(array_size != 0) {
         return nullopt;
     }
+    pos = p;
     return ChildIndexWildcard();
 }
 

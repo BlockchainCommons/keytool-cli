@@ -15,21 +15,23 @@ ChildIndexRange::ChildIndexRange(ChildIndex low, ChildIndex high) : _low(low), _
 optional<ChildIndexRange> ChildIndexRange::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     auto tag = undefined;
     size_t array_size;
-    decodeTagAndValue(pos, end, tag, array_size, cborDecodingFlags);
+    auto p = pos;
+    decodeTagAndValue(p, end, tag, array_size, cborDecodingFlags);
     if(tag != Major::array) {
         return nullopt;
     }
     if(array_size != 2) {
         return nullopt;
     }
-    auto low = ChildIndex::decode_cbor(pos, end);
+    auto low = ChildIndex::decode_cbor(p, end);
     if(!low.has_value()) {
         return nullopt;
     }
-    auto high = ChildIndex::decode_cbor(pos, end);
+    auto high = ChildIndex::decode_cbor(p, end);
     if(!high.has_value()) {
         return nullopt;
     }
+    pos = p;
     return ChildIndexRange(*low, *high);
 }
 

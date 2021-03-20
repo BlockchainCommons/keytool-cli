@@ -39,7 +39,7 @@ void ChildIndexSpec::encode_cbor(ByteVector& cbor) const {
     }
 }
 
-std::ostream& operator<< (std::ostream& os, const ChildIndexSpec& rhs) {
+ostream& operator<< (std::ostream& os, const ChildIndexSpec& rhs) {
     if(rhs.is_index()) {
         return os << rhs.index();
     } else if(rhs.is_range()) {

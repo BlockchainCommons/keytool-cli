@@ -72,7 +72,6 @@ Seed Seed::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterat
                 break;
             default:
                 throw domain_error("Unknown label.");
-                break;
         }
     }
     if(data.empty()) {

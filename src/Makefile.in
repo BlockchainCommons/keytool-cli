@@ -43,6 +43,7 @@ OBJS = \
 	child-index-spec.o \
 	child-index-wildcard.o \
 	derivation-path.o \
+	derivation-path-2.o \
 	derivation-step.o \
 	ec-key.o \
 	hd-key.o \
@@ -90,6 +91,7 @@ child-index-range.o: child-index-range.hpp utils.hpp child-index.hpp
 child-index-spec.o: child-index-spec.hpp child-index.hpp child-index-range.hpp child-index-wildcard.hpp utils.hpp
 child-index-wildcard.o: child-index-wildcard.hpp utils.hpp
 derivation-path.o: derivation-path.hpp utils.hpp index-bound.hpp
+derivation-path-2.o: derivation-path-2.hpp derivation-step.hpp
 derivation-step.o: derivation-step.hpp child-index-spec.hpp
 ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
 hd-key.o: hd-key.hpp utils.hpp network.hpp wally-utils.hpp derivation-path.hpp seed.hpp

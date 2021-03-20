@@ -5,6 +5,7 @@
 #include "child-index.hpp"
 #include <stdint.h>
 #include <ostream>
+#include <optional>
 
 class ChildIndexRange final {
 public:
@@ -13,7 +14,7 @@ public:
     ChildIndex low() const { return _low; }
     ChildIndex high() const { return _high; }
 
-    static ChildIndexRange decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
+    static std::optional<ChildIndexRange> decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
     void encode_cbor(ByteVector& cbor) const;
 
     inline friend std::ostream& operator<< (std::ostream& os, const ChildIndexRange& rhs) {

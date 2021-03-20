@@ -4,6 +4,7 @@
 #include "utils.hpp"
 #include <stdint.h>
 #include <ostream>
+#include <optional>
 
 class ChildIndex final {
 public:
@@ -11,7 +12,7 @@ public:
 
     uint32_t value() const { return _value; }
 
-    static ChildIndex decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
+    static std::optional<ChildIndex> decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
     void encode_cbor(ByteVector& cbor) const;
 
     inline friend bool operator ==(const ChildIndex& lhs, const ChildIndex& rhs) {

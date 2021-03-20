@@ -12,15 +12,25 @@ ChildIndexRange::ChildIndexRange(ChildIndex low, ChildIndex high) : _low(low), _
     }
 }
 
-ChildIndexRange ChildIndexRange::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+optional<ChildIndexRange> ChildIndexRange::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    auto tag = undefined;
     size_t array_size;
-    decodeArraySize(pos, end, array_size, cborDecodingFlags);
+    decodeTagAndValue(pos, end, tag, array_size, cborDecodingFlags);
+    if(tag != Major::array) {
+        return nullopt;
+    }
     if(array_size != 2) {
-        throw domain_error("Invalid child index range.");
+        return nullopt;
     }
     auto low = ChildIndex::decode_cbor(pos, end);
+    if(!low.has_value()) {
+        return nullopt;
+    }
     auto high = ChildIndex::decode_cbor(pos, end);
-    return ChildIndexRange(low, high);
+    if(!high.has_value()) {
+        return nullopt;
+    }
+    return ChildIndexRange(*low, *high);
 }
 
 void ChildIndexRange::encode_cbor(ByteVector& cbor) const {

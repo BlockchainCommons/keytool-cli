@@ -12,9 +12,13 @@ ChildIndex::ChildIndex(uint32_t value) : _value(value) {
     }
 }
 
-ChildIndex ChildIndex::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
-    int64_t value;
-    decodeInteger(pos, end, value, cborDecodingFlags);
+optional<ChildIndex> ChildIndex::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    Tag tag = undefined;
+    uint64_t value;
+    decodeTagAndValue(pos, end, tag, value, cborDecodingFlags);
+    if(tag != Major::unsignedInteger) {
+        return nullopt;
+    }
     if(value >= 0x80000000) {
         throw domain_error("Invalid child index.");
     }

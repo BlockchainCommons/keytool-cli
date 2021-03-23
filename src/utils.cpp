@@ -220,7 +220,7 @@ ByteVector big_endian_data(uint32_t i) {
     return result;
 }
 
-ByteVector data_of(uint8_t* b, size_t len) {
+ByteVector data_of(const uint8_t* b, size_t len) {
     return ByteVector(b, b + len);
 }
 

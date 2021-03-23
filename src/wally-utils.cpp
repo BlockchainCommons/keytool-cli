@@ -182,6 +182,33 @@ ECCompressedPublicKey Wally::bip32_key_to_ec_public(const HDKey& key) const {
     return ECCompressedPublicKey(k);
 }
 
+bool Wally::is_private(const ext_key& k) {
+    return k.priv_key[0] == BIP32_FLAG_KEY_PRIVATE;
+}
+
+bool Wally::is_master(const ext_key& k) {
+    return k.depth == 0;
+}
+
+bool Wally::is_version_valid(uint32_t ver, uint32_t flags) {
+    if(ver == BIP32_VER_MAIN_PRIVATE || ver == BIP32_VER_TEST_PRIVATE) {
+        return true;
+    }
+
+    return flags == BIP32_FLAG_KEY_PUBLIC && (ver == BIP32_VER_MAIN_PUBLIC || ver == BIP32_VER_TEST_PUBLIC);
+}
+
+void Wally::check_valid(const ext_key& k) {
+    auto ver_flags = is_private(k) ? BIP32_FLAG_KEY_PRIVATE : BIP32_FLAG_KEY_PUBLIC;
+    assert(is_version_valid(k.version, ver_flags));
+    assert(!is_all_zero(data_of(k.chain_code, sizeof(k.chain_code))));
+    assert(k.pub_key[0] == 0x2 || k.pub_key[0] == 0x3);
+    assert(!is_all_zero(drop(data_of(k.pub_key, sizeof(k.pub_key)))));
+    assert(k.priv_key[0] == BIP32_FLAG_KEY_PUBLIC || k.priv_key[0] == BIP32_FLAG_KEY_PRIVATE);
+    assert(!is_private(k) || !is_all_zero(drop(data_of(k.priv_key, sizeof(k.priv_key)))));
+    assert(!is_master(k) || is_all_zero(data_of(k.parent160, sizeof(k.parent160))));
+}
+
 ECCompressedPublicKey Wally::ec_key_to_public(const ECPrivateKey& key) const {
     ByteVector key_out(EC_PUBLIC_KEY_LEN);
     assert(wally_ec_public_key_from_private_key(&key.data()[0], key.data().size(), &key_out[0], key_out.size()) == WALLY_OK);

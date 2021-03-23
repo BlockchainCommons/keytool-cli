@@ -122,7 +122,7 @@ uint32_t parse_uint32(const std::string& s);
 
 void push_uint32(ByteVector& v, uint32_t i);
 ByteVector big_endian_data(uint32_t i);
-ByteVector data_of(uint8_t* b, size_t len);
+ByteVector data_of(const uint8_t* b, size_t len);
 bool is_all_zero(const ByteVector& v);
 
 #endif // KEYTOOL_UTILS_HPP

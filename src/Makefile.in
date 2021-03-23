@@ -95,7 +95,7 @@ derivation-path-2.o: derivation-path-2.hpp derivation-step.hpp
 derivation-step.o: derivation-step.hpp child-index-spec.hpp
 ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
 hd-key.o: hd-key.hpp utils.hpp network.hpp wally-utils.hpp derivation-path.hpp seed.hpp
-hd-key-2.o: hd-key-2.hpp utils.hpp asset.hpp network.hpp derivation-path-2.hpp
+hd-key-2.o: hd-key-2.hpp utils.hpp asset.hpp network.hpp derivation-path-2.hpp wally-utils.hpp
 index-bound.o: index-bound.hpp
 keytool.o: params.hpp
 model.o: model.hpp data-node.hpp asset.hpp hd-key.hpp ec-key.hpp utils.hpp wally-utils.hpp derivation-path.hpp chain-type.hpp output-type.hpp index-bound.hpp output-descriptor.hpp psbt.hpp transaction.hpp seed.hpp model-eckey.hpp model-hdkey.hpp model-psbt.hpp model-seed.hpp uuid.hpp request.hpp

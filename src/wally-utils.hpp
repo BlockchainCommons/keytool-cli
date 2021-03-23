@@ -8,6 +8,7 @@
 
 struct wally_psbt;
 struct wally_tx;
+struct ext_key;
 
 class Wally final {
 public:
@@ -39,6 +40,11 @@ public:
 
     ECPrivateKey bip32_key_to_ec_private(const HDKey& key) const;
     ECCompressedPublicKey bip32_key_to_ec_public(const HDKey& key) const;
+
+    bool is_private(const ext_key& k);
+    bool is_master(const ext_key& k);
+    bool is_version_valid(uint32_t ver, uint32_t flags);
+    void check_valid(const ext_key& k);
 
     ECCompressedPublicKey ec_key_to_public(const ECPrivateKey& key) const;
     ECUncompressedPublicKey ec_key_uncompress(const ECCompressedPublicKey& key) const;

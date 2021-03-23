@@ -1,5 +1,6 @@
 #include "hd-key-2.hpp"
 #include "wally.hpp"
+#include "wally-utils.hpp"
 
 HDKey2::HDKey2(
     const std::string& name,
@@ -22,33 +23,6 @@ HDKey2::HDKey2(
     , _children(children)
     , _parent_fingerprint(parent_fingerprint)
 { }
-
-static bool is_private(const ext_key& k) {
-    return k.priv_key[0] == BIP32_FLAG_KEY_PRIVATE;
-}
-
-static bool is_master(const ext_key& k) {
-    return k.depth == 0;
-}
-
-static bool is_version_valid(uint32_t ver, uint32_t flags) {
-    if(ver == BIP32_VER_MAIN_PRIVATE || ver == BIP32_VER_TEST_PRIVATE) {
-        return true;
-    }
-
-    return flags == BIP32_FLAG_KEY_PUBLIC && (ver == BIP32_VER_MAIN_PUBLIC || ver == BIP32_VER_TEST_PUBLIC);
-}
-
-static void check_valid(ext_key& k) {
-    auto ver_flags = is_private(k) ? BIP32_FLAG_KEY_PRIVATE : BIP32_FLAG_KEY_PUBLIC;
-    assert(is_version_valid(k.version, ver_flags));
-    assert(!is_all_zero(data_of(k.chain_code, sizeof(k.chain_code))));
-    assert(k.pub_key[0] == 0x2 || k.pub_key[0] == 0x3);
-    assert(!is_all_zero(drop(data_of(k.pub_key, sizeof(k.pub_key)))));
-    assert(k.priv_key[0] == BIP32_FLAG_KEY_PUBLIC || k.priv_key[0] == BIP32_FLAG_KEY_PRIVATE);
-    assert(!is_private(k) || !is_all_zero(drop(data_of(k.priv_key, sizeof(k.priv_key)))));
-    assert(!is_master(k) || is_all_zero(data_of(k.parent160, sizeof(k.parent160))));
-}
 
 ext_key HDKey2::wally_ext_key() const {
     ext_key k;
@@ -99,7 +73,7 @@ ext_key HDKey2::wally_ext_key() const {
         store_into(k.parent160, big_endian_data(*opt_parent_fingerprint));
     }
 
-    check_valid(k);
+    Wally::instance.check_valid(k);
 
     return k;
 }

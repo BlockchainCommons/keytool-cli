@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <chrono>
+#include <algorithm>
 
 #include <bc-crypto-base/bc-crypto-base.h>
 #include "randombytes.h"
@@ -204,4 +205,25 @@ uint32_t parse_uint32(const string& s) {
         throw domain_error("Expected integer >= 0.");
     }
     return n;
+}
+
+void push_uint32(ByteVector& v, uint32_t i) {
+    v.push_back( (i >> 24) & 0xFF);
+    v.push_back( (i >> 16) & 0xFF);
+    v.push_back( (i >>  8) & 0xFF);
+    v.push_back( (i >>  0) & 0xFF);
+}
+
+ByteVector big_endian_data(uint32_t i) {
+    ByteVector result;
+    push_uint32(result, i);
+    return result;
+}
+
+ByteVector data_of(uint8_t* b, size_t len) {
+    return ByteVector(b, b + len);
+}
+
+bool is_all_zero(const ByteVector& v) {
+    return all_of(v.begin(), v.end(), [](auto b) { return b == 0; });
 }

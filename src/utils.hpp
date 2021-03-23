@@ -35,11 +35,23 @@ StringVector split(const std::string& s, const char& separator);
 
 std::string to_lowercase(const std::string& s);
 
+static inline void store_into(void* dest, const ByteVector& source) {
+    memcpy(dest, source.data(), source.size());
+}
+
 template<typename T>
 std::vector<T> take(const std::vector<T> &buf, size_t count) {
     auto first = buf.begin();
     auto c = std::min(buf.size(), count);
     auto last = first + c;
+    return std::vector(first, last);
+}
+
+template<typename T>
+std::vector<T> drop(const std::vector<T> &buf, size_t count = 1) {
+    auto c = std::min(buf.size(), count);
+    auto first = buf.begin() + c;
+    auto last = buf.end();
     return std::vector(first, last);
 }
 
@@ -107,5 +119,10 @@ ByteVector make_uuid();
 const ByteVector sha256(const ByteVector &buf);
 
 uint32_t parse_uint32(const std::string& s);
+
+void push_uint32(ByteVector& v, uint32_t i);
+ByteVector big_endian_data(uint32_t i);
+ByteVector data_of(uint8_t* b, size_t len);
+bool is_all_zero(const ByteVector& v);
 
 #endif // KEYTOOL_UTILS_HPP

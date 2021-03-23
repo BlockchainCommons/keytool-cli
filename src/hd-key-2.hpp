@@ -18,7 +18,6 @@ struct ext_key;
 class HDKey2 final {
 public:
     HDKey2(
-        const std::string& name,
         bool is_master,
         KeyType key_type,
         const ByteVector& key_data,
@@ -29,7 +28,6 @@ public:
         std::optional<uint32_t> parent_fingerprint
     );
 
-    const std::string& name() const { return _name; }
     bool is_master() const { return _is_master; }
     KeyType key_type() const { return _key_type; }
     const ByteVector& key_data() const { return _key_data; }
@@ -39,8 +37,9 @@ public:
     std::optional<DerivationPath2> children() const { return _children; }
     std::optional<uint32_t> parent_fingerprint() const { return _parent_fingerprint; }
 
+    HDKey2 derive(KeyType derived_key_type) const;
+
 private:
-    std::string _name;
     bool _is_master;
     KeyType _key_type;
     ByteVector _key_data;

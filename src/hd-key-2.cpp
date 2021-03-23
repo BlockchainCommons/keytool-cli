@@ -2,19 +2,19 @@
 #include "wally.hpp"
 #include "wally-utils.hpp"
 
+using namespace std;
+
 HDKey2::HDKey2(
-    const std::string& name,
     bool is_master,
     KeyType key_type,
     const ByteVector& key_data,
-    std::optional<ByteVector> chain_code,
+    optional<ByteVector> chain_code,
     const Asset& asset,
-    std::optional<DerivationPath2> origin,
-    std::optional<DerivationPath2> children,
-    std::optional<uint32_t> parent_fingerprint
+    optional<DerivationPath2> origin,
+    optional<DerivationPath2> children,
+    optional<uint32_t> parent_fingerprint
 )
-    : _name(name)
-    , _is_master(is_master)
+    : _is_master(is_master)
     , _key_type(key_type)
     , _key_data(key_data)
     , _chain_code(chain_code)
@@ -76,4 +76,20 @@ ext_key HDKey2::wally_ext_key() const {
     Wally::instance.check_valid(k);
 
     return k;
+}
+
+HDKey2 HDKey2::derive(KeyType derived_key_type) const {
+    if(key_type() == KeyType::public_key && derived_key_type == KeyType::private_key) {
+        throw domain_error("Cannot derive private key from public key.");
+    }
+
+    if(key_type() == derived_key_type) {
+        // private -> private
+        // public -> public
+        return HDKey2(*this);
+    } else {
+        // private -> public
+        auto pub_key = data_of(wally_ext_key().pub_key, sizeof(ext_key::pub_key));
+        return HDKey2(is_master(), derived_key_type, pub_key, chain_code(), asset(), origin(), children(), parent_fingerprint());
+    }
 }

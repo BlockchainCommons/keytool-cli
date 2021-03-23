@@ -8,8 +8,8 @@ HDKey2::HDKey2(
     const ByteVector& key_data,
     std::optional<ByteVector> chain_code,
     const Asset& asset,
-    std::optional<DerivationPath> origin,
-    std::optional<DerivationPath> children,
+    std::optional<DerivationPath2> origin,
+    std::optional<DerivationPath2> children,
     std::optional<uint32_t> parent_fingerprint
 )
     : _name(name)
@@ -22,6 +22,17 @@ HDKey2::HDKey2(
     , _children(children)
     , _parent_fingerprint(parent_fingerprint)
 { }
+
+ext_key HDKey2::wally_ext_key() const {
+    ext_key k;
+
+    if(auto o = origin()) {
+        DerivationPath2 origin = *o;
+        // k.depth =
+    }
+
+    return k;
+}
 
 static ext_key wally_ext_key(const HDKey2& hd_key) {
     ext_key k;

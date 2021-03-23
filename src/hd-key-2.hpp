@@ -6,12 +6,14 @@
 #include "utils.hpp"
 #include "asset.hpp"
 #include "network.hpp"
-#include "derivation-path.hpp"
+#include "derivation-path-2.hpp"
 
 enum KeyType {
     private_key,
     public_key
 };
+
+struct ext_key;
 
 class HDKey2 final {
 public:
@@ -22,8 +24,8 @@ public:
         const ByteVector& key_data,
         std::optional<ByteVector> chain_code,
         const Asset& asset,
-        std::optional<DerivationPath> origin,
-        std::optional<DerivationPath> children,
+        std::optional<DerivationPath2> origin,
+        std::optional<DerivationPath2> children,
         std::optional<uint32_t> parent_fingerprint
     );
 
@@ -33,8 +35,8 @@ public:
     const ByteVector& key_data() const { return _key_data; }
     std::optional<ByteVector> chain_code() const { return _chain_code; }
     const Asset& asset() const { return _asset; }
-    std::optional<DerivationPath> origin() const { return _origin; }
-    std::optional<DerivationPath> children() const { return _children; }
+    std::optional<DerivationPath2> origin() const { return _origin; }
+    std::optional<DerivationPath2> children() const { return _children; }
     std::optional<uint32_t> parent_fingerprint() const { return _parent_fingerprint; }
 
 private:
@@ -44,9 +46,11 @@ private:
     ByteVector _key_data;
     std::optional<ByteVector> _chain_code;
     Asset _asset;
-    std::optional<DerivationPath> _origin;
-    std::optional<DerivationPath> _children;
+    std::optional<DerivationPath2> _origin;
+    std::optional<DerivationPath2> _children;
     std::optional<uint32_t> _parent_fingerprint;
+
+    ext_key wally_ext_key() const;
 };
 
 #endif

@@ -20,43 +20,43 @@ Seed Seed::from_cbor(const ByteVector& cbor) {
 
 Seed Seed::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     size_t map_len;
-    decodeMapSize(pos, end, map_len, cborDecodingFlags);
+    decodeMapSize(pos, end, map_len, cbor_decoding_flags);
     set<int> labels;
     auto data = ByteVector();
     auto name = string();
     auto note = string();
     for(auto index = 0; index < map_len; index++) {
         int label;
-        decodeInteger(pos, end, label, cborDecodingFlags);
+        decodeInteger(pos, end, label, cbor_decoding_flags);
         if(labels.find(label) != labels.end()) {
             throw domain_error("Duplicate label.");
         }
         labels.insert(label);
         switch (label) {
             case 1: // payload
-                decodeBytes(pos, end, data, cborDecodingFlags);
+                decodeBytes(pos, end, data, cbor_decoding_flags);
                 break;
             case 2: { // creation-date
                 ur::CborLite::Tag tag;
                 size_t value;
-                decodeTagAndValue(pos, end, tag, value, cborDecodingFlags);
+                decodeTagAndValue(pos, end, tag, value, cbor_decoding_flags);
                 if(tag != ur::CborLite::Major::semantic) {
                     throw domain_error("Invalid date.");
                 }
                 switch(value) {
                     case 0: {
                         string date;
-                        decodeText(pos, end, date, cborDecodingFlags);
+                        decodeText(pos, end, date, cbor_decoding_flags);
                     }
                         break;
                     case 1: {
                         double date;
-                        decodeDoubleFloat(pos, end, date, cborDecodingFlags);
+                        decodeDoubleFloat(pos, end, date, cbor_decoding_flags);
                     }
                         break;
                     case 100: {
                         int date;
-                        decodeInteger(pos, end, date, cborDecodingFlags);
+                        decodeInteger(pos, end, date, cbor_decoding_flags);
                     }
                         break;
                     default:
@@ -65,10 +65,10 @@ Seed Seed::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterat
             }
                 break;
             case 3: // name
-                decodeText(pos, end, name, cborDecodingFlags);
+                decodeText(pos, end, name, cbor_decoding_flags);
                 break;
             case 4: // note
-                decodeText(pos, end, note, cborDecodingFlags);
+                decodeText(pos, end, note, cbor_decoding_flags);
                 break;
             default:
                 throw domain_error("Unknown label.");
@@ -83,7 +83,7 @@ Seed Seed::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterat
 Seed Seed::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     Tag major_tag;
     Tag minor_tag;
-    decodeTagAndValue(pos, end, major_tag, minor_tag, cborDecodingFlags);
+    decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
     if(major_tag != Major::semantic || minor_tag != 300) {
         throw domain_error("Invalid seed.");
     }

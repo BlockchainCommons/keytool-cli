@@ -19,7 +19,7 @@
 #include <locale>
 #include <bc-ur/bc-ur.hpp>
 
-static const auto cborDecodingFlags = ur::CborLite::Flag::requireMinimalEncoding;
+static const auto cbor_decoding_flags = ur::CborLite::Flag::requireMinimalEncoding;
 
 typedef std::vector<uint8_t> ByteVector;
 typedef std::vector<std::string> StringVector;

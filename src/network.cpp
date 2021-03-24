@@ -49,7 +49,7 @@ void Network::encode_cbor(ByteVector& cbor) const {
 
 Network Network::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     uint64_t v;
-    decodeUnsigned(pos, end, v, cborDecodingFlags);
+    decodeUnsigned(pos, end, v, cbor_decoding_flags);
     if(v == mainnet().value()) {
         return mainnet();
     } else if(v == testnet().value()) {

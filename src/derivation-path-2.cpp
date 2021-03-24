@@ -35,14 +35,14 @@ uint8_t DerivationPath2::effective_depth() const {
 
 DerivationPath2 DerivationPath2::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     size_t map_len;
-    decodeMapSize(pos, end, map_len, cborDecodingFlags);
+    decodeMapSize(pos, end, map_len, cbor_decoding_flags);
     set<int> labels;
     vector<DerivationStep> steps;
     optional<uint32_t> source_fingerprint;
     optional<uint8_t> depth;
     for(auto index = 0; index < map_len; index++) {
         int label;
-        decodeInteger(pos, end, label, cborDecodingFlags);
+        decodeInteger(pos, end, label, cbor_decoding_flags);
         if(labels.find(label) != labels.end()) {
             throw domain_error("Duplicate label.");
         }
@@ -50,7 +50,7 @@ DerivationPath2 DerivationPath2::decode_cbor(ByteVector::const_iterator& pos, By
         switch(label) {
             case 1: { // steps
                 size_t array_size;
-                decodeArraySize(pos, end, array_size, cborDecodingFlags);
+                decodeArraySize(pos, end, array_size, cbor_decoding_flags);
                 // each step takes 2 array entries
                 if(array_size % 2 != 0) {
                     throw domain_error("Invalid DerivationPath components.");
@@ -63,7 +63,7 @@ DerivationPath2 DerivationPath2::decode_cbor(ByteVector::const_iterator& pos, By
                 break;
             case 2: { // source_fingerprint
                 uint64_t f;
-                decodeUnsigned(pos, end, f, cborDecodingFlags);
+                decodeUnsigned(pos, end, f, cbor_decoding_flags);
                 if(f > numeric_limits<uint32_t>::max()) {
                     throw domain_error("Invalid source fingerprint.");
                 }
@@ -72,7 +72,7 @@ DerivationPath2 DerivationPath2::decode_cbor(ByteVector::const_iterator& pos, By
                 break;
             case 3: { // depth
                 uint64_t d;
-                decodeUnsigned(pos, end, d, cborDecodingFlags);
+                decodeUnsigned(pos, end, d, cbor_decoding_flags);
                 if(d > numeric_limits<uint8_t>::max()) {
                     throw domain_error("Invalid depth.");
                 }
@@ -89,7 +89,7 @@ DerivationPath2 DerivationPath2::decode_cbor(ByteVector::const_iterator& pos, By
 DerivationPath2 DerivationPath2::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     Tag major_tag;
     Tag minor_tag;
-    decodeTagAndValue(pos, end, major_tag, minor_tag, cborDecodingFlags);
+    decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
     if(major_tag != Major::semantic || minor_tag != 304) {
         throw domain_error("Invalid derivation path.");
     }

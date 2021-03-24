@@ -58,13 +58,13 @@ void UseInfo::encode_cbor(ByteVector& cbor) const {
 
 UseInfo UseInfo::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     size_t map_len;
-    decodeMapSize(pos, end, map_len, cborDecodingFlags);
+    decodeMapSize(pos, end, map_len, cbor_decoding_flags);
     set<int> labels;
     auto asset = Asset2::btc();
     auto network = Network::mainnet();
     for(auto index = 0; index < map_len; index++) {
         int label;
-        decodeInteger(pos, end, label, cborDecodingFlags);
+        decodeInteger(pos, end, label, cbor_decoding_flags);
         if(labels.find(label) != labels.end()) {
             throw domain_error("Duplicate label.");
         }

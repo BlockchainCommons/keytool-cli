@@ -56,11 +56,11 @@ const void Timestamp::encode_cbor(ByteVector &buf) const {
 Timestamp Timestamp::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     ur::CborLite::Tag major_tag;
     ur::CborLite::Tag minor_tag;
-    ur::CborLite::decodeTagAndValue(pos, end, major_tag, minor_tag, cborDecodingFlags);
+    ur::CborLite::decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
     if(major_tag != ur::CborLite::Major::semantic || minor_tag != 1) {
         throw domain_error("Invalid UUID.");
     }
     double secs_since_epoch;
-    ur::CborLite::decodeDoubleFloat(pos, end, secs_since_epoch, cborDecodingFlags);
+    ur::CborLite::decodeDoubleFloat(pos, end, secs_since_epoch, cbor_decoding_flags);
     return Timestamp(secs_since_epoch);
 }

@@ -44,6 +44,8 @@ public:
 
     void encode_cbor(ByteVector& cbor) const;
     void encode_tagged_cbor(ByteVector &cbor) const;
+    static HDKey2 decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
+    static HDKey2 decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
 private:
     bool _is_master;

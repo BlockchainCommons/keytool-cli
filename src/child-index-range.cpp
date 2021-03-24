@@ -16,7 +16,7 @@ optional<ChildIndexRange> ChildIndexRange::decode_cbor(ByteVector::const_iterato
     auto tag = undefined;
     size_t array_size;
     auto p = pos;
-    decodeTagAndValue(p, end, tag, array_size, cborDecodingFlags);
+    decodeTagAndValue(p, end, tag, array_size, cbor_decoding_flags);
     if(tag != Major::array) {
         return nullopt;
     }

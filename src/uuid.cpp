@@ -61,11 +61,11 @@ const void UUID::encode_cbor(ByteVector &buf) const {
 UUID UUID::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     ur::CborLite::Tag major_tag;
     ur::CborLite::Tag minor_tag;
-    ur::CborLite::decodeTagAndValue(pos, end, major_tag, minor_tag, cborDecodingFlags);
+    ur::CborLite::decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
     if(major_tag != ur::CborLite::Major::semantic || minor_tag != 37) {
         throw domain_error("Invalid UUID.");
     }
     ByteVector data;
-    ur::CborLite::decodeBytes(pos, end, data, cborDecodingFlags);
+    ur::CborLite::decodeBytes(pos, end, data, cbor_decoding_flags);
     return UUID(data);
 }

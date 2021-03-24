@@ -49,7 +49,7 @@ void Asset2::encode_cbor(ByteVector& cbor) const {
 
 Asset2 Asset2::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     uint64_t v;
-    decodeUnsigned(pos, end, v, cborDecodingFlags);
+    decodeUnsigned(pos, end, v, cbor_decoding_flags);
     if(v == btc().coin_type()) {
         return btc();
     } else if(v == eth().coin_type()) {

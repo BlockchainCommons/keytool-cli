@@ -16,7 +16,7 @@ optional<ChildIndex> ChildIndex::decode_cbor(ByteVector::const_iterator& pos, By
     Tag tag = undefined;
     uint64_t value;
     auto p = pos;
-    decodeTagAndValue(p, end, tag, value, cborDecodingFlags);
+    decodeTagAndValue(p, end, tag, value, cbor_decoding_flags);
     if(tag != Major::unsignedInteger) {
         return nullopt;
     }

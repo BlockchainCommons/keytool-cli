@@ -21,11 +21,11 @@ Response::Response(const string& s) {
         auto pos = cbor.begin();
         auto end = cbor.end();
         size_t map_len;
-        decodeMapSize(pos, end, map_len, cborDecodingFlags);
+        decodeMapSize(pos, end, map_len, cbor_decoding_flags);
         set<int> labels;
         for(auto index = 0; index < map_len; index++) {
             int label;
-            decodeInteger(pos, end, label, cborDecodingFlags);
+            decodeInteger(pos, end, label, cbor_decoding_flags);
             if(labels.find(label) != labels.end()) {
                 throw domain_error("Duplicate label.");
             }
@@ -37,7 +37,7 @@ Response::Response(const string& s) {
                 case 2: {
                     Tag major_tag;
                     Tag minor_tag;
-                    decodeTagAndValue(pos, end, major_tag, minor_tag, cborDecodingFlags);
+                    decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
                     if(major_tag != Major::semantic) {
                         throw domain_error("Invalid response.");
                     }

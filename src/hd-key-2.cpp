@@ -205,8 +205,130 @@ void HDKey2::encode_cbor(ByteVector& cbor) const {
         encodeInteger(chain_code_map_entry, 4);
         encodeBytes(chain_code_map_entry, *chain_code_opt);
     }
+
+    // use_info
+    ByteVector use_info_map_entry;
+    if(!use_info().is_default()) {
+        map_size += 1;
+        encodeInteger(use_info_map_entry, 5);
+        use_info().encode_cbor(use_info_map_entry);
+    }
+
+    // origin
+    ByteVector origin_map_entry;
+    if(auto origin_opt = origin()) {
+        map_size += 1;
+        encodeInteger(origin_map_entry, 6);
+        origin_opt->encode_cbor(origin_map_entry);
+    }
+
+    // children
+    ByteVector children_map_entry;
+    if(auto children_opt = children()) {
+        map_size += 1;
+        encodeInteger(children_map_entry, 7);
+        children_opt->encode_cbor(children_map_entry);
+    }
+
+    // parent_fingerprint
+    ByteVector parent_fingerprint_map_entry;
+    if(auto parent_fingerprint_opt = parent_fingerprint()) {
+        map_size += 1;
+        encodeInteger(parent_fingerprint_map_entry, 8);
+        encodeInteger(parent_fingerprint_map_entry, *parent_fingerprint_opt);
+    }
 }
 
 void HDKey2::encode_tagged_cbor(ByteVector &cbor) const {
+    encodeTagAndValue(cbor, Major::semantic, Tag(303));
+    encode_cbor(cbor);
+}
 
+HDKey2 HDKey2::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    size_t map_len;
+    decodeMapSize(pos, end, map_len, cbor_decoding_flags);
+    set<int> labels;
+
+    bool is_master = false;
+    KeyType key_type = KeyType::public_key();
+    ByteVector key_data;
+    optional<ByteVector> chain_code;
+    UseInfo use_info;
+    optional<DerivationPath2> origin;
+    optional<DerivationPath2> children;
+    optional<uint32_t> parent_fingerprint;
+
+    for(auto index = 0; index < map_len; index++) {
+        int label;
+        decodeInteger(pos, end, label, cbor_decoding_flags);
+        if(labels.find(label) != labels.end()) {
+            throw domain_error("Duplicate label.");
+        }
+        labels.insert(label);
+        switch(label) {
+            case 1: { // is_master
+                decodeBool(pos, end, is_master, cbor_decoding_flags);
+            }
+                break;
+            case 2: { // is_private
+                bool is_private;
+                decodeBool(pos, end, is_private, cbor_decoding_flags);
+                key_type = is_private ? KeyType::private_key() : KeyType::public_key();
+            }
+                break;
+            case 3: { // key_data
+                decodeBytes(pos, end, key_data, cbor_decoding_flags);
+            }
+                break;
+            case 4: { // chain_code
+                ByteVector c;
+                decodeBytes(pos, end, c, cbor_decoding_flags);
+                if(c.size() != 32) {
+                    throw domain_error("Invalid key chain code.");
+                }
+                chain_code = c;
+            }
+                break;
+            case 5: { // use_info
+                use_info = UseInfo::decode_cbor(pos, end);
+            }
+                break;
+            case 6: { // origin
+                origin = DerivationPath2::decode_cbor(pos, end);
+            }
+                break;
+            case 7: { // children
+                children = DerivationPath2::decode_cbor(pos, end);
+            }
+                break;
+            case 8: { // parent_fingerprint
+                uint64_t p;
+                decodeUnsigned(pos, end, p, cbor_decoding_flags);
+                if(p > numeric_limits<uint32_t>::max()) {
+                    throw domain_error("Invalid parent fingerprint");
+                }
+                parent_fingerprint = p;
+            }
+                break;
+            default:
+                throw domain_error("Unknown label.");
+        }
+    }
+    if(is_master && key_type == KeyType::public_key()) {
+        throw domain_error("Master key cannot be public.");
+    }
+    if(key_data.size() != 33) {
+        throw domain_error("Invalid key data.");
+    }
+    return HDKey2(is_master, key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
+}
+
+HDKey2 HDKey2::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    Tag major_tag;
+    Tag minor_tag;
+    decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
+    if(major_tag != Major::semantic || minor_tag != 303) {
+        throw domain_error("Invalid HDKey.");
+    }
+    return decode_cbor(pos, end);
 }

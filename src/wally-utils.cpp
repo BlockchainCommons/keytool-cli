@@ -65,16 +65,7 @@ HDKey Wally::bip32_key_from_seed(const ByteVector& seed, const Network& network)
     }
 
     ext_key* key = NULL;
-
-    uint32_t version;
-    if(network == Network::mainnet()) {
-        version = BIP32_VER_MAIN_PRIVATE;
-    } else if(network == Network::testnet()) {
-        version = BIP32_VER_TEST_PRIVATE;
-    } else {
-        assert(false);
-    }
-    if(bip32_key_from_seed_alloc(&seed[0], seed.size(), version, BIP32_FLAG_SKIP_HASH, &key) != WALLY_OK) {
+    if(bip32_key_from_seed_alloc(&seed[0], seed.size(), network.bip32_private_version(), BIP32_FLAG_SKIP_HASH, &key) != WALLY_OK) {
         throw HDKeyInvalidSeed();
     }
 

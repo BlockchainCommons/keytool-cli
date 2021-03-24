@@ -121,6 +121,8 @@ const ByteVector sha256(const ByteVector &buf);
 uint32_t parse_uint32(const std::string& s);
 
 void push_uint32(ByteVector& v, uint32_t i);
+uint32_t pop_uint32(ByteVector& v);
+
 ByteVector big_endian_data(uint32_t i);
 ByteVector data_of(const uint8_t* b, size_t len);
 bool is_all_zero(const ByteVector& v);

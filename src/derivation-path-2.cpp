@@ -62,18 +62,18 @@ DerivationPath2 DerivationPath2::decode_cbor(ByteVector::const_iterator& pos, By
             }
                 break;
             case 2: { // source_fingerprint
-                int64_t f;
-                decodeInteger(pos, end, f, cborDecodingFlags);
-                if(f <= 0 || f > numeric_limits<uint32_t>::max()) {
+                uint64_t f;
+                decodeUnsigned(pos, end, f, cborDecodingFlags);
+                if(f > numeric_limits<uint32_t>::max()) {
                     throw domain_error("Invalid source fingerprint.");
                 }
                 source_fingerprint = f;
             }
                 break;
             case 3: { // depth
-                int64_t d;
-                decodeInteger(pos, end, d, cborDecodingFlags);
-                if(d < 0 || d > numeric_limits<uint8_t>::max()) {
+                uint64_t d;
+                decodeUnsigned(pos, end, d, cborDecodingFlags);
+                if(d > numeric_limits<uint8_t>::max()) {
                     throw domain_error("Invalid depth.");
                 }
                 depth = d;

@@ -5,6 +5,7 @@
 
 using namespace std;
 using namespace ur;
+using namespace ur::CborLite;
 
 static wally_tx* parse_tx(const string& s) {
     try {
@@ -19,7 +20,7 @@ static wally_tx* parse_tx(const string& s) {
         auto cbor = ur.cbor();
         auto i = cbor.begin();
         ByteVector data;
-        CborLite::decodeBytes(i, cbor.end(), data);
+        decodeBytes(i, cbor.end(), data);
         return Wally::instance.tx_from_data(data);
     } catch(...) { }
 
@@ -55,6 +56,6 @@ string Transaction::hex() const {
 
 string Transaction::ur() const {
     ByteVector cbor;
-    CborLite::encodeBytes(cbor, data());
+    encodeBytes(cbor, data());
     return UREncoder::encode(UR("crypto-tx", cbor));
 }

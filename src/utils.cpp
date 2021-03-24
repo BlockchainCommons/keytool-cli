@@ -214,6 +214,16 @@ void push_uint32(ByteVector& v, uint32_t i) {
     v.push_back( (i >>  0) & 0xFF);
 }
 
+uint32_t pop_uint32(ByteVector& v) {
+    assert(v.size() >= 4);
+    uint32_t result = 0;
+    result |= ((uint32_t)v.back()) << 0; v.pop_back();
+    result |= ((uint32_t)v.back()) << 8; v.pop_back();
+    result |= ((uint32_t)v.back()) << 16; v.pop_back();
+    result |= ((uint32_t)v.back()) << 24; v.pop_back();
+    return result;
+}
+
 ByteVector big_endian_data(uint32_t i) {
     ByteVector result;
     push_uint32(result, i);

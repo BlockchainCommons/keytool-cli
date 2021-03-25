@@ -82,3 +82,31 @@ UseInfo UseInfo::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_
     }
     return UseInfo(asset, network);
 }
+
+uint8_t UseInfo::version_sh() const {
+    if(asset() == Asset2::btc()) {
+        if(network() == Network::mainnet()) {
+            return 0x05;
+        } else if(network() == Network::testnet()) {
+            return 0xc4;
+        } else {
+            assert(false);
+        }
+    } else {
+        throw domain_error("Unsupported asset.");
+    }
+}
+
+uint8_t UseInfo::version_pkh() const {
+    if(asset() == Asset2::btc()) {
+        if(network() == Network::mainnet()) {
+            return 0x00;
+        } else if(network() == Network::testnet()) {
+            return 0x6f;
+        } else {
+            assert(false);
+        }
+    } else {
+        throw domain_error("Unsupported asset.");
+    }
+}

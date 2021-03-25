@@ -45,7 +45,7 @@ Response::Response(const string& s) {
                         _body = Seed::decode_cbor(pos, end);
                     } else if(minor_tag == 303) {
                         // TODO
-                        _body = HDKey::decode_cbor(pos, end);
+                        _body = HDKey2::decode_cbor(pos, end);
                         throw runtime_error("Unimplemented.");
                     } else if(minor_tag == 310) {
                         // TODO

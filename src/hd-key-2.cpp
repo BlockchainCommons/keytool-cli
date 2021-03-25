@@ -362,3 +362,38 @@ HDKey2 HDKey2::from_ur(const string& ur_string) {
     auto end = ur.cbor().end();
     return decode_cbor(pos, end);
 }
+
+ECPrivateKey HDKey2::to_ec_private() const {
+    if(key_type() != KeyType::private_key()) {
+        throw domain_error("Cannot derive private key from public key.");
+    }
+    auto k = wally_ext_key();
+    auto a = k.priv_key + 1;
+    auto v = ByteVector(a, a + EC_PRIVATE_KEY_LEN);
+    return ECPrivateKey(v);
+}
+
+ECCompressedPublicKey HDKey2::to_ec_public() const {
+    auto k = wally_ext_key();
+    auto a = k.pub_key;
+    auto v = ByteVector(a, a + EC_PUBLIC_KEY_LEN);
+    return ECCompressedPublicKey(v);
+}
+
+string HDKey2::to_segwit_address() const {
+    string address_family;
+    if(use_info().network() == Network::mainnet()) {
+        address_family = "bc";
+    } else if(use_info().network() == Network::testnet()) {
+        address_family = "tb";
+    } else {
+        assert(false);
+    }
+
+    auto k = wally_ext_key();
+    char* addr_segwit = nullptr;
+    assert(wally_bip32_key_to_addr_segwit(&k, address_family.c_str(), 0, &addr_segwit) == WALLY_OK);
+    string result(addr_segwit);
+    wally_free_string(addr_segwit);
+    return result;
+}

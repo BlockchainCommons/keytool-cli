@@ -36,7 +36,7 @@ DataNode<ECPrivateKey>* setup_address_ec_key(Model& model) {
     model.add_derivation("address-ec-key <- [address-ec-key-wif, network]");
     node->set_derivation([&]() -> optional<ECPrivateKey> {
         if(model.address_key->has_value()) {
-            return Wally::instance.bip32_key_to_ec_private(model.address_key->value());
+            return model.address_key->value().to_ec_private();
         } else if(model.address_ec_key_wif->has_value()) {
             return Wally::instance.wif_to_ec_key(model.address_ec_key_wif->value(), model.network->value());
         } else {
@@ -73,7 +73,7 @@ DataNode<ECCompressedPublicKey>* setup_address_pub_ec_key(Model& model) {
     model.add_derivation("address-pub-ec-key <- [address-pub-key]");
     node->set_derivation([&]() -> optional<ECCompressedPublicKey> {
         if(model.address_pub_key->has_value()) {
-            return Wally::instance.bip32_key_to_ec_public(model.address_pub_key->value());
+            return model.address_pub_key->value().to_ec_public();
         } else if(model.address_ec_key->has_value()) {
             return model.address_ec_key->value().to_public();
         } else {
@@ -89,10 +89,11 @@ DataNode<string>* setup_address_pkh(Model& model) {
     node->set_info("address-pkh", "ADDRESS", "The pay-to-public-key-hash address.");
     node->set_to_string([](const string& s) { return s; });
     node->set_from_string([](const string& a) -> string { return a; });
-    model.add_derivation("address-pkh <- [address-pub-ec-key, asset]");
+    model.add_derivation("address-pkh <- [address-pub-ec-key, asset, network]");
     node->set_derivation([&]() -> optional<string> {
         if(model.address_pub_ec_key->has_value()) {
-            return Wally::instance.to_address(model.address_pub_ec_key->value(), model.asset->value(), false);
+            UseInfo use_info(model.asset->value(), model.network->value());
+            return model.address_pub_ec_key->value().to_address(use_info, false);
         } else {
             return nullopt;
         }
@@ -106,10 +107,11 @@ DataNode<string>* setup_address_sh(Model& model) {
     node->set_info("address-sh", "ADDRESS", "The pay-to-script-hash address.");
     node->set_to_string([](const string& s) { return s; });
     node->set_from_string([](const string& a) -> string { return a; });
-    model.add_derivation("address-sh <- [address-pub-ec-key, asset]");
+    model.add_derivation("address-sh <- [address-pub-ec-key, asset, network]");
     node->set_derivation([&]() -> optional<string> {
         if(model.address_pub_ec_key->has_value()) {
-            return Wally::instance.to_address(model.address_pub_ec_key->value(), model.asset->value(), true);
+            UseInfo use_info(model.asset->value(), model.network->value());
+            return model.address_pub_ec_key->value().to_address(use_info, true);
         } else {
             return nullopt;
         }
@@ -123,10 +125,10 @@ DataNode<string>* setup_address_segwit(Model& model) {
     node->set_info("address-segwit", "ADDRESS", "The segwit address.");
     node->set_to_string([](const string& s) { return s; });
     node->set_from_string([](const string& a) -> string { return a; });
-    model.add_derivation("address-segwit <- [address-pub-key, network]");
+    model.add_derivation("address-segwit <- [address-pub-key]");
     node->set_derivation([&]() -> optional<string> {
         if(model.address_pub_key->has_value()) {
-            return Wally::instance.to_segwit_address(model.address_pub_key->value(), model.network->value());
+            return model.address_pub_key->value().to_segwit_address();
         } else {
             return nullopt;
         }

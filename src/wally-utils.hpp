@@ -24,22 +24,22 @@ public:
     ByteVector bip39_mnemonic_to_entropy(const std::string& mnemonic) const;
     ByteVector bip39_mnemonic_to_bip32_seed(const std::string& mnemonic) const;
 
-    struct HDKeyInvalidSeedLength: std::exception { };
-    struct HDKeyInvalidSeed: std::exception { };
-    struct HDKeyInvalidKey: std::exception { };
+    // struct HDKeyInvalidSeedLength: std::exception { };
+    // struct HDKeyInvalidSeed: std::exception { };
+    // struct HDKeyInvalidKey: std::exception { };
 
     bool bip32_is_seed_length_valid(size_t len) const;
-    HDKey2 bip32_key_from_base58(const std::string& base58) const;
-    HDKey2 bip32_key_from_seed(const ByteVector& seed, const Network& network) const;
-    HDKey2 bip32_key_from_entropy(const ByteVector& entropy, const Network& network) const;
-    HDKey2 bip32_key_from_parent(const HDKey2& parent, uint32_t index, bool is_hardened, bool is_private) const;
-    ByteVector bip32_key_serialize(const HDKey2& parent, bool is_private) const;
-    HDKey2 bip32_key_unserialize(const ByteVector& serialized) const;
-    HDKey2 bip32_key_to_public(const HDKey2& key) const;
-    ByteVector bip32_key_get_fingerprint(const HDKey2& key) const;
+    // HDKey2 bip32_key_from_base58(const std::string& base58) const;
+    // HDKey2 bip32_key_from_seed(const ByteVector& seed, const Network& network) const;
+    // HDKey2 bip32_key_from_entropy(const ByteVector& entropy, const Network& network) const;
+    // HDKey2 bip32_key_from_parent(const HDKey2& parent, uint32_t index, bool is_hardened, bool is_private) const;
+    // ByteVector bip32_key_serialize(const HDKey2& parent, bool is_private) const;
+    // HDKey2 bip32_key_unserialize(const ByteVector& serialized) const;
+    // HDKey2 bip32_key_to_public(const HDKey2& key) const;
+    // ByteVector bip32_key_get_fingerprint(const HDKey2& key) const;
 
-    ECPrivateKey bip32_key_to_ec_private(const HDKey2& key) const;
-    ECCompressedPublicKey bip32_key_to_ec_public(const HDKey2& key) const;
+    // ECPrivateKey bip32_key_to_ec_private(const HDKey2& key) const;
+    // ECCompressedPublicKey bip32_key_to_ec_public(const HDKey2& key) const;
 
     bool is_private(const ext_key& k);
     bool is_master(const ext_key& k);
@@ -55,9 +55,9 @@ public:
 
     ByteVector hash160(const ByteVector& bytes) const;
     std::string to_base58(const ByteVector& bytes, bool is_check) const;
-    std::string to_address(const ECCompressedPublicKey& key, uint8_t version) const;
-    std::string to_address(const ECCompressedPublicKey& key, const Asset2& asset, bool is_sh) const;
-    std::string to_segwit_address(const HDKey2& key, const Network& network) const;
+    // std::string to_address(const ECCompressedPublicKey& key, uint8_t version) const;
+    // std::string to_address(const ECCompressedPublicKey& key, const Asset2& asset, bool is_sh) const;
+    // std::string to_segwit_address(const HDKey2& key, const Network& network) const;
 
     wally_psbt* psbt_from_data(const ByteVector& data) const;
     bool psbt_is_finalized(wally_psbt* psbt) const;

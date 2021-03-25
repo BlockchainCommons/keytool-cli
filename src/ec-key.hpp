@@ -2,6 +2,7 @@
 #define KEYTOOL_EC_KEY_HPP
 
 #include "utils.hpp"
+#include "use-info.hpp"
 
 class ECCompressedPublicKey;
 class ECUncompressedPublicKey;
@@ -38,6 +39,9 @@ public:
     explicit ECCompressedPublicKey(const ByteVector& data);
 
     virtual ECUncompressedPublicKey uncompressed() const override;
+
+    std::string to_address(uint8_t version) const;
+    std::string to_address(const UseInfo& use_info, bool is_sh) const;
 };
 
 class ECUncompressedPublicKey: public ECPublicKey {

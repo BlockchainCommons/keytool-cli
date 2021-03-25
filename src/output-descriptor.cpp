@@ -7,7 +7,7 @@ using namespace std;
 string OutputDescriptor::to_string() const {
     ostringstream content;
     content << "[" << account_path() << "]";
-    content << account_pub_key();
+    content << account_pub_key().to_base58();
     content << "/" << address_path();
 
     ostringstream result;

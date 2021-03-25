@@ -8,6 +8,7 @@
 #include "derivation-path-2.hpp"
 #include "seed.hpp"
 #include "key-type.hpp"
+#include "ec-key.hpp"
 
 struct ext_key;
 
@@ -52,6 +53,10 @@ public:
 
     std::string ur() const;
     static HDKey2 from_ur(const std::string& ur);
+
+    ECPrivateKey to_ec_private() const;
+    ECCompressedPublicKey to_ec_public() const;
+    std::string to_segwit_address() const;
 
 private:
     bool _is_master;

@@ -101,8 +101,8 @@ derivation-index-spec.o: derivation-index-spec.hpp derivation-index.hpp derivati
 derivation-index-wildcard.o: derivation-index-wildcard.hpp utils.hpp
 derivation-path-2.o: derivation-path-2.hpp derivation-step.hpp utils.hpp
 derivation-step.o: derivation-step.hpp derivation-index-spec.hpp
-ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp
-hd-key-2.o: hd-key-2.hpp utils.hpp use-info.hpp derivation-path-2.hpp wally-utils.hpp seed.hpp
+ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp use-info.hpp
+hd-key-2.o: hd-key-2.hpp utils.hpp use-info.hpp derivation-path-2.hpp wally-utils.hpp seed.hpp ec-key.hpp
 keytool.o: params.hpp
 key-type.o: key-type.hpp
 model.o: model.hpp data-node.hpp asset-2.hpp hd-key-2.hpp ec-key.hpp utils.hpp wally-utils.hpp derivation-path.hpp chain-type.hpp output-type.hpp derivation-index-spec.hpp output-descriptor.hpp psbt.hpp transaction.hpp seed.hpp model-eckey.hpp model-hdkey.hpp model-psbt.hpp model-seed.hpp uuid.hpp request.hpp

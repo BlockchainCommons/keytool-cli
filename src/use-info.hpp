@@ -21,6 +21,9 @@ public:
     void encode_cbor(ByteVector& cbor) const;
     static UseInfo decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
+    uint8_t version_sh() const;
+    uint8_t version_pkh() const;
+    
 private:
     Asset2 _asset;
     Network _network;

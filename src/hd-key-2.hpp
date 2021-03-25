@@ -42,10 +42,16 @@ public:
     HDKey2 derive(const KeyType& derived_key_type, DerivationStep child_derivation);
     HDKey2 derive(const KeyType& derived_key_type, const DerivationPath2& child_derivation_path);
 
+    std::string to_base58(KeyType key_type) const;
+    std::string to_base58() const;
+
     void encode_cbor(ByteVector& cbor) const;
     void encode_tagged_cbor(ByteVector &cbor) const;
     static HDKey2 decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
     static HDKey2 decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
+
+    std::string ur() const;
+    static HDKey2 from_ur(const std::string& ur);
 
 private:
     bool _is_master;

@@ -2,15 +2,15 @@
 #define KEYTOOL_MODEL_HPP
 
 #include "data-node.hpp"
-#include "asset.hpp"
-#include "hd-key.hpp"
+#include "asset-2.hpp"
+#include "hd-key-2.hpp"
 #include "ec-key.hpp"
 #include "utils.hpp"
 #include "wally-utils.hpp"
 #include "derivation-path.hpp"
 #include "chain-type.hpp"
 #include "output-type.hpp"
-#include "index-bound.hpp"
+#include "derivation-index-spec.hpp"
 #include "output-descriptor.hpp"
 #include "psbt.hpp"
 #include "transaction.hpp"
@@ -49,7 +49,7 @@ public:
     DataNode<Response> *seed_response;
 
     // ec-key
-    DataNode<Asset> *asset;
+    DataNode<Asset2> *asset;
     DataNode<Network> *network;
     DataNode<ECPrivateKey> *address_ec_key;
     DataNode<std::string> *address_ec_key_wif;
@@ -59,22 +59,22 @@ public:
     DataNode<std::string> *address_segwit;
 
     // hd-key
-    DataNode<HDKey> *master_key;
-    DataNode<ByteVector> *master_key_fingerprint;
+    DataNode<HDKey2> *master_key;
+    DataNode<uint32_t> *master_key_fingerprint;
     DataNode<OutputDescriptorType> *output_type;
     DataNode<uint32_t> *purpose;
     DataNode<uint32_t> *coin_type;
     DataNode<uint32_t> *account_index;
-    DataNode<DerivationPath> *account_derivation_path;
-    DataNode<HDKey> *account_key;
-    DataNode<HDKey> *account_pub_key;
+    DataNode<DerivationPath2> *account_derivation_path;
+    DataNode<HDKey2> *account_key;
+    DataNode<HDKey2> *account_pub_key;
     DataNode<ChainType> *chain_type;
     DataNode<uint32_t> *chain_type_int;
-    DataNode<IndexBound> *address_index;
-    DataNode<DerivationPath> *address_derivation_path;
-    DataNode<DerivationPath> *full_address_derivation_path;
-    DataNode<HDKey> *address_key;
-    DataNode<HDKey> *address_pub_key;
+    DataNode<DerivationIndexSpec> *address_index;
+    DataNode<DerivationPath2> *address_derivation_path;
+    DataNode<DerivationPath2> *full_address_derivation_path;
+    DataNode<HDKey2> *address_key;
+    DataNode<HDKey2> *address_pub_key;
     DataNode<OutputDescriptor> *output_descriptor;
 
     // psbt

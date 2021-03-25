@@ -1,9 +1,11 @@
 #include "derivation-path-2.hpp"
+#include "utils.hpp"
 #include <set>
 #include <bc-ur/bc-ur.hpp>
 #include <limits>
 #include <iomanip>
 #include <sstream>
+#include <algorithm>
 
 using namespace std;
 using namespace ur;
@@ -150,4 +152,51 @@ ostream& operator<< (ostream& os, const DerivationPath2& rhs) {
     }
 
     return os << ::join(result, "/");
+}
+
+string DerivationPath2::to_string() const {
+    ostringstream o;
+    o << *this;
+    return o.str();
+}
+
+DerivationPath2 DerivationPath2::from_string(const string& path) {
+    auto elems = ::split(::to_lowercase(path), '/');
+    if(elems.empty()) {
+        throw domain_error("Invalid derivation path.");
+    }
+    optional<uint32_t> source_fingerprint = nullopt;
+    if(elems.front() == "m") {
+        elems.erase(elems.begin());
+    } else if(elems.front().length() == 8) {
+        source_fingerprint = hex_to_uint32(elems.front());
+        elems.erase(elems.begin());
+    }
+    DerivationPath2 result;
+    transform(elems.begin(), elems.end(), back_inserter(result._steps), [&](auto elem) {
+        return parse_elem(elem);
+    });
+    result._source_fingerprint = source_fingerprint;
+    return result;
+}
+
+DerivationStep DerivationPath2::parse_elem(const std::string& elem) {
+    string e = elem;
+    if(e.empty()) {
+        throw domain_error("Invalid derivation path element.");
+    }
+    bool is_hardened = false;
+    if(e.back() == 'h') {
+        is_hardened = true;
+        e.pop_back();
+    }
+    if(e.empty()) {
+        throw domain_error("Invalid derivation path element.");
+    }
+    auto spec = DerivationIndexSpec::from_string(elem);
+    return DerivationStep(spec, is_hardened);
+}
+
+void DerivationPath2::append(const DerivationPath2& other) {
+    _steps.insert(_steps.end(), other._steps.begin(), other._steps.end());
 }

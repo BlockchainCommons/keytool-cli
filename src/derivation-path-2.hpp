@@ -8,7 +8,7 @@
 class DerivationPath2 final {
 public:
     DerivationPath2(
-        const std::vector<DerivationStep>& steps,
+        const std::vector<DerivationStep>& steps = {},
         std::optional<uint32_t> source_fingerprint = std::nullopt,
         std::optional<uint8_t> depth = std::nullopt
     );
@@ -26,10 +26,17 @@ public:
     void encode_cbor(ByteVector& cbor) const;
     void encode_tagged_cbor(ByteVector& cbor) const;
 
+    std::string to_string() const;
+    static DerivationPath2 from_string(const std::string& path);
+
+    void append(const DerivationPath2& other);
+
 private:
     std::vector<DerivationStep> _steps;
     std::optional<uint32_t> _source_fingerprint;
     std::optional<uint8_t> _depth;
+
+    static DerivationStep parse_elem(const std::string& elem);
 };
 
 std::ostream& operator<< (std::ostream& os, const DerivationPath2& rhs);

@@ -127,4 +127,8 @@ ByteVector big_endian_data(uint32_t i);
 ByteVector data_of(const uint8_t* b, size_t len);
 bool is_all_zero(const ByteVector& v);
 
+uint32_t hex_to_uint32(const std::string& s);
+uint32_t data_to_uint32(const ByteVector& v);
+std::string uint32_to_hex(uint32_t n);
+
 #endif // KEYTOOL_UTILS_HPP

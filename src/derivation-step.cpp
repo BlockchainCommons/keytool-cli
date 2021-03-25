@@ -6,10 +6,10 @@ using namespace std;
 using namespace ur;
 using namespace ur::CborLite;
 
-DerivationStep::DerivationStep(ChildIndexSpec spec, bool is_hardened) : _spec(spec), _is_hardened(is_hardened) { }
+DerivationStep::DerivationStep(DerivationIndexSpec spec, bool is_hardened) : _spec(spec), _is_hardened(is_hardened) { }
 
 DerivationStep DerivationStep::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
-    auto spec = ChildIndexSpec::decode_cbor(pos, end);
+    auto spec = DerivationIndexSpec::decode_cbor(pos, end);
     bool is_hardened;
     decodeBool(pos, end, is_hardened);
     return DerivationStep(spec, is_hardened);

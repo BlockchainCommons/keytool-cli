@@ -1,13 +1,13 @@
 #ifndef KEYTOOL_DERIVATION_STEP_HPP
 #define KEYTOOL_DERIVATION_STEP_HPP
 
-#include "child-index-spec.hpp"
+#include "derivation-index-spec.hpp"
 
 class DerivationStep final {
 public:
-    DerivationStep(ChildIndexSpec spec, bool is_hardened);
+    DerivationStep(DerivationIndexSpec spec, bool is_hardened);
 
-    ChildIndexSpec spec() const { return _spec; }
+    DerivationIndexSpec spec() const { return _spec; }
     bool is_hardened() const { return _is_hardened; }
     uint32_t child_num() const;
 
@@ -19,7 +19,7 @@ public:
     }
 
 private:
-    ChildIndexSpec _spec;
+    DerivationIndexSpec _spec;
     bool _is_hardened;
 };
 

@@ -30,5 +30,6 @@ private:
 
 std::ostream& operator<< (std::ostream& os, const KeyType& key_type);
 bool operator==(const KeyType& k1, const KeyType& k2);
+bool operator!=(const KeyType& k1, const KeyType& k2);
 
 #endif

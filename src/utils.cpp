@@ -237,3 +237,19 @@ ByteVector data_of(const uint8_t* b, size_t len) {
 bool is_all_zero(const ByteVector& v) {
     return all_of(v.begin(), v.end(), [](auto b) { return b == 0; });
 }
+
+uint32_t hex_to_uint32(const std::string& s) {
+    auto d = hex_to_data(s);
+    return pop_uint32(d);
+}
+
+uint32_t data_to_uint32(const ByteVector& v) {
+    auto d = v;
+    return pop_uint32(d);
+}
+
+std::string uint32_to_hex(uint32_t n) {
+    ByteVector v;
+    push_uint32(v, n);
+    return data_to_hex(v);
+}

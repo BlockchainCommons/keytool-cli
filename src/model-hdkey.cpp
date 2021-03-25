@@ -4,16 +4,26 @@
 
 using namespace std;
 
-DataNode<HDKey>* setup_master_key(Model& model) {
-    auto node = new DataNode<HDKey>();
+DataNode<HDKey2>* setup_master_key(Model& model) {
+    auto node = new DataNode<HDKey2>();
     model.add_node(node);
     node->set_info("master-key", "XPRV", "The BIP-32 master HD key.");
-    node->set_to_string([](const HDKey& key) { return key.to_base58(true); });
-    node->set_from_string([](const string& prv) -> HDKey { return HDKey(prv, true); });
-    model.add_derivation("master-key <- [network, seed]");
-    node->set_derivation([&]() -> optional<HDKey> {
-        if(model.seed->has_value() && model.network->has_value()) {
-            return HDKey(model.seed->value(), model.network->value());
+    node->set_to_string([](const HDKey2& key) { return key.ur(); });
+    node->set_from_string([](const string& ur) -> HDKey2 {
+        auto k = HDKey2::from_ur(ur);
+        if(k.key_type() != KeyType::private_key()) {
+            throw domain_error("master-key must be a private key.");
+        }
+        return k;
+    });
+    model.add_derivation("master-key <- [seed, asset, network]");
+    node->set_derivation([&]() -> optional<HDKey2> {
+        if(model.seed->has_value()) {
+            auto seed = model.seed->value();
+            auto asset = model.asset->value();
+            auto network = model.network->value();
+            auto use_info = UseInfo(asset, network);
+            return HDKey2::from_seed(seed, use_info);
         } else {
             return nullopt;
         }
@@ -21,16 +31,16 @@ DataNode<HDKey>* setup_master_key(Model& model) {
     return node;
 }
 
-DataNode<ByteVector>* setup_master_key_fingerprint(Model& model) {
-    auto node = new DataNode<ByteVector>();
+DataNode<uint32_t>* setup_master_key_fingerprint(Model& model) {
+    auto node = new DataNode<uint32_t>();
     model.add_node(node);
     node->set_info("master-key-fingerprint", "HEX", "Fingerprint of the master HD key.");
-    node->set_to_string([](const ByteVector& bytes) { return data_to_hex(bytes); });
-    node->set_from_string([](const string& hex) -> ByteVector { return hex_to_data(hex); });
+    node->set_to_string([](uint32_t value) { return uint32_to_hex(value); });
+    node->set_from_string([](const string& hex) -> uint32_t { return hex_to_uint32(hex); });
     model.add_derivation("master-key-fingerprint <- [master-key]");
-    node->set_derivation([&]() -> optional<ByteVector> {
+    node->set_derivation([&]() -> optional<uint32_t> {
         if(model.master_key->has_value()) {
-            return model.master_key->value().fingerprint();
+            return model.master_key->value().key_fingerprint();
         } else {
             return nullopt;
         }
@@ -86,35 +96,43 @@ DataNode<uint32_t>* setup_account_index(Model& model) {
     return node;
 }
 
-DataNode<DerivationPath>* setup_account_derivation_path(Model& model) {
-    auto node = new DataNode<DerivationPath>();
+DataNode<DerivationPath2>* setup_account_derivation_path(Model& model) {
+    auto node = new DataNode<DerivationPath2>();
     model.add_node(node);
     node->set_info("account-derivation-path", "BIP32_PATH", "m/purpose'/coin-type'/accont-index'.");
-    node->set_to_string([](const DerivationPath& path) { return to_string(path); });
-    node->set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
+    node->set_to_string([](const DerivationPath2& path) { return path.to_string(); });
+    node->set_from_string([](const string& p) -> DerivationPath2 { return DerivationPath2::from_string(p); });
     model.add_derivation("account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]");
     node->set_derivation([&]() {
-        DerivationPathElement m = model.master_key_fingerprint->has_value() ? DerivationPathElement(model.master_key_fingerprint->value()) : DerivationPathElement();
-        return DerivationPath {
-            m,
-            DerivationPathElement(model.purpose->value(), true),
-            DerivationPathElement(model.coin_type->value(), true),
-            DerivationPathElement(model.account_index->value(), true)
+        auto source_fingerprint = model.master_key_fingerprint->optional_value();
+        vector<DerivationStep> steps {
+            DerivationStep(model.purpose->value(), true),
+            DerivationStep(model.coin_type->value(), true),
+            DerivationStep(model.account_index->value(), true)
         };
+        return DerivationPath2(steps, source_fingerprint);
     });
     return node;
 }
 
-DataNode<HDKey>* setup_account_key(Model& model) {
-    auto node = new DataNode<HDKey>();
+DataNode<HDKey2>* setup_account_key(Model& model) {
+    auto node = new DataNode<HDKey2>();
     model.add_node(node);
     node->set_info("account-key", "XPRV", "The BIP-44 account key.");
-    node->set_to_string([](const HDKey& key) { return key.to_base58(true); });
-    node->set_from_string([](const string& prv) -> HDKey { return HDKey(prv, true); });
+    node->set_to_string([](const HDKey2& key) { return key.ur(); });
+    node->set_from_string([](const string& ur) -> HDKey2 {
+        auto k = HDKey2::from_ur(ur);
+        if(k.key_type() != KeyType::private_key()) {
+            throw domain_error("account-key must be a private key.");
+        }
+        return k;
+    });
     model.add_derivation("account-key <- [master-key, account-derivation-path]");
-    node->set_derivation([&]() -> optional<HDKey> {
+    node->set_derivation([&]() -> optional<HDKey2> {
         if(model.master_key->has_value()) {
-            return model.master_key->value().derive(model.account_derivation_path->value(), true);
+            auto master_key = model.master_key->value();
+            auto path = model.account_derivation_path->value();
+            return master_key.derive(KeyType::private_key(), path);
         } else {
             return nullopt;
         }
@@ -122,16 +140,16 @@ DataNode<HDKey>* setup_account_key(Model& model) {
     return node;
 }
 
-DataNode<HDKey>* setup_account_pub_key(Model& model) {
-    auto node = new DataNode<HDKey>();
+DataNode<HDKey2>* setup_account_pub_key(Model& model) {
+    auto node = new DataNode<HDKey2>();
     model.add_node(node);
     node->set_info("account-pub-key", "XPUB", "The BIP-44 account public key.");
-    node->set_to_string([](const HDKey& key) { return key.to_base58(false); });
-    node->set_from_string([](const string& pub) -> HDKey { return HDKey(pub, false); });
+    node->set_to_string([](const HDKey2& key) { return key.ur(); });
+    node->set_from_string([](const string& ur) -> HDKey2 { return HDKey2::from_ur(ur); });
     model.add_derivation("account-pub-key <- [account-key]");
-    node->set_derivation([&]() -> optional<HDKey> {
+    node->set_derivation([&]() -> optional<HDKey2> {
         if(model.account_key->has_value()) {
-            return model.account_key->value().to_public();
+            return model.account_key->value().derive(KeyType::public_key());
         } else {
             return nullopt;
         }
@@ -163,58 +181,59 @@ DataNode<uint32_t>* setup_chain_type_int(Model& model) {
     return node;
 }
 
-DataNode<IndexBound>* setup_address_index(Model& model) {
-    auto node = new DataNode<IndexBound>();
+DataNode<DerivationIndexSpec>* setup_address_index(Model& model) {
+    auto node = new DataNode<DerivationIndexSpec>();
     model.add_node(node);
     node->set_info("address-index", "INDEX_BOUND", "The BIP-44 address_index field. '*' is allowed for output descriptors.");
-    node->set_to_string([](IndexBound n) { return n.to_string(); });
-    node->set_from_string([](const string& s) -> IndexBound { return parse_index_range(s); });
+    node->set_to_string([](DerivationIndexSpec n) { return n.to_string(); });
+    node->set_from_string([](const string& s) -> DerivationIndexSpec { return DerivationIndexSpec::from_string(s); });
     model.add_derivation("address-index (default: 0)");
     node->set_value(0);
     return node;
 }
 
-DataNode<DerivationPath>* setup_address_derivation_path(Model& model) {
-    auto node = new DataNode<DerivationPath>();
+DataNode<DerivationPath2>* setup_address_derivation_path(Model& model) {
+    auto node = new DataNode<DerivationPath2>();
     model.add_node(node);
     node->set_info("address-derivation-path", "BIP32_PATH", "The BIP-32 address derivation path, starting from the account-key.");
-    node->set_to_string([](const DerivationPath& path) { return to_string(path); });
-    node->set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
+    node->set_to_string([](const DerivationPath2& path) { return path.to_string(); });
+    node->set_from_string([](const string& p) -> DerivationPath2 { return DerivationPath2::from_string(p); });
     model.add_derivation("address-derivation-path <- [chain-type-int, address-index]");
     node->set_derivation([&]() {
-        return DerivationPath {
-            DerivationPathElement(model.chain_type_int->value(), false),
-            DerivationPathElement(model.address_index->value(), false)
+        vector<DerivationStep> steps {
+            DerivationStep(model.chain_type_int->value(), false),
+            DerivationStep(model.address_index->value(), false)
         };
+        return DerivationPath2(steps);
     });
     return node;
 }
 
-DataNode<DerivationPath>* setup_full_address_derivation_path(Model& model) {
-    auto node = new DataNode<DerivationPath>();
+DataNode<DerivationPath2>* setup_full_address_derivation_path(Model& model) {
+    auto node = new DataNode<DerivationPath2>();
     model.add_node(node);
     node->set_info("full-address-derivation-path", "BIP32_PATH", "The BIP-32 address derivation path, starting from the master-key.");
-    node->set_to_string([](const DerivationPath& path) { return to_string(path); });
-    node->set_from_string([](const string& p) -> DerivationPath { return parse_derivation_path(p); });
+    node->set_to_string([](const DerivationPath2& path) { return path.to_string(); });
+    node->set_from_string([](const string& p) -> DerivationPath2 { return DerivationPath2::from_string(p); });
     model.add_derivation("full-address-derivation-path <- [account-derivation-path, address-derivation-path]");
     node->set_derivation([&]() {
         auto path = model.account_derivation_path->value();
         auto address_path = model.address_derivation_path->value();
-        path.insert(path.end(), address_path.begin(), address_path.end());
+        path.append(address_path);
         return path;
     });
     return node;
 }
 
-DataNode<HDKey>* setup_address_key(Model& model) {
-    auto node = new DataNode<HDKey>();
+DataNode<HDKey2>* setup_address_key(Model& model) {
+    auto node = new DataNode<HDKey2>();
     model.add_node(node);
     node->set_info("address-key", "XPRV", "The BIP-32 address HD key.");
-    node->set_to_string([](const HDKey& key) { return key.to_base58(true); });
-    node->set_from_string([](const string& prv) -> HDKey { return HDKey(prv, true); });
+    node->set_to_string([](const HDKey2& key) { return key.to_base58(true); });
+    node->set_from_string([](const string& prv) -> HDKey2 { return HDKey2(prv, true); });
     model.add_derivation("address-key <- [master-key, full-address-derivation-path]");
     model.add_derivation("address-key <- [account-key, address-derivation-path]");
-    node->set_derivation([&]() -> optional<HDKey> {
+    node->set_derivation([&]() -> optional<HDKey2> {
         if(model.master_key->has_value() && model.full_address_derivation_path->has_value()) {
             return model.master_key->value().derive(model.full_address_derivation_path->value(), true);
         } else if(model.account_key->has_value() && model.address_derivation_path->has_value()) {
@@ -226,15 +245,15 @@ DataNode<HDKey>* setup_address_key(Model& model) {
     return node;
 }
 
-DataNode<HDKey>* setup_address_pub_key(Model& model) {
-    auto node = new DataNode<HDKey>();
+DataNode<HDKey2>* setup_address_pub_key(Model& model) {
+    auto node = new DataNode<HDKey2>();
     model.add_node(node);
     node->set_info("address-pub-key", "XPUB", "The BIP-32 address public HD key.");
-    node->set_to_string([](const HDKey& key) { return key.to_base58(false); });
-    node->set_from_string([](const string& pub) -> HDKey { return HDKey(pub, false); });
+    node->set_to_string([](const HDKey2& key) { return key.to_base58(false); });
+    node->set_from_string([](const string& pub) -> HDKey2 { return HDKey2(pub, false); });
     model.add_derivation("address-pub-key <- [address-key]");
     model.add_derivation("address-pub-key <- [account-pub-key, address-derivation-path]");
-    node->set_derivation([&]() -> optional<HDKey> {
+    node->set_derivation([&]() -> optional<HDKey2> {
         if(model.address_key->has_value()) {
             return model.address_key->value().to_public();
         } else if(model.account_pub_key->has_value() && model.address_derivation_path->has_value()) {

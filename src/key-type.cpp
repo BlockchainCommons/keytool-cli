@@ -24,6 +24,10 @@ bool operator==(const KeyType& k1, const KeyType& k2) {
     return k1.name() == k2.name();
 }
 
+bool operator!=(const KeyType& k1, const KeyType& k2) {
+    return k1.name() != k2.name();
+}
+
 KeyType KeyType::find(const std::string& name) {
     for(auto key_type: key_types()) {
         if(key_type.name() == name) {

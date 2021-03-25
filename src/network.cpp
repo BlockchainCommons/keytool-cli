@@ -1,4 +1,3 @@
-#include "asset.hpp"
 #include "wally.hpp"
 #include <bc-ur/bc-ur.hpp>
 #include <limits>

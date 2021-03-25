@@ -117,8 +117,7 @@ ByteVector HDKey2::key_fingerprint_data() const {
 }
 
 uint32_t HDKey2::key_fingerprint() const {
-    auto b = key_fingerprint_data();
-    return pop_uint32(b);
+    return data_to_uint32(key_fingerprint_data());
 }
 
 HDKey2 HDKey2::derive(const KeyType& derived_key_type, DerivationStep child_derivation) {
@@ -330,5 +329,36 @@ HDKey2 HDKey2::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::c
     if(major_tag != Major::semantic || minor_tag != 303) {
         throw domain_error("Invalid HDKey.");
     }
+    return decode_cbor(pos, end);
+}
+
+string HDKey2::to_base58(KeyType key_type) const {
+    auto hd_key = this->derive(key_type);
+    auto k = hd_key.wally_ext_key();
+    auto flags = key_type.bip32_flag();
+    char* output = nullptr;
+    assert(bip32_key_to_base58(&k, flags, &output) == WALLY_OK);
+    auto result = string(output);
+    wally_free_string(output);
+    return result;
+}
+
+string HDKey2::to_base58() const {
+    return to_base58(key_type());
+}
+
+string HDKey2::ur() const {
+    ByteVector cbor;
+    encode_cbor(cbor);
+    return UREncoder::encode(UR("crypto-hdkey", cbor));
+}
+
+HDKey2 HDKey2::from_ur(const string& ur_string) {
+    auto ur = URDecoder::decode(ur_string);
+    if(ur.type() != "crypto-hdkey") {
+        throw domain_error("Unexpected UR type: " + ur.type() + ". Expected crypto-hdkey.");
+    }
+    auto pos = ur.cbor().begin();
+    auto end = ur.cbor().end();
     return decode_cbor(pos, end);
 }

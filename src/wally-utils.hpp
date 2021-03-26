@@ -45,6 +45,7 @@ public:
     bool is_master(const ext_key& k);
     bool is_version_valid(uint32_t ver, uint32_t flags);
     void check_valid(const ext_key& k);
+    void print_key(const ext_key& k) const;
 
     ECCompressedPublicKey ec_key_to_public(const ECPrivateKey& key) const;
     ECUncompressedPublicKey ec_key_uncompress(const ECCompressedPublicKey& key) const;

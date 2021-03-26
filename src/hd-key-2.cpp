@@ -2,6 +2,7 @@
 #include "wally.hpp"
 #include "wally-utils.hpp"
 #include <bc-ur/bc-ur.hpp>
+#include <iostream>
 
 using namespace std;
 using namespace ur;
@@ -27,8 +28,63 @@ HDKey2::HDKey2(
     , _parent_fingerprint(parent_fingerprint)
 { }
 
+HDKey2 HDKey2::from_wally_ext_key(const ext_key& k) {
+    optional<ByteVector> chain_code = nullopt;
+    auto c = data_of(k.chain_code, sizeof(k.chain_code));
+    if(!is_all_zero(c)) {
+        chain_code = c;
+    }
+
+    auto parent160 = data_of(k.parent160, sizeof(uint32_t));
+    optional<uint8_t> depth;
+    if(k.depth > 0) {
+        depth = k.depth;
+    }
+    optional<uint32_t> parent_fingerprint;
+    if(!is_all_zero(parent160)) {
+        parent_fingerprint = data_to_uint32(parent160);
+    }
+
+    bool is_master = !depth.has_value() && !parent_fingerprint.has_value();
+
+    Network network = Network::mainnet();
+    KeyType key_type = KeyType::private_key();
+    if(k.version == BIP32_VER_MAIN_PUBLIC) {
+        network = Network::mainnet();
+        key_type = KeyType::public_key();
+    } else if(k.version == BIP32_VER_MAIN_PRIVATE) {
+        network = Network::mainnet();
+        key_type = KeyType::private_key();
+    } else if(k.version == BIP32_VER_TEST_PUBLIC) {
+        network = Network::testnet();
+        key_type = KeyType::public_key();
+    } else if(k.version == BIP32_VER_TEST_PRIVATE) {
+        network = Network::testnet();
+        key_type = KeyType::private_key();
+    } else {
+        throw domain_error("Unknown BIP-32 key version.");
+    }
+
+    auto asset = Asset2::btc();
+    auto use_info = UseInfo(asset, network);
+
+    auto origin = DerivationPath2({}, nullopt, depth);
+    auto children = nullopt;
+
+    ByteVector key_data;
+    if(key_type == KeyType::private_key()) {
+        key_data = data_of(k.priv_key + 1, EC_PRIVATE_KEY_LEN);
+    } else if(key_type == KeyType::public_key()) {
+        key_data = data_of(k.pub_key, EC_PUBLIC_KEY_LEN);
+    } else {
+        assert(false);
+    }
+
+    return HDKey2(is_master, key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
+}
+
 ext_key HDKey2::wally_ext_key() const {
-    ext_key k;
+    ext_key k = {};
 
     if(auto opt_origin = origin()) {
         DerivationPath2 origin = *opt_origin;
@@ -44,7 +100,6 @@ ext_key HDKey2::wally_ext_key() const {
             }
         }
     }
-
 
     if(key_type() == KeyType::private_key()) {
         store_into(k.priv_key, key_data());
@@ -236,6 +291,16 @@ void HDKey2::encode_cbor(ByteVector& cbor) const {
         encodeInteger(parent_fingerprint_map_entry, 8);
         encodeInteger(parent_fingerprint_map_entry, *parent_fingerprint_opt);
     }
+
+    encodeMapSize(cbor, map_size);
+    ::append(cbor, is_master_map_entry);
+    ::append(cbor, is_private_map_entry);
+    ::append(cbor, key_data_map_entry);
+    ::append(cbor, chain_code_map_entry);
+    ::append(cbor, use_info_map_entry);
+    ::append(cbor, origin_map_entry);
+    ::append(cbor, children_map_entry);
+    ::append(cbor, parent_fingerprint_map_entry);
 }
 
 void HDKey2::encode_tagged_cbor(ByteVector &cbor) const {
@@ -319,6 +384,7 @@ HDKey2 HDKey2::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_it
     if(key_data.size() != 33) {
         throw domain_error("Invalid key data.");
     }
+
     return HDKey2(is_master, key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
 }
 
@@ -345,6 +411,14 @@ string HDKey2::to_base58(KeyType key_type) const {
 
 string HDKey2::to_base58() const {
     return to_base58(key_type());
+}
+
+HDKey2 HDKey2::from_base58(const std::string& base58) {
+    ext_key key;
+    if(bip32_key_from_base58(base58.c_str(), &key) != WALLY_OK) {
+        throw domain_error("Invalid Base58 key.");
+    }
+    return from_wally_ext_key(key);
 }
 
 string HDKey2::ur() const {

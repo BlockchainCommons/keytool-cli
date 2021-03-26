@@ -23,7 +23,7 @@ public:
 
     uint8_t version_sh() const;
     uint8_t version_pkh() const;
-    
+
 private:
     Asset2 _asset;
     Network _network;

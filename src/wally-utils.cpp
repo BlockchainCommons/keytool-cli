@@ -92,7 +92,7 @@ uint32_t Wally::flags_for_private(bool is_private) {
     return is_private ? BIP32_FLAG_KEY_PRIVATE : BIP32_FLAG_KEY_PUBLIC;
 }
 
-static void print_key(const ext_key& k) {
+void Wally::print_key(const ext_key& k) const {
     ostringstream result;
     // "ext_key(chain_code: \(chain_code), parent160: \(parent160), priv_key: \(priv_key),
     // child_num: \(child_num), hash160: \(hash160), version: \(version), pub_key: \(pub_key)"

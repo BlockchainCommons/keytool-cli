@@ -43,9 +43,9 @@ public:
         if(!_tried) {
             _tried = true;
             if(!_value.has_value() && _derivation) {
-                // std::cout << "deriving: " << name() << std::endl;
+                //std::cout << "deriving: " << name() << std::endl;
                 _value = _derivation();
-                // std::cout << "done: " << name() << std::endl;
+                //std::cout << "done: " << name() << std::endl;
             }
         }
         return _value;

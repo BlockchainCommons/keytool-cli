@@ -57,6 +57,12 @@ Model::Model() {
     address_pub_key = setup_address_pub_key(*this);
     output_descriptor = setup_output_descriptor(*this);
 
+    master_key_base58 = setup_master_key_base58(*this);
+    account_key_base58 = setup_account_key_base58(*this);
+    account_pub_key_base58 = setup_account_pub_key_base58(*this);
+    address_key_base58 = setup_address_key_base58(*this);
+    address_pub_key_base58 = setup_address_pub_key_base58(*this);
+
     // psbt
     psbt = setup_psbt(*this);
     psbt_hex = setup_psbt_hex(*this);

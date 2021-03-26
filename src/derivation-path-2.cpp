@@ -119,7 +119,7 @@ void DerivationPath2::encode_cbor(ByteVector& cbor) const {
 
     // depth
     ByteVector depth_map_entry;
-    if(depth().has_value()) {
+    if(depth().has_value() && *depth() != steps().size()) {
         map_size += 1;
         encodeInteger(depth_map_entry, 3);
         encodeInteger(depth_map_entry, *depth());

@@ -43,8 +43,12 @@ public:
     HDKey2 derive(const KeyType& derived_key_type, DerivationStep child_derivation);
     HDKey2 derive(const KeyType& derived_key_type, const DerivationPath2& child_derivation_path);
 
+    ext_key wally_ext_key() const;
+    static HDKey2 from_wally_ext_key(const ext_key& k);
+
     std::string to_base58(KeyType key_type) const;
     std::string to_base58() const;
+    static HDKey2 from_base58(const std::string& base58);
 
     void encode_cbor(ByteVector& cbor) const;
     void encode_tagged_cbor(ByteVector &cbor) const;
@@ -67,8 +71,6 @@ private:
     std::optional<DerivationPath2> _origin;
     std::optional<DerivationPath2> _children;
     std::optional<uint32_t> _parent_fingerprint;
-
-    ext_key wally_ext_key() const;
 };
 
 #endif

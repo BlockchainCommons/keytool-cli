@@ -118,7 +118,7 @@ DataNode<DerivationPath2>* setup_account_derivation_path(Model& model) {
 DataNode<HDKey2>* setup_account_key(Model& model) {
     auto node = new DataNode<HDKey2>();
     model.add_node(node);
-    node->set_info("account-key", "UR:CRYPTO-HDKEY", "The BIP-44 account key.");
+    node->set_info("account-key", "UR:CRYPTO-HDKEY", "The BIP-44 account HD key.");
     node->set_to_string([](const HDKey2& key) { return key.ur(); });
     node->set_from_string([](const string& ur) -> HDKey2 {
         auto k = HDKey2::from_ur(ur);
@@ -143,7 +143,7 @@ DataNode<HDKey2>* setup_account_key(Model& model) {
 DataNode<HDKey2>* setup_account_pub_key(Model& model) {
     auto node = new DataNode<HDKey2>();
     model.add_node(node);
-    node->set_info("account-pub-key", "UR:CRYPTO-HDKEY", "The BIP-44 account public key.");
+    node->set_info("account-pub-key", "UR:CRYPTO-HDKEY", "The BIP-44 account public HD key.");
     node->set_to_string([](const HDKey2& key) { return key.ur(); });
     node->set_from_string([](const string& ur) -> HDKey2 { return HDKey2::from_ur(ur); });
     model.add_derivation("account-pub-key <- [account-key]");
@@ -289,6 +289,89 @@ DataNode<OutputDescriptor>* setup_output_descriptor(Model& model) {
         } else {
             return nullopt;
         }
+    });
+    return node;
+}
+
+DataNode<HDKey2>* setup_master_key_base58(Model& model) {
+    auto node = new DataNode<HDKey2>();
+    model.add_node(node);
+    node->set_info("master-key-base58", "BASE58", "The BIP-32 master HD key.");
+    node->set_to_string([](const HDKey2& key) { return key.to_base58(); });
+    node->set_from_string([](const string& base58) -> HDKey2 {
+        auto k = HDKey2::from_base58(base58);
+        if(k.key_type() != KeyType::private_key()) {
+            throw domain_error("master-key-base58 must be a private key.");
+        }
+        return k;
+    });
+    model.add_derivation("master-key-base58 <- [master-key]");
+    node->set_derivation([&]() -> optional<HDKey2> {
+        return model.master_key->optional_value();
+    });
+    return node;
+}
+
+DataNode<HDKey2>* setup_account_key_base58(Model& model) {
+    auto node = new DataNode<HDKey2>();
+    model.add_node(node);
+    node->set_info("account-key-base58", "BASE58", "The BIP-44 account HD key.");
+    node->set_to_string([](const HDKey2& key) { return key.to_base58(); });
+    node->set_from_string([](const string& base58) -> HDKey2 {
+        auto k = HDKey2::from_base58(base58);
+        if(k.key_type() != KeyType::private_key()) {
+            throw domain_error("account-key-base58 must be a private key.");
+        }
+        return k;
+    });
+    model.add_derivation("account-key-base58 <- [account-key]");
+    node->set_derivation([&]() -> optional<HDKey2> {
+        return model.account_key->optional_value();
+    });
+    return node;
+}
+
+DataNode<HDKey2>* setup_account_pub_key_base58(Model& model) {
+    auto node = new DataNode<HDKey2>();
+    model.add_node(node);
+    node->set_info("account-pub-key-base58", "BASE58", "The BIP-44 account public HD key.");
+    node->set_to_string([](const HDKey2& key) { return key.to_base58(); });
+    node->set_from_string([](const string& base58) -> HDKey2 { return HDKey2::from_base58(base58); });
+    model.add_derivation("account-pub-key-base58 <- [account-pub-key]");
+    node->set_derivation([&]() -> optional<HDKey2> {
+        return model.account_pub_key->optional_value();
+    });
+    return node;
+}
+
+DataNode<HDKey2>* setup_address_key_base58(Model& model) {
+    auto node = new DataNode<HDKey2>();
+    model.add_node(node);
+    node->set_info("address-key-base58", "BASE58", "The BIP-32 address HD key.");
+    node->set_to_string([](const HDKey2& key) { return key.to_base58(); });
+    node->set_from_string([](const string& base58) -> HDKey2 {
+        auto k = HDKey2::from_base58(base58);
+        if(k.key_type() != KeyType::private_key()) {
+            throw domain_error("address-key-base58 must be a private key.");
+        }
+        return k;
+    });
+    model.add_derivation("address-key-base58 <- [address-key]");
+    node->set_derivation([&]() -> optional<HDKey2> {
+        return model.address_key->optional_value();
+    });
+    return node;
+}
+
+DataNode<HDKey2>* setup_address_pub_key_base58(Model& model) {
+    auto node = new DataNode<HDKey2>();
+    model.add_node(node);
+    node->set_info("address-pub-key-base58", "BASE58", "The BIP-32 address public HD key.");
+    node->set_to_string([](const HDKey2& key) { return key.to_base58(); });
+    node->set_from_string([](const string& base58) -> HDKey2 { return HDKey2::from_base58(base58); });
+    model.add_derivation("address-pub-key-base58 <- [address-pub-key]");
+    node->set_derivation([&]() -> optional<HDKey2> {
+        return model.address_pub_key->optional_value();
     });
     return node;
 }

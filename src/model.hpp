@@ -77,6 +77,12 @@ public:
     DataNode<HDKey2> *address_pub_key;
     DataNode<OutputDescriptor> *output_descriptor;
 
+    DataNode<HDKey2> *master_key_base58;
+    DataNode<HDKey2> *account_key_base58;
+    DataNode<HDKey2> *account_pub_key_base58;
+    DataNode<HDKey2> *address_key_base58;
+    DataNode<HDKey2> *address_pub_key_base58;
+
     // psbt
     DataNode<PSBT> *psbt;
     DataNode<std::string> *psbt_hex;

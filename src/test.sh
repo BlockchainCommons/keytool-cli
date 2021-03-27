@@ -80,28 +80,28 @@ testSeed()
 
 testSeedUROutput()
 {
-  # seed-ur <- seed-hex
+  # seed <- seed-hex
   assertEquals ${TEST_SEED_UR} \
-    "$(${KEYTOOL} --seed-hex ${TEST_SEED_HEX} seed-ur)"
+    "$(${KEYTOOL} --seed-hex ${TEST_SEED_HEX} seed)"
 }
 
 testSeedURInput()
 {
-  # seed-hex <- seed-ur
+  # seed-hex <- seed
   assertEquals ${TEST_SEED_HEX} \
-    "$(${KEYTOOL} --seed-ur ${TEST_SEED_UR} seed-hex)"
+    "$(${KEYTOOL} --seed ${TEST_SEED_UR} seed-hex)"
 }
 
 testReadSeedURMetadata()
 {
   assertEquals ${TEST_SEED_HEX}$'\n'"${TEST_SEED_NAME}"$'\n'"${TEST_SEED_NOTE}" \
-    "$(${KEYTOOL} --seed-ur ${TEST_SEED_METADATA_UR} seed-hex seed-name seed-note)"
+    "$(${KEYTOOL} --seed ${TEST_SEED_METADATA_UR} seed-hex seed-name seed-note)"
 }
 
 testWriteSeedURMetadata()
 {
   assertEquals ${TEST_SEED_METADATA_UR} \
-    "$(${KEYTOOL} --seed-hex ${TEST_SEED_HEX} --seed-name "${TEST_SEED_NAME}" --seed-note "${TEST_SEED_NOTE}" seed-ur)"
+    "$(${KEYTOOL} --seed-hex ${TEST_SEED_HEX} --seed-name "${TEST_SEED_NAME}" --seed-note "${TEST_SEED_NOTE}" seed)"
 }
 
 testSeedDigest()
@@ -144,7 +144,7 @@ testSeedResponse2()
 {
   assertEquals ${TEST_SEED_RESPONSE_METADATA_UR} \
     "$(${KEYTOOL} --seed-request ${TEST_SEED_REQUEST_UR} \
-  --seed-ur ${TEST_SEED_METADATA_UR} \
+  --seed ${TEST_SEED_METADATA_UR} \
   seed-response)"
 }
 
@@ -152,7 +152,7 @@ testReadSeedResponse()
 {
   assertEquals "${TEST_SEED_METADATA_UR}"$'\n'"${TEST_REQUEST_ID}"$'\n'"${TEST_SEED_HEX}"$'\n'"${TEST_SEED_NAME}"$'\n'"${TEST_SEED_NOTE}" \
     "$(${KEYTOOL} --seed-response ${TEST_SEED_RESPONSE_METADATA_UR} \
-    seed-ur seed-request-id seed-hex seed-name seed-note)"
+    seed seed-request-id seed-hex seed-name seed-note)"
 }
 
 testMasterKey()

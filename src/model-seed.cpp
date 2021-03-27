@@ -12,10 +12,10 @@ DataNode<ByteVector>* setup_seed_hex(Model& model) {
     node->set_to_string([](const ByteVector& data) { return data_to_hex(data); });
     node->set_from_string([](const string& s) -> ByteVector { return hex_to_data(s); });
 
-    model.add_derivation("seed-hex <- [seed-ur]");
+    model.add_derivation("seed-hex <- [seed]");
     node->set_derivation([&]() -> optional<ByteVector> {
-        if(model.seed_ur->has_assigned_value()) {
-            return model.seed_ur->value().data();
+        if(model.seed->has_assigned_value()) {
+            return model.seed->value().data();
         } else {
             return nullopt;
         }
@@ -30,10 +30,10 @@ DataNode<string>* setup_seed_name(Model& model) {
     node->set_to_string([](const string& s) { return s; });
     node->set_from_string([](const string& s) -> string { return s; });
 
-    model.add_derivation("seed-name <- [seed-ur]");
+    model.add_derivation("seed-name <- [seed]");
     node->set_derivation([&]() -> optional<string> {
-        if(model.seed_ur->has_assigned_value()) {
-            return model.seed_ur->value().name();
+        if(model.seed->has_assigned_value()) {
+            return model.seed->value().name();
         } else {
             return nullopt;
         }
@@ -48,10 +48,10 @@ DataNode<string>* setup_seed_note(Model& model) {
     node->set_to_string([](const string& s) { return s; });
     node->set_from_string([](const string& s) -> string { return s; });
 
-    model.add_derivation("seed-note <- [seed-ur]");
+    model.add_derivation("seed-note <- [seed]");
     node->set_derivation([&]() -> optional<string> {
-        if(model.seed_ur->has_assigned_value()) {
-            return model.seed_ur->value().note();
+        if(model.seed->has_assigned_value()) {
+            return model.seed->value().note();
         } else {
             return nullopt;
         }
@@ -59,11 +59,11 @@ DataNode<string>* setup_seed_note(Model& model) {
     return node;
 }
 
-DataNode<Seed>* setup_seed_ur(Model& model) {
-    model.add_derivation("seed-ur <- [seed, seed-name (optional), seed-note (optional)]");
+DataNode<Seed>* setup_seed(Model& model) {
+    model.add_derivation("seed <- [seed-hex, seed-name (optional), seed-note (optional)]");
     auto node = new DataNode<Seed>();
     model.add_node(node);
-    node->set_info("seed-ur", "UR:CRYPTO-SEED", "A seed in UR format.");
+    node->set_info("seed", "UR:CRYPTO-SEED", "A seed in UR format.");
     node->set_to_string([](const Seed& seed) { return seed.ur(); });
     node->set_from_string([](const string& s) -> Seed { return Seed(s); });
     node->set_derivation([&]() -> optional<Seed> {
@@ -169,10 +169,10 @@ DataNode<Response>* setup_seed_response(Model& model) {
     node->set_info("seed-response", "UR:CRYPTO-RESPONSE", "A response containing the requested seed.");
     node->set_to_string([](const Response& response) { return response.ur(); });
     node->set_from_string([](const string& s) -> Response { return Response(s); });
-    model.add_derivation("seed-response <- [seed-request-id, seed-ur]");
+    model.add_derivation("seed-response <- [seed-request-id, seed]");
     node->set_derivation([&]() -> optional<Response> {
-        if(model.seed_ur->has_value()) {
-            auto body = model.seed_ur->value();
+        if(model.seed->has_value()) {
+            auto body = model.seed->value();
             auto id = model.seed_request_id->value();
             return Response(body, id);
         } else {

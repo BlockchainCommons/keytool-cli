@@ -41,7 +41,7 @@ public:
     DataNode<ByteVector> *seed_hex;
     DataNode<std::string> *seed_name;
     DataNode<std::string> *seed_note;
-    DataNode<Seed> *seed_ur;
+    DataNode<Seed> *seed;
     DataNode<ByteVector> *seed_digest;
     DataNode<UUID> *seed_request_id;
     DataNode<std::string> *request_description;

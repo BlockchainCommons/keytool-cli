@@ -21,7 +21,7 @@ Model::Model() {
     seed_hex = setup_seed_hex(*this);
     seed_name = setup_seed_name(*this);
     seed_note = setup_seed_note(*this);
-    seed_ur = setup_seed_ur(*this);
+    seed = setup_seed(*this);
     seed_digest = setup_seed_digest(*this);
     seed_request_id = setup_seed_request_id(*this);
     request_description = setup_request_description(*this);

@@ -5,6 +5,30 @@
 
 KEYTOOL=${1:-keytool}
 
+TEST_SEED='59f2293a5bce7d4de59e71b4207ac5d2'
+TEST_SEED_UR='ur:crypto-seed/oyadgdhkwzdtfthptokigtvwnnjsqzcxknsktdhpyljeda'
+TEST_SEED_NAME='Dark Purple Aqua Love'
+TEST_SEED_NOTE='This is a seed note.'
+TEST_SEED_METADATA_UR='ur:crypto-seed/otadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmknzsnbwy'
+TEST_SEED_DIGEST='ffa11a8b90954fc89ae625779ca11b8f0227573a2f8b4ed85d96ddf901a72cea'
+TEST_REQUEST_ID='abca5901-7419-4a37-9473-a55f434ebc27'
+TEST_REQUEST_DESC='Information about this request.'
+TEST_SEED_REQUEST_UR='ur:crypto-request/otadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaadwkhdcxzmoycylumhmdgwspnyvadaktnsoycwmyaodihgftdllugltphlmtutytadosdwwdaxksctgajtiyjljpjnhsjyinjljtcxhsidjlkpjycxjyisinjkcxjpihjskpihjkjydmetdriyes'
+TEST_SEED_RESPONSE_UR='ur:crypto-response/oeadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaaddwoyadgdhkwzdtfthptokigtvwnnjsqzcxknsktdhltklans'
+TEST_SEED_RESPONSE_METADATA_UR='ur:crypto-response/oeadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaaddwotadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmjliatbcn'
+TEST_MASTER_KEY_UR='ur:crypto-hdkey/oxadykaoykaxhdclaeeheyceykguhkgdbzpssfkplpftwdhkaetdetpfcnztjzctlrcygoiobtteplqdwnaahdcxvdbggasekkuytykkfefdlahtflkecpbzyackrpfmghvyqdssfsfhmtzcttsehdcsmusabnke'
+TEST_MASTER_KEY_BASE58='xprv9s21ZrQH143K4Mnjc7E8rpSMf8JB1XWmojYf7Ndk6zcNSbUYBsvTqJcdzTok1XwYcgytn5CRxtwhHu93NNXNQwGUbBqL3AHHZZrtKpEvmww'
+TEST_MASTER_KEY_FINGERPRINT='604b93f2'
+TEST_ACCOUNT_DERIVATION_PATH='84h/0h/0h'
+TEST_ACCOUNT_KEY_UR='ur:crypto-hdkey/onaoykaxhdclaejnsodtmtfwdkknwpbeqdlacskoadsgdlehbwrpahdmmepkbywsmuvynlmwbbdktsaahdcxhnfgnepefxgdytryckticelyotsstoknfntavevaskiddmolsarntykbrybtjpksamoeadlncsghykaeykaeykaocyhngrmuwzaycyzssajpsnknaewnko'
+TEST_ADDRESS_DERIVATION_PATH='0/0'
+TEST_ACCOUNT_PUB_KEY_UR='ur:crypto-hdkey/oxaxhdclaxvlcprfttldjobkredtlnhsidwybaeyjtswyandlgjnehtkdsidbkqzsrkphyfhsaaahdcxhnfgnepefxgdytryckticelyotsstoknfntavevaskiddmolsarntykbrybtjpksamoeadlncsghykaeykaeykaocyhngrmuwzaycyzssajpsndrvlrlbk'
+TEST_ADDRESS_KEY_UR='ur:crypto-hdkey/onaoykaxhdclaefwmwpdrhbapygdplnbfwzmmwknglmtneaeurlakggwetenpeiedmbtgwvtmtvtasaahdcxeooeaedscmfdlotnmyvyjzroltoecfglgrjlldbgflkggsayaockrpveamnladfnamoeadlecsghykaeykaeykaewkaewkaocyhngrmuwzaycycyceptprzokgdwim'
+TEST_ADDRESS_PUB_KEY_UR='ur:crypto-hdkey/oxaxhdclaolujplrprwzqzcfvymyosglflwkdnyldslrlnqdlnsfistpfwgdheimrscpbtlolnaahdcxeooeaedscmfdlotnmyvyjzroltoecfglgrjlldbgflkggsayaockrpveamnladfnamoeadlecsghykaeykaeykaewkaewkaocyhngrmuwzaycycyceptprfnfewdtd'
+TEST_ADDRESS_EC_KEY='4294a8b90eab50aea042ff947a4e969f00df807b4f3836af642e0d4fe096e009'
+TEST_ADDRESS_EC_KEY_WIF='KyT8nbdFcaujJ7gE2sL74goxG6wENA7myKDxssEeuK4t93hmsiJ6'
+TEST_ADDRESS_PUB_EC_KEY='028b7284b2f2b419e18fa74e47f42bf7268486b386cc68d842505f6abf220d8886'
+
 testDefaults()
 {
   # asset
@@ -50,226 +74,286 @@ testChainTypeInt()
 testSeed()
 {
   # seed <- hex
-  assertEquals $'1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550' \
-    "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 seed)"
+  assertEquals ${TEST_SEED} \
+    "$(${KEYTOOL} --seed ${TEST_SEED} seed)"
 }
 
 testSeedUROutput()
 {
   # seed-ur <- seed
-  assertEquals $'ur:crypto-seed/oyadhdcxcwbbghzsqzdswzjpntuowpcwdrjlreespkdlwtotjnatldaonlgldluehfcaihgdrddevese' \
-    "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 seed-ur)"
+  assertEquals ${TEST_SEED_UR} \
+    "$(${KEYTOOL} --seed ${TEST_SEED} seed-ur)"
 }
 
 testSeedURInput()
 {
   # seed <- seed-ur
-  assertEquals $'1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550' \
-    "$(${KEYTOOL} --seed-ur ur:crypto-seed/oyadhdcxcwbbghzsqzdswzjpntuowpcwdrjlreespkdlwtotjnatldaonlgldluehfcaihgdrddevese seed)"
+  assertEquals ${TEST_SEED} \
+    "$(${KEYTOOL} --seed-ur ${TEST_SEED_UR} seed)"
 }
 
 testReadSeedURMetadata()
 {
-  assertEquals $'59f2293a5bce7d4de59e71b4207ac5d2\nDark Purple Aqua Love\nThis is a seed note.' \
-    "$(${KEYTOOL} --seed-ur ur:crypto-seed/otadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmknzsnbwy seed seed-name seed-note)"
+  assertEquals ${TEST_SEED}$'\n'"${TEST_SEED_NAME}"$'\n'"${TEST_SEED_NOTE}" \
+    "$(${KEYTOOL} --seed-ur ${TEST_SEED_METADATA_UR} seed seed-name seed-note)"
 }
 
 testWriteSeedURMetadata()
 {
-  assertEquals $'ur:crypto-seed/otadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmknzsnbwy' \
-    "$(${KEYTOOL} --seed 59f2293a5bce7d4de59e71b4207ac5d2 --seed-name 'Dark Purple Aqua Love' --seed-note 'This is a seed note.' seed-ur)"
+  assertEquals ${TEST_SEED_METADATA_UR} \
+    "$(${KEYTOOL} --seed ${TEST_SEED} --seed-name "${TEST_SEED_NAME}" --seed-note "${TEST_SEED_NOTE}" seed-ur)"
 }
 
 testSeedDigest()
 {
-  assertEquals $'ffa11a8b90954fc89ae625779ca11b8f0227573a2f8b4ed85d96ddf901a72cea' \
-    "$(${KEYTOOL} --seed 59f2293a5bce7d4de59e71b4207ac5d2 seed-digest)"
+  assertEquals ${TEST_SEED_DIGEST} \
+    "$(${KEYTOOL} --seed ${TEST_SEED} seed-digest)"
 }
 
 testRequestID()
 {
-  assertEquals $'abca5901-7419-4a37-9473-a55f434ebc27' \
-    "$(${KEYTOOL} --request-id ABCA5901-7419-4A37-9473-A55F434EBC27 request-id)"
+  assertEquals ${TEST_REQUEST_ID} \
+    "$(${KEYTOOL} --request-id ${TEST_REQUEST_ID} request-id)"
 }
 
 testRequestDescription()
 {
-  assertEquals $'Information about this request.' \
-    "$(${KEYTOOL} --request-description 'Information about this request.' request-description)"
+  assertEquals "${TEST_REQUEST_DESC}" \
+    "$(${KEYTOOL} --request-description "${TEST_REQUEST_DESC}" request-description)"
 }
 
 testSeedRequest()
 {
-  assertEquals $'ur:crypto-request/otadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaadwkhdcxzmoycylumhmdgwspnyvadaktnsoycwmyaodihgftdllugltphlmtutytadosdwwdaxksctgajtiyjljpjnhsjyinjljtcxhsidjlkpjycxjyisinjkcxjpihjskpihjkjydmetdriyes' \
-    "$(${KEYTOOL} --request-id abca5901-7419-4a37-9473-a55f434ebc27 --seed 59f2293a5bce7d4de59e71b4207ac5d2 --request-description 'Information about this request.' seed-request)"
+  assertEquals ${TEST_SEED_REQUEST_UR} \
+    "$(${KEYTOOL} --request-id ${TEST_REQUEST_ID} --seed ${TEST_SEED} --request-description "${TEST_REQUEST_DESC}" seed-request)"
 }
 
 testReadSeedRequest()
 {
-  assertEquals $'abca5901-7419-4a37-9473-a55f434ebc27\nInformation about this request.\nffa11a8b90954fc89ae625779ca11b8f0227573a2f8b4ed85d96ddf901a72cea' \
-    "$(${KEYTOOL} --seed-request ur:crypto-request/otadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaadwkhdcxzmoycylumhmdgwspnyvadaktnsoycwmyaodihgftdllugltphlmtutytadosdwwdaxksctgajtiyjljpjnhsjyinjljtcxhsidjlkpjycxjyisinjkcxjpihjskpihjkjydmetdriyes request-id request-description seed-digest)"
+  assertEquals "${TEST_REQUEST_ID}"$'\n'"${TEST_REQUEST_DESC}"$'\n'"${TEST_SEED_DIGEST}" \
+    "$(${KEYTOOL} --seed-request ${TEST_SEED_REQUEST_UR} request-id request-description seed-digest)"
 }
 
 testSeedResponse1()
 {
-  assertEquals $'ur:crypto-response/oeadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaaddwoyadgdhkwzdtfthptokigtvwnnjsqzcxknsktdhltklans' \
-    "$(${KEYTOOL} --request-id abca5901-7419-4a37-9473-a55f434ebc27 --seed 59f2293a5bce7d4de59e71b4207ac5d2 seed-response)"
+  assertEquals ${TEST_SEED_RESPONSE_UR} \
+    "$(${KEYTOOL} --request-id ${TEST_REQUEST_ID} --seed ${TEST_SEED} seed-response)"
 }
 
 testSeedResponse2()
 {
-  assertEquals $'ur:crypto-response/oeadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaaddwotadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmjliatbcn' \
-    "$(${KEYTOOL} --seed-request ur:crypto-request/otadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaadwkhdcxzmoycylumhmdgwspnyvadaktnsoycwmyaodihgftdllugltphlmtutytadosdwwdaxksctgajtiyjljpjnhsjyinjljtcxhsidjlkpjycxjyisinjkcxjpihjskpihjkjydmetdriyes \
-  --seed-ur ur:crypto-seed/otadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmknzsnbwy \
+  assertEquals ${TEST_SEED_RESPONSE_METADATA_UR} \
+    "$(${KEYTOOL} --seed-request ${TEST_SEED_REQUEST_UR} \
+  --seed-ur ${TEST_SEED_METADATA_UR} \
   seed-response)"
 }
 
 testReadSeedResponse()
 {
-  assertEquals $'ur:crypto-seed/otadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmknzsnbwy\nabca5901-7419-4a37-9473-a55f434ebc27\n59f2293a5bce7d4de59e71b4207ac5d2\nDark Purple Aqua Love\nThis is a seed note.' \
-    "$(${KEYTOOL} --seed-response ur:crypto-response/oeadtpdagdpysghkadjycfgeemmwjkonhefxglrfdiaotaaddwotadgdhkwzdtfthptokigtvwnnjsqzcxknsktdaxkpfyhsjpjecxgdkpjpjojzihcxfpjskphscxgsjlkoihaajyghisinjkcxinjkcxhscxjkihihiecxjtjljyihdmjliatbcn \
+  assertEquals "${TEST_SEED_METADATA_UR}"$'\n'"${TEST_REQUEST_ID}"$'\n'"${TEST_SEED}"$'\n'"${TEST_SEED_NAME}"$'\n'"${TEST_SEED_NOTE}" \
+    "$(${KEYTOOL} --seed-response ${TEST_SEED_RESPONSE_METADATA_UR} \
     seed-ur request-id seed seed-name seed-note)"
 }
 
 testMasterKey()
 {
   # master-key <- [seed, asset, network]
-  assertEquals $'ur:crypto-hdkey/oxadykaoykaxhdclaejsftrnlumkjyaxvwcypsltflenfptbetsrcxqzztdwoedayawppfjyjpcxcmgdfdaahdcxgarkgmlsahfysbhdjebyfrbwkorfryvdadesdsmernhsayttihjposjpeclaceursfztatgs' \
-    "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 master-key)"
+  assertEquals ${TEST_MASTER_KEY_UR} \
+    "$(${KEYTOOL} --seed ${TEST_SEED} master-key)"
 }
 
 testMasterKeyUR()
 {
-  assertEquals $'ur:crypto-hdkey/oxadykaoykaxhdclaejsftrnlumkjyaxvwcypsltflenfptbetsrcxqzztdwoedayawppfjyjpcxcmgdfdaahdcxgarkgmlsahfysbhdjebyfrbwkorfryvdadesdsmernhsayttihjposjpeclaceursfztatgs' \
-    "$(${KEYTOOL} --master-key ur:crypto-hdkey/oxadykaoykaxhdclaejsftrnlumkjyaxvwcypsltflenfptbetsrcxqzztdwoedayawppfjyjpcxcmgdfdaahdcxgarkgmlsahfysbhdjebyfrbwkorfryvdadesdsmernhsayttihjposjpeclaceursfztatgs master-key)"
+  assertEquals ${TEST_MASTER_KEY_UR} \
+    "$(${KEYTOOL} --master-key ${TEST_MASTER_KEY_UR} master-key)"
 }
 
 testMasterKeyBase58()
 {
   # master-key-base58 <- [master-key]
-  assertEquals $'xprv9s21ZrQH143K2nw6kAQQiZWmsZUpwRLGQmGt5toEfEU5EnDnfx67oPKNKTApqoikXnMotWxBcVzpCX6AqChxB48MxhvaqxcLwapqAjHmwQp' \
-    "$(${KEYTOOL} --master-key ur:crypto-hdkey/oxadykaoykaxhdclaejsftrnlumkjyaxvwcypsltflenfptbetsrcxqzztdwoedayawppfjyjpcxcmgdfdaahdcxgarkgmlsahfysbhdjebyfrbwkorfryvdadesdsmernhsayttihjposjpeclaceursfztatgs master-key-base58)"
+  assertEquals ${TEST_MASTER_KEY_BASE58} \
+    "$(${KEYTOOL} --master-key ${TEST_MASTER_KEY_UR} master-key-base58)"
+
+  # master-key <- [master-key-base58]
+  assertEquals ${TEST_MASTER_KEY_UR} \
+    "$(${KEYTOOL} --master-key-base58 ${TEST_MASTER_KEY_BASE58} master-key)"
 }
 
 testMasterKeyFingerprint()
 {
   # master-key-fingerprint <- [master-key]
-  assertEquals $'a140ddfb' \
-    "$(${KEYTOOL} --master-key ur:crypto-hdkey/oxadykaoykaxhdclaejsftrnlumkjyaxvwcypsltflenfptbetsrcxqzztdwoedayawppfjyjpcxcmgdfdaahdcxgarkgmlsahfysbhdjebyfrbwkorfryvdadesdsmernhsayttihjposjpeclaceursfztatgs master-key-fingerprint)"
+  assertEquals ${TEST_MASTER_KEY_FINGERPRINT} \
+    "$(${KEYTOOL} --master-key ${TEST_MASTER_KEY_UR} master-key-fingerprint)"
 }
 
 testAccountDerivationPath()
 {
   # account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
-  assertEquals $'84h/0h/0h' "$(${KEYTOOL}  account-derivation-path)"
-  assertEquals $'9abcdef0/84h/0h/0h' "$(${KEYTOOL} --master-key-fingerprint 9abcdef0 account-derivation-path)"
-  assertEquals $'a140ddfb/84h/0h/0h' "$(${KEYTOOL} --master-key ur:crypto-hdkey/oxadykaoykaxhdclaejsftrnlumkjyaxvwcypsltflenfptbetsrcxqzztdwoedayawppfjyjpcxcmgdfdaahdcxgarkgmlsahfysbhdjebyfrbwkorfryvdadesdsmernhsayttihjposjpeclaceursfztatgs account-derivation-path)"
+  assertEquals ${TEST_ACCOUNT_DERIVATION_PATH} "$(${KEYTOOL} account-derivation-path)"
+  assertEquals "9abcdef0/${TEST_ACCOUNT_DERIVATION_PATH}" "$(${KEYTOOL} --master-key-fingerprint 9abcdef0 account-derivation-path)"
+  assertEquals "${TEST_MASTER_KEY_FINGERPRINT}/${TEST_ACCOUNT_DERIVATION_PATH}" "$(${KEYTOOL} --master-key ${TEST_MASTER_KEY_UR} account-derivation-path)"
 }
 
 testAccountKey()
 {
   # account-key <- [master-key, account-derivation-path]
-  assertEquals $'xprv9yasgNa354kXD4zJNZbS9tAsDXnENsGdJbrRkrwvtyb348XhccD42B8ekimwxyj6dNy6jX4K7NpUoNNaxTrCjrWMgFGTcaqZbwpevvwfBeR' \
-    "$(${KEYTOOL} --master-key ur:crypto-hdkey/oxadykaoykaxhdclaejsftrnlumkjyaxvwcypsltflenfptbetsrcxqzztdwoedayawppfjyjpcxcmgdfdaahdcxgarkgmlsahfysbhdjebyfrbwkorfryvdadesdsmernhsayttihjposjpeclaceursfztatgs account-key)"
+  assertEquals ${TEST_ACCOUNT_KEY_UR} \
+    "$(${KEYTOOL} --master-key ${TEST_MASTER_KEY_UR} account-key)"
 }
 
-# testAccountKey()
-# {
-#   # account-key <- [master-key, account-derivation-path]
-#   assertEquals $'xprv9yasgNa354kXD4zJNZbS9tAsDXnENsGdJbrRkrwvtyb348XhccD42B8ekimwxyj6dNy6jX4K7NpUoNNaxTrCjrWMgFGTcaqZbwpevvwfBeR' \
-#     "$(${KEYTOOL} --master-key xprv9s21ZrQH143K28kcT3e8kegkeMexRDzozueBMsHVtctk8gYxLUiBVqzZpK8KwcTjz5xnzZq84ymFKTmbXqwdexKJRkSuejVcCAM8P7sc39b account-key)"
-# }
+TEST_ACCOUNT_KEY_MINIMAL_UR='ur:crypto-hdkey/onaoykaxhdclaejnsodtmtfwdkknwpbeqdlacskoadsgdlehbwrpahdmmepkbywsmuvynlmwbbdktsaahdcxhnfgnepefxgdytryckticelyotsstoknfntavevaskiddmolsarntykbrybtjpksamoeadlfaeykaxaxaycyzssajpsnyaaemeso'
+TEST_ACCOUNT_KEY_BASE58='xprv9zWKRdxk5S4PWnZwz7qyUzFUA86bHXDw6u1vZ9sGPUkknsQU3oE8TBmnEmCtKh9yVjoZySwhUqPSSPzRKt4FuKetSmJGfGoS1YbE3eyyE6N'
 
-# testPartialAddressDerivationPath()
-# {
-#     # address-derivation-path <- [chain-type, address-index]
-#     assertEquals $'0/0' "$(${KEYTOOL} address-derivation-path)"
-#     assertEquals $'1/*' "$(${KEYTOOL} --chain-type change --address-index '*' address-derivation-path)"
-# }
+testAccountKeyBase58()
+{
+  # account-key-base58 <- [account-key]
+  assertEquals ${TEST_ACCOUNT_KEY_BASE58} \
+    "$(${KEYTOOL} --account-key ${TEST_ACCOUNT_KEY_UR} account-key-base58)"
 
-# testFullAddressDerivationPath()
-# {
-#   # full-address-derivation-path <- [account-derivation-path, address-derivation-path]
-#   assertEquals $'m/84h/0h/0h/0/0' "$(${KEYTOOL} full-address-derivation-path)"
-# }
+  # account-key-base58 <- [account-key]
+  assertEquals ${TEST_ACCOUNT_KEY_BASE58} \
+    "$(${KEYTOOL} --account-key ${TEST_ACCOUNT_KEY_MINIMAL_UR} account-key-base58)"
 
-# testAccountPubKey()
-# {
-#   # account-pub-key <- [account-key]
-#   assertEquals $'xpub6DDytLvRh5N8QR3H4nzY4q3TCStCsnmLBQtjNE3rNFcEyhvvNF3yN6WTLyK599xkUdEKycY5cxcujv9u9YeiENgYBewfCUUHXdQmzj3fjqo' \
-#     "$(${KEYTOOL} --account-key xprv9zEdUqPXrhoqBvxoxmTXhh6ieR3iUL3UpBy8ZqeEov5G6ubmphjipJByVhoxBnRtF5LhgrCSyQLEDKLqKoBVJHzDHXZBkhXmfbDje6Bm7AQ account-pub-key)"
-# }
+  # account-key <- [account-key-base58]
+  assertEquals ${TEST_ACCOUNT_KEY_MINIMAL_UR} \
+    "$(${KEYTOOL} --account-key-base58 ${TEST_ACCOUNT_KEY_BASE58} account-key)"
+}
 
-# testAddressKey()
-# {
-#   # address-key <- [master-key, full-address-derivation-path]
-#   assertEquals $'xprvA3wj42STH7XPmjS3eSAQiZKowik7pky9r3hck3jNVWA2tHBXyn92mtC3M6CJDSbG92av7CJF8Zr64gsb4s9LQkQvGi5E1QvAFgvuVk3bEqE' \
-#     "$(${KEYTOOL} --master-key xprv9s21ZrQH143K28kcT3e8kegkeMexRDzozueBMsHVtctk8gYxLUiBVqzZpK8KwcTjz5xnzZq84ymFKTmbXqwdexKJRkSuejVcCAM8P7sc39b address-key)"
+testPartialAddressDerivationPath()
+{
+    # address-derivation-path <- [chain-type, address-index]
+    assertEquals ${TEST_ADDRESS_DERIVATION_PATH} "$(${KEYTOOL} address-derivation-path)"
+    assertEquals $'1/*' "$(${KEYTOOL} --chain-type change --address-index '*' address-derivation-path)"
+}
 
-#   # address-key <- [account-key, address-derivation-path]
-#   assertEquals $'xprvA2p2Wu4w5XUZ6L2iHjvuxCkm38bUcwNCKwSB9XXG5oMjArwtkm2TeA3amg5p73QZVH6owECFo4T9nGnCEuwgUMWLbivB24yyjpsWBWPvYgf' \
-#     "$(${KEYTOOL} --account-key xprv9zEdUqPXrhoqBvxoxmTXhh6ieR3iUL3UpBy8ZqeEov5G6ubmphjipJByVhoxBnRtF5LhgrCSyQLEDKLqKoBVJHzDHXZBkhXmfbDje6Bm7AQ address-key)"
-# }
+testFullAddressDerivationPath()
+{
+  # full-address-derivation-path <- [account-derivation-path, address-derivation-path]
+  assertEquals "${TEST_ACCOUNT_DERIVATION_PATH}/${TEST_ADDRESS_DERIVATION_PATH}" "$(${KEYTOOL} full-address-derivation-path)"
+}
+
+testAccountPubKey()
+{
+  # account-pub-key <- [account-key]
+  assertEquals ${TEST_ACCOUNT_PUB_KEY_UR} \
+    "$(${KEYTOOL} --account-key ${TEST_ACCOUNT_KEY_UR} account-pub-key)"
+}
+
+TEST_ACCOUNT_PUB_KEY_MINIMAL_UR='ur:crypto-hdkey/oxaxhdclaxvlcprfttldjobkredtlnhsidwybaeyjtswyandlgjnehtkdsidbkqzsrkphyfhsaaahdcxhnfgnepefxgdytryckticelyotsstoknfntavevaskiddmolsarntykbrybtjpksamoeadlfaeykaxaxaycyzssajpsnbkrdlymo'
+TEST_ACCOUNT_PUB_KEY_BASE58='xpub6DVfq9VduocgjGeR69Nyr8CCi9w5gywnU7wXMYGswpHjffjcbLYNzz6G6555VDcSZLDwZPzJHJQabVWWgkpvYntpunL3UjHGrkCJ6VndbQf'
+
+testAccountPubKeyBase58()
+{
+  # account-pub-key-base58 <- [account-pub-key]
+  assertEquals ${TEST_ACCOUNT_PUB_KEY_BASE58} \
+    "$(${KEYTOOL} --account-pub-key ${TEST_ACCOUNT_PUB_KEY_UR} account-pub-key-base58)"
+
+  # account-pub-key-base58 <- [account-pub-key]
+  assertEquals ${TEST_ACCOUNT_PUB_KEY_BASE58} \
+    "$(${KEYTOOL} --account-pub-key ${TEST_ACCOUNT_PUB_KEY_MINIMAL_UR} account-pub-key-base58)"
+
+  # account-pub-key <- [account-pub-key-base58]
+  assertEquals ${TEST_ACCOUNT_PUB_KEY_MINIMAL_UR} \
+    "$(${KEYTOOL} --account-pub-key-base58 ${TEST_ACCOUNT_PUB_KEY_BASE58} account-pub-key)"
+}
+
+testAddressKey()
+{
+  # address-key <- [master-key, full-address-derivation-path]
+  assertEquals ${TEST_ADDRESS_KEY_UR} \
+    "$(${KEYTOOL} --master-key ${TEST_MASTER_KEY_UR} address-key)"
+
+  assertEquals ${TEST_ACCOUNT_KEY_UR} \
+    "$(${KEYTOOL} --master-key ${TEST_MASTER_KEY_UR} account-key)"
+
+  # address-key <- [account-key, address-derivation-path]
+  assertEquals ${TEST_ADDRESS_KEY_UR} \
+    "$(${KEYTOOL} --account-key ${TEST_ACCOUNT_KEY_UR} address-key)"
+}
+
+TEST_ADDRESS_KEY_BASE58='xprvA2cpWAfRGtwAfZYb3gQ7aDw5H34a8kJszXZD6zXLtXsG58Mn3F3GPJZvD66qfFkmEzks4TuWbenCp9Q5oGx6aCRE4XBg7TMsq56XxjgbN2d'
+TEST_ADDRESS_KEY_MINIMAL_UR='ur:crypto-hdkey/onaoykaxhdclaefwmwpdrhbapygdplnbfwzmmwknglmtneaeurlakggwetenpeiedmbtgwvtmtvtasaahdcxeooeaedscmfdlotnmyvyjzroltoecfglgrjlldbgflkggsayaockrpveamnladfnamoeadlfaewkaxahaycycyceptprahosjsbz'
+
+testAddressKeyBase58()
+{
+  # address-key-base58 <- [address-key]
+  assertEquals ${TEST_ADDRESS_KEY_BASE58} \
+    "$(${KEYTOOL} --address-key ${TEST_ADDRESS_KEY_UR} address-key-base58)"
+
+  # address-key-base58 <- [address-key]
+  assertEquals ${TEST_ADDRESS_KEY_BASE58} \
+    "$(${KEYTOOL} --address-key ${TEST_ADDRESS_KEY_MINIMAL_UR} address-key-base58)"
+
+  # address-key <- [address-key-base58]
+  assertEquals ${TEST_ADDRESS_KEY_MINIMAL_UR} \
+    "$(${KEYTOOL} --address-key-base58 ${TEST_ADDRESS_KEY_BASE58} address-key)"
+}
 
 # testAddressPubKey()
 # {
 #   # address-pub-key <- [address-key]
-#   assertEquals $'xpub6FoNvQbpuu2rJp7BPmTvKLhVbARy2Q63hAMmwuvse8ti3fH3JJLiBxN4cyXjeypWSen5ydkxfxJCLkPydGqQrSdhAwxe9ExFzbakNZ46AK6' \
-#     "$(${KEYTOOL} --address-key xprvA2p2Wu4w5XUZ6L2iHjvuxCkm38bUcwNCKwSB9XXG5oMjArwtkm2TeA3amg5p73QZVH6owECFo4T9nGnCEuwgUMWLbivB24yyjpsWBWPvYgf address-pub-key)"
+#   assertEquals ${TEST_ADDRESS_PUB_KEY_UR} \
+#     "$(${KEYTOOL} --address-key ${TEST_ADDRESS_KEY_UR} address-pub-key)"
 
 #   # address-pub-key <- [account-pub-key, address-derivation-path]
-#   assertEquals $'xpub6FoNvQbpuu2rJp7BPmTvKLhVbARy2Q63hAMmwuvse8ti3fH3JJLiBxN4cyXjeypWSen5ydkxfxJCLkPydGqQrSdhAwxe9ExFzbakNZ46AK6' \
-#     "$(${KEYTOOL} --account-pub-key xpub6DDytLvRh5N8QR3H4nzY4q3TCStCsnmLBQtjNE3rNFcEyhvvNF3yN6WTLyK599xkUdEKycY5cxcujv9u9YeiENgYBewfCUUHXdQmzj3fjqo address-pub-key)"
+#   assertEquals ${TEST_ADDRESS_PUB_KEY_UR} \
+#     "$(${KEYTOOL} --account-pub-key ${TEST_ACCOUNT_PUB_KEY_UR} address-pub-key)"
 # }
 
-# testAddressECKey()
+# testAddressECKey1()
 # {
 #   # address-ec-key <- [address-key]
-#   assertEquals $'063e2110fc78e7944175d6714a77bc33f5efac9ba25a575980918dca3a738323' \
-#     "$(${KEYTOOL} --address-key xprvA2p2Wu4w5XUZ6L2iHjvuxCkm38bUcwNCKwSB9XXG5oMjArwtkm2TeA3amg5p73QZVH6owECFo4T9nGnCEuwgUMWLbivB24yyjpsWBWPvYgf address-ec-key)"
-
-#   # address-ec-key <- [address-ec-key-wif]
-#   assertEquals $'063e2110fc78e7944175d6714a77bc33f5efac9ba25a575980918dca3a738323' \
-#     "$(${KEYTOOL} --address-ec-key-wif KwRr1isWZUTRWhrWL2gTyoyuABXSnADtLbryFozgxKHbPDBoWpoU address-ec-key)"
-# }
-
-# testAddressPubECKey()
-# {
-#   # address-pub-ec-key <- [address-ec-key]
-#   assertEquals $'03447c85461b3383b7077d678a79dde4ba09c74da2036811b5e6165f1ae6254dd6' \
-#     "$(${KEYTOOL} --address-ec-key 063e2110fc78e7944175d6714a77bc33f5efac9ba25a575980918dca3a738323 address-pub-ec-key)"
-
-#   # address-pub-ec-key <- [address-pub-key]
-#   assertEquals $'03447c85461b3383b7077d678a79dde4ba09c74da2036811b5e6165f1ae6254dd6' \
-#     "$(${KEYTOOL} --address-pub-key xpub6FoNvQbpuu2rJp7BPmTvKLhVbARy2Q63hAMmwuvse8ti3fH3JJLiBxN4cyXjeypWSen5ydkxfxJCLkPydGqQrSdhAwxe9ExFzbakNZ46AK6 address-pub-ec-key)"
+#   assertEquals ${TEST_ADDRESS_EC_KEY} \
+#     "$(${KEYTOOL} --address-key ${TEST_ADDRESS_KEY_UR} address-ec-key)"
 # }
 
 # testAddressECKeyWIF()
 # {
 #   # address-ec-key-wif <- [address-ec-key, network]
-#   assertEquals $'KwRr1isWZUTRWhrWL2gTyoyuABXSnADtLbryFozgxKHbPDBoWpoU' \
-#     "$(${KEYTOOL} --address-ec-key 063e2110fc78e7944175d6714a77bc33f5efac9ba25a575980918dca3a738323 address-ec-key-wif)"
+#   assertEquals ${TEST_ADDRESS_EC_KEY_WIF} \
+#     "$(${KEYTOOL} --address-ec-key ${TEST_ADDRESS_EC_KEY} address-ec-key-wif)"
+
+#   assertEquals ${TEST_ADDRESS_EC_KEY_WIF} \
+#     "$(${KEYTOOL} --address-key ${TEST_ADDRESS_KEY_UR} address-ec-key-wif)"
+# }
+
+# testAddressECKey2()
+# {
+#   # address-ec-key <- [address-ec-key-wif]
+#   assertEquals ${TEST_ADDRESS_EC_KEY} \
+#     "$(${KEYTOOL} --address-ec-key-wif ${TEST_ADDRESS_EC_KEY_WIF} address-ec-key)"
+# }
+
+# testAddressPubECKey()
+# {
+#   # address-pub-ec-key <- [address-ec-key]
+#   assertEquals ${TEST_ADDRESS_PUB_EC_KEY} \
+#     "$(${KEYTOOL} --address-ec-key ${TEST_ADDRESS_EC_KEY} address-pub-ec-key)"
+
+#   # address-pub-ec-key <- [address-pub-key]
+#   assertEquals ${TEST_ADDRESS_PUB_EC_KEY} \
+#     "$(${KEYTOOL} --address-pub-key ${TEST_ADDRESS_PUB_KEY_UR} address-pub-ec-key)"
 # }
 
 # testAddressPKH()
 # {
-#   # address-pkh <- [address-pub-ec-key, asset]
-#   assertEquals $'1AwGNpYoJBxTQb2cFBHPS78L2AqsT9rAjm' \
-#     "$(${KEYTOOL} --address-pub-ec-key 03447c85461b3383b7077d678a79dde4ba09c74da2036811b5e6165f1ae6254dd6 address-pkh)"
+#   # address-pkh <- [address-pub-ec-key, asset, network]
+#   assertEquals $'1Ah3MPVCRuAG6M7kGU8fU1Aze3dBYuTF3f' \
+#     "$(${KEYTOOL} --address-pub-ec-key ${TEST_ADDRESS_PUB_EC_KEY} address-pkh)"
 # }
 
 # testAddressSH()
 # {
-#   # address-sh <- [address-pub-ec-key, asset]
-#   assertEquals $'3BdHJN3Er6GqVkj3NGwyrjVGAh8aybp2ou' \
-#     "$(${KEYTOOL} --address-pub-ec-key 03447c85461b3383b7077d678a79dde4ba09c74da2036811b5e6165f1ae6254dd6 address-sh)"
+#   # address-sh <- [address-pub-ec-key, asset, network]
+#   assertEquals $'3BP4GvydyoUeBWpBPZoFtdXvnZuu8Q9mVG' \
+#     "$(${KEYTOOL} --address-pub-ec-key ${TEST_ADDRESS_PUB_EC_KEY} address-sh)"
 # }
 
 # testOutputDescriptor()
 # {
 #   # output-descriptor <- [output-descriptor-type, account-derivation-path, address-derivation-path, account-pub-key]
-#   assertEquals $'sh(wpkh([01577231/49h/0h/0h]xpub6DMNt7GPfYj4XkPio3LdjTsofQWTfYAM1ryRLpwU5XQ17xpiSuKicFBL5uD42RRXeFAFvHepiFw5xpRqGhCqj2QgmQ5ZTJCXXhY2VUU6xvw/0/*))' \
-#     "$(${KEYTOOL} --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 --output-type sh-wpkh --address-index '*' output-descriptor)"
+#   assertEquals $'sh(wpkh([604b93f2/49h/0h/0h]xpub6CiwBquyrgYoKFuQRxvp2EbJBVd6HfSoceSj57m3XTLaMLsyAvKZXLu9kr1ocV3LFYDcNd1wADSaCurZowTwpBSko3BrRrAoNk6m3or7btT/0/*))' \
+#     "$(${KEYTOOL} --seed ${TEST_SEED} --output-type sh-wpkh --address-index '*' output-descriptor)"
 # }
 
 # testPSBT()

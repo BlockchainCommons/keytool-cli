@@ -68,14 +68,20 @@ HDKey2 HDKey2::from_wally_ext_key(const ext_key& k) {
     auto asset = Asset2::btc();
     auto use_info = UseInfo(asset, network);
 
-    auto origin = DerivationPath2({}, nullopt, depth);
+    optional<DerivationPath2> origin = nullopt;
+    if(depth > 0) {
+        auto index = k.child_num & 0x7fffffff;
+        bool is_hardened = (k.child_num & 0x80000000) != 0;
+        auto step = DerivationStep(index, is_hardened);
+        origin = DerivationPath2({step}, nullopt, depth);
+    }
     auto children = nullopt;
 
     ByteVector key_data;
     if(key_type == KeyType::private_key()) {
-        key_data = data_of(k.priv_key + 1, EC_PRIVATE_KEY_LEN);
+        key_data = data_of(k.priv_key, sizeof(k.priv_key));
     } else if(key_type == KeyType::public_key()) {
-        key_data = data_of(k.pub_key, EC_PUBLIC_KEY_LEN);
+        key_data = data_of(k.pub_key, sizeof(k.pub_key));
     } else {
         assert(false);
     }
@@ -135,7 +141,7 @@ HDKey2 HDKey2::from_seed(const Seed& seed, const UseInfo& use_info) {
     auto bip32_seed = Wally::instance.bip39_mnemonic_to_bip32_seed(mnemonic);
 
     ext_key k;
-    bip32_key_from_seed(&data[0], data.size(), use_info.network().bip32_private_version(), BIP32_FLAG_SKIP_HASH, &k);
+    bip32_key_from_seed(&bip32_seed[0], bip32_seed.size(), use_info.network().bip32_private_version(), 0, &k);
 
     auto is_master = true;
     auto key_type = KeyType::private_key();
@@ -204,11 +210,9 @@ HDKey2 HDKey2::derive(const KeyType& derived_key_type, DerivationStep child_deri
         } else {
             source_fingerprint = parent_fingerprint;
         }
-        uint8_t depth;
+        optional<uint8_t> depth;
         if(auto parent_depth_opt = parent_origin.depth()) {
             depth = *parent_depth_opt + 1;
-        } else {
-            depth = 1;
         }
         origin = DerivationPath2(steps, source_fingerprint, depth);
     } else {

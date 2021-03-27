@@ -99,14 +99,17 @@ DerivationPath2 DerivationPath2::decode_tagged_cbor(ByteVector::const_iterator& 
 }
 
 void DerivationPath2::encode_cbor(ByteVector& cbor) const {
-    size_t map_size = 1;
+    size_t map_size = 0;
 
     // steps
     ByteVector steps_map_entry;
-    encodeInteger(steps_map_entry, 1);
-    encodeArraySize(steps_map_entry, steps().size() * 2); // each step takes 2 array entries
-    for(auto step: steps()) {
-        step.encode_cbor(steps_map_entry);
+    if(!steps().empty()) {
+        map_size += 1;
+        encodeInteger(steps_map_entry, 1);
+        encodeArraySize(steps_map_entry, steps().size() * 2); // each step takes 2 array entries
+        for(auto step: steps()) {
+            step.encode_cbor(steps_map_entry);
+        }
     }
 
     // source_fingerprint

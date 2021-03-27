@@ -17,8 +17,11 @@ DataNode<HDKey2>* setup_master_key(Model& model) {
         return k;
     });
     model.add_derivation("master-key <- [seed, asset, network]");
+    model.add_derivation("master-key <- [master-key-base58]");
     node->set_derivation([&]() -> optional<HDKey2> {
-        if(model.seed->has_value()) {
+        if(model.master_key_base58->has_assigned_value()) {
+            return model.master_key_base58->value();
+        } else if(model.seed->has_value()) {
             auto seed = model.seed->value();
             auto asset = model.asset->value();
             auto network = model.network->value();
@@ -128,8 +131,11 @@ DataNode<HDKey2>* setup_account_key(Model& model) {
         return k;
     });
     model.add_derivation("account-key <- [master-key, account-derivation-path]");
+    model.add_derivation("account-key <- [account-key-base58]");
     node->set_derivation([&]() -> optional<HDKey2> {
-        if(model.master_key->has_value()) {
+        if(model.account_key_base58->has_assigned_value()) {
+            return model.account_key_base58->value();
+        } else if(model.master_key->has_value()) {
             auto master_key = model.master_key->value();
             auto path = model.account_derivation_path->value();
             return master_key.derive(KeyType::private_key(), path);
@@ -147,8 +153,11 @@ DataNode<HDKey2>* setup_account_pub_key(Model& model) {
     node->set_to_string([](const HDKey2& key) { return key.ur(); });
     node->set_from_string([](const string& ur) -> HDKey2 { return HDKey2::from_ur(ur); });
     model.add_derivation("account-pub-key <- [account-key]");
+    model.add_derivation("account-pub-key <- [account-pub-key-base58]");
     node->set_derivation([&]() -> optional<HDKey2> {
-        if(model.account_key->has_value()) {
+        if(model.account_pub_key_base58->has_assigned_value()) {
+            return model.account_pub_key_base58->value();
+        } else if(model.account_key->has_value()) {
             return model.account_key->value().derive(KeyType::public_key());
         } else {
             return nullopt;
@@ -239,8 +248,11 @@ DataNode<HDKey2>* setup_address_key(Model& model) {
     });
     model.add_derivation("address-key <- [master-key, full-address-derivation-path]");
     model.add_derivation("address-key <- [account-key, address-derivation-path]");
+    model.add_derivation("address-key <- [address-key-base58]");
     node->set_derivation([&]() -> optional<HDKey2> {
-        if(model.master_key->has_value() && model.full_address_derivation_path->has_value()) {
+        if(model.address_key_base58->has_assigned_value()) {
+            return model.address_key_base58->value();
+        } else if(model.master_key->has_value() && model.full_address_derivation_path->has_value()) {
             auto master_key = model.master_key->value();
             auto path = model.full_address_derivation_path->value();
             return master_key.derive(KeyType::private_key(), path);
@@ -263,8 +275,11 @@ DataNode<HDKey2>* setup_address_pub_key(Model& model) {
     node->set_from_string([](const string& ur) -> HDKey2 { return HDKey2::from_ur(ur); });
     model.add_derivation("address-pub-key <- [address-key]");
     model.add_derivation("address-pub-key <- [account-pub-key, address-derivation-path]");
+    model.add_derivation("address-pub-key <- [address-pub-key-base58]");
     node->set_derivation([&]() -> optional<HDKey2> {
-        if(model.address_key->has_value()) {
+        if(model.address_pub_key_base58->has_assigned_value()) {
+            return model.address_pub_key_base58->value();
+        } else if(model.address_key->has_value()) {
             return model.address_key->value().derive(KeyType::public_key());
         } else if(model.account_pub_key->has_value() && model.address_derivation_path->has_value()) {
             auto account_pub_key = model.account_pub_key->value();
@@ -282,7 +297,7 @@ DataNode<OutputDescriptor>* setup_output_descriptor(Model& model) {
     model.add_node(node);
     node->set_info("output-descriptor", "OUTPUT_DESCRIPTOR", "A single-signature output descriptor.");
     node->set_to_string([](const OutputDescriptor& o) -> string { return o.to_string(); });
-    model.add_derivation("output-descriptor <- [output_type, account_derivation_path, address_derivation_path, account_pub_key]");
+    model.add_derivation("output-descriptor <- [output-type, account-derivation-path, address-derivation-path, account-pub-key]");
     node->set_derivation([&]() -> optional<OutputDescriptor> {
         if(model.output_type->has_value() && model.account_derivation_path->has_value(), model.address_derivation_path->has_value() && model.account_pub_key->has_value()) {
             return OutputDescriptor(model.output_type->value(), model.account_derivation_path->value(), model.address_derivation_path->value(), model.account_pub_key->value());

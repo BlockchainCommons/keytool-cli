@@ -16,17 +16,17 @@ DataNode<HDKey2>* setup_master_key(Model& model) {
         }
         return k;
     });
-    model.add_derivation("master-key <- [seed, asset, network]");
+    model.add_derivation("master-key <- [seed-hex, asset, network]");
     model.add_derivation("master-key <- [master-key-base58]");
     node->set_derivation([&]() -> optional<HDKey2> {
         if(model.master_key_base58->has_assigned_value()) {
             return model.master_key_base58->value();
-        } else if(model.seed->has_value()) {
-            auto seed = model.seed->value();
+        } else if(model.seed_hex->has_value()) {
+            auto seed_hex = model.seed_hex->value();
             auto asset = model.asset->value();
             auto network = model.network->value();
             auto use_info = UseInfo(asset, network);
-            return HDKey2::from_seed(seed, use_info);
+            return HDKey2::from_seed(seed_hex, use_info);
         } else {
             return nullopt;
         }

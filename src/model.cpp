@@ -17,8 +17,8 @@ void Model::add_derivation(const std::string& d) {
 }
 
 Model::Model() {
-    // seed
-    seed = setup_seed(*this);
+    // seed-hex
+    seed_hex = setup_seed_hex(*this);
     seed_name = setup_seed_name(*this);
     seed_note = setup_seed_note(*this);
     seed_ur = setup_seed_ur(*this);

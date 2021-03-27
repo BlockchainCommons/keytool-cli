@@ -37,8 +37,8 @@ public:
     void add_node(DataNodeProtocol*);
     void add_derivation(const std::string& d);
 
-    // seed
-    DataNode<ByteVector> *seed;
+    // seed-hex
+    DataNode<ByteVector> *seed_hex;
     DataNode<std::string> *seed_name;
     DataNode<std::string> *seed_note;
     DataNode<Seed> *seed_ur;

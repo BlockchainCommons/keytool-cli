@@ -5,7 +5,7 @@
 
 KEYTOOL=${1:-keytool}
 
-TEST_SEED='59f2293a5bce7d4de59e71b4207ac5d2'
+TEST_SEED_HEX='59f2293a5bce7d4de59e71b4207ac5d2'
 TEST_SEED_UR='ur:crypto-seed/oyadgdhkwzdtfthptokigtvwnnjsqzcxknsktdhpyljeda'
 TEST_SEED_NAME='Dark Purple Aqua Love'
 TEST_SEED_NOTE='This is a seed note.'
@@ -73,41 +73,41 @@ testChainTypeInt()
 
 testSeed()
 {
-  # seed <- hex
-  assertEquals ${TEST_SEED} \
-    "$(${KEYTOOL} --seed ${TEST_SEED} seed)"
+  # seed-hex <- hex
+  assertEquals ${TEST_SEED_HEX} \
+    "$(${KEYTOOL} --seed-hex ${TEST_SEED_HEX} seed-hex)"
 }
 
 testSeedUROutput()
 {
-  # seed-ur <- seed
+  # seed-ur <- seed-hex
   assertEquals ${TEST_SEED_UR} \
-    "$(${KEYTOOL} --seed ${TEST_SEED} seed-ur)"
+    "$(${KEYTOOL} --seed-hex ${TEST_SEED_HEX} seed-ur)"
 }
 
 testSeedURInput()
 {
-  # seed <- seed-ur
-  assertEquals ${TEST_SEED} \
-    "$(${KEYTOOL} --seed-ur ${TEST_SEED_UR} seed)"
+  # seed-hex <- seed-ur
+  assertEquals ${TEST_SEED_HEX} \
+    "$(${KEYTOOL} --seed-ur ${TEST_SEED_UR} seed-hex)"
 }
 
 testReadSeedURMetadata()
 {
-  assertEquals ${TEST_SEED}$'\n'"${TEST_SEED_NAME}"$'\n'"${TEST_SEED_NOTE}" \
-    "$(${KEYTOOL} --seed-ur ${TEST_SEED_METADATA_UR} seed seed-name seed-note)"
+  assertEquals ${TEST_SEED_HEX}$'\n'"${TEST_SEED_NAME}"$'\n'"${TEST_SEED_NOTE}" \
+    "$(${KEYTOOL} --seed-ur ${TEST_SEED_METADATA_UR} seed-hex seed-name seed-note)"
 }
 
 testWriteSeedURMetadata()
 {
   assertEquals ${TEST_SEED_METADATA_UR} \
-    "$(${KEYTOOL} --seed ${TEST_SEED} --seed-name "${TEST_SEED_NAME}" --seed-note "${TEST_SEED_NOTE}" seed-ur)"
+    "$(${KEYTOOL} --seed-hex ${TEST_SEED_HEX} --seed-name "${TEST_SEED_NAME}" --seed-note "${TEST_SEED_NOTE}" seed-ur)"
 }
 
 testSeedDigest()
 {
   assertEquals ${TEST_SEED_DIGEST} \
-    "$(${KEYTOOL} --seed ${TEST_SEED} seed-digest)"
+    "$(${KEYTOOL} --seed-hex ${TEST_SEED_HEX} seed-digest)"
 }
 
 testRequestID()
@@ -125,7 +125,7 @@ testRequestDescription()
 testSeedRequest()
 {
   assertEquals ${TEST_SEED_REQUEST_UR} \
-    "$(${KEYTOOL} --seed-request-id ${TEST_REQUEST_ID} --seed ${TEST_SEED} --request-description "${TEST_REQUEST_DESC}" seed-request)"
+    "$(${KEYTOOL} --seed-request-id ${TEST_REQUEST_ID} --seed-hex ${TEST_SEED_HEX} --request-description "${TEST_REQUEST_DESC}" seed-request)"
 }
 
 testReadSeedRequest()
@@ -137,7 +137,7 @@ testReadSeedRequest()
 testSeedResponse1()
 {
   assertEquals ${TEST_SEED_RESPONSE_UR} \
-    "$(${KEYTOOL} --seed-request-id ${TEST_REQUEST_ID} --seed ${TEST_SEED} seed-response)"
+    "$(${KEYTOOL} --seed-request-id ${TEST_REQUEST_ID} --seed-hex ${TEST_SEED_HEX} seed-response)"
 }
 
 testSeedResponse2()
@@ -150,16 +150,16 @@ testSeedResponse2()
 
 testReadSeedResponse()
 {
-  assertEquals "${TEST_SEED_METADATA_UR}"$'\n'"${TEST_REQUEST_ID}"$'\n'"${TEST_SEED}"$'\n'"${TEST_SEED_NAME}"$'\n'"${TEST_SEED_NOTE}" \
+  assertEquals "${TEST_SEED_METADATA_UR}"$'\n'"${TEST_REQUEST_ID}"$'\n'"${TEST_SEED_HEX}"$'\n'"${TEST_SEED_NAME}"$'\n'"${TEST_SEED_NOTE}" \
     "$(${KEYTOOL} --seed-response ${TEST_SEED_RESPONSE_METADATA_UR} \
-    seed-ur seed-request-id seed seed-name seed-note)"
+    seed-ur seed-request-id seed-hex seed-name seed-note)"
 }
 
 testMasterKey()
 {
-  # master-key <- [seed, asset, network]
+  # master-key <- [seed-hex, asset, network]
   assertEquals ${TEST_MASTER_KEY_UR} \
-    "$(${KEYTOOL} --seed ${TEST_SEED} master-key)"
+    "$(${KEYTOOL} --seed-hex ${TEST_SEED_HEX} master-key)"
 }
 
 testMasterKeyUR()
@@ -371,7 +371,7 @@ testOutputDescriptor()
 {
   # output-descriptor <- [output-descriptor-type, account-derivation-path, address-derivation-path, account-pub-key]
   assertEquals $'sh(wpkh([604b93f2/49h/0h/0h]xpub6CiwBquyrgYoKFuQRxvp2EbJBVd6HfSoceSj57m3XTLaMLsyAvKZXLu9kr1ocV3LFYDcNd1wADSaCurZowTwpBSko3BrRrAoNk6m3or7btT/0/*))' \
-    "$(${KEYTOOL} --seed ${TEST_SEED} --output-type sh-wpkh --address-index '*' output-descriptor)"
+    "$(${KEYTOOL} --seed-hex ${TEST_SEED_HEX} --output-type sh-wpkh --address-index '*' output-descriptor)"
 }
 
 testPSBT()

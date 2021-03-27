@@ -5,14 +5,14 @@
 
 using namespace std;
 
-DataNode<ByteVector>* setup_seed(Model& model) {
+DataNode<ByteVector>* setup_seed_hex(Model& model) {
     auto node = new DataNode<ByteVector>();
     model.add_node(node);
-    node->set_info("seed", "HEX", "Random data from which to generate a master key.");
+    node->set_info("seed-hex", "HEX", "Random data from which to generate a master key.");
     node->set_to_string([](const ByteVector& data) { return data_to_hex(data); });
     node->set_from_string([](const string& s) -> ByteVector { return hex_to_data(s); });
 
-    model.add_derivation("seed <- [seed-ur]");
+    model.add_derivation("seed-hex <- [seed-ur]");
     node->set_derivation([&]() -> optional<ByteVector> {
         if(model.seed_ur->has_assigned_value()) {
             return model.seed_ur->value().data();
@@ -69,8 +69,8 @@ DataNode<Seed>* setup_seed_ur(Model& model) {
     node->set_derivation([&]() -> optional<Seed> {
         if(model.seed_response->has_assigned_value()) {
             return model.seed_response->value().seed_response();
-        } else if(model.seed->has_value()) {
-            auto data = model.seed->value();
+        } else if(model.seed_hex->has_value()) {
+            auto data = model.seed_hex->value();
             auto name = model.seed_name->has_value() ? model.seed_name->value() : "";
             auto note = model.seed_note->has_value() ? model.seed_note->value() : "";
             return Seed(data, name, note);
@@ -93,13 +93,13 @@ DataNode<ByteVector>* setup_seed_digest(Model& model) {
         }
         return data;
     });
-    model.add_derivation("seed-digest <- [seed]");
+    model.add_derivation("seed-digest <- [seed-hex]");
     model.add_derivation("seed-digest <- [seed-request]");
     node->set_derivation([&]() -> optional<ByteVector> {
         if(model.seed_request->has_assigned_value()) {
             return model.seed_request->value().seed_request().digest();
-        } else if(model.seed->has_value()) {
-            return sha256(model.seed->value());
+        } else if(model.seed_hex->has_value()) {
+            return sha256(model.seed_hex->value());
         } else {
             return nullopt;
         }

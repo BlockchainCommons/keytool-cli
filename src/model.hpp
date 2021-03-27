@@ -43,7 +43,7 @@ public:
     DataNode<std::string> *seed_note;
     DataNode<Seed> *seed_ur;
     DataNode<ByteVector> *seed_digest;
-    DataNode<UUID> *request_id;
+    DataNode<UUID> *seed_request_id;
     DataNode<std::string> *request_description;
     DataNode<Request> *seed_request;
     DataNode<Response> *seed_response;

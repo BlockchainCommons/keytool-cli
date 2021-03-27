@@ -23,7 +23,7 @@ Model::Model() {
     seed_note = setup_seed_note(*this);
     seed_ur = setup_seed_ur(*this);
     seed_digest = setup_seed_digest(*this);
-    request_id = setup_request_id(*this);
+    seed_request_id = setup_seed_request_id(*this);
     request_description = setup_request_description(*this);
     seed_request = setup_seed_request(*this);
     seed_response = setup_seed_response(*this);

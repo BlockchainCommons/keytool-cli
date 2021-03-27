@@ -113,7 +113,7 @@ testSeedDigest()
 testRequestID()
 {
   assertEquals ${TEST_REQUEST_ID} \
-    "$(${KEYTOOL} --request-id ${TEST_REQUEST_ID} request-id)"
+    "$(${KEYTOOL} --seed-request-id ${TEST_REQUEST_ID} seed-request-id)"
 }
 
 testRequestDescription()
@@ -125,19 +125,19 @@ testRequestDescription()
 testSeedRequest()
 {
   assertEquals ${TEST_SEED_REQUEST_UR} \
-    "$(${KEYTOOL} --request-id ${TEST_REQUEST_ID} --seed ${TEST_SEED} --request-description "${TEST_REQUEST_DESC}" seed-request)"
+    "$(${KEYTOOL} --seed-request-id ${TEST_REQUEST_ID} --seed ${TEST_SEED} --request-description "${TEST_REQUEST_DESC}" seed-request)"
 }
 
 testReadSeedRequest()
 {
   assertEquals "${TEST_REQUEST_ID}"$'\n'"${TEST_REQUEST_DESC}"$'\n'"${TEST_SEED_DIGEST}" \
-    "$(${KEYTOOL} --seed-request ${TEST_SEED_REQUEST_UR} request-id request-description seed-digest)"
+    "$(${KEYTOOL} --seed-request ${TEST_SEED_REQUEST_UR} seed-request-id request-description seed-digest)"
 }
 
 testSeedResponse1()
 {
   assertEquals ${TEST_SEED_RESPONSE_UR} \
-    "$(${KEYTOOL} --request-id ${TEST_REQUEST_ID} --seed ${TEST_SEED} seed-response)"
+    "$(${KEYTOOL} --seed-request-id ${TEST_REQUEST_ID} --seed ${TEST_SEED} seed-response)"
 }
 
 testSeedResponse2()
@@ -152,7 +152,7 @@ testReadSeedResponse()
 {
   assertEquals "${TEST_SEED_METADATA_UR}"$'\n'"${TEST_REQUEST_ID}"$'\n'"${TEST_SEED}"$'\n'"${TEST_SEED_NAME}"$'\n'"${TEST_SEED_NOTE}" \
     "$(${KEYTOOL} --seed-response ${TEST_SEED_RESPONSE_METADATA_UR} \
-    seed-ur request-id seed seed-name seed-note)"
+    seed-ur seed-request-id seed seed-name seed-note)"
 }
 
 testMasterKey()

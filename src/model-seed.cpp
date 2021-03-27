@@ -107,13 +107,13 @@ DataNode<ByteVector>* setup_seed_digest(Model& model) {
     return node;
 }
 
-DataNode<UUID>* setup_request_id(Model& model) {
+DataNode<UUID>* setup_seed_request_id(Model& model) {
     auto node = new DataNode<UUID>();
     model.add_node(node);
-    node->set_info("request-id", "UUID (default: unique)", "The ID of the request and response.");
+    node->set_info("seed-request-id", "UUID (default: unique)", "The ID of the request and response.");
     node->set_to_string([](const UUID& uuid) { return uuid.str(); });
     node->set_from_string([](const string& s) -> UUID { return UUID(s); });
-    model.add_derivation("request-id <- [seed-request] (default: unique)");
+    model.add_derivation("seed-request-id <- [seed-request] (default: unique)");
     node->set_derivation([&]() -> optional<UUID> {
         if(model.seed_request->has_assigned_value()) {
             return model.seed_request->value().id();
@@ -149,12 +149,12 @@ DataNode<Request>* setup_seed_request(Model& model) {
     node->set_info("seed-request", "UR:CRYPTO-REQUEST", "A request for a seed with the given digest.");
     node->set_to_string([](const Request& request) { return request.ur(); });
     node->set_from_string([](const string& s) -> Request { return Request(s); });
-    model.add_derivation("seed-request <- [seed-digest request-id request-description]");
+    model.add_derivation("seed-request <- [seed-digest seed-request-id request-description]");
     node->set_derivation([&]() -> optional<Request> {
         if(model.seed_digest->has_value()) {
             auto body = SeedRequestBody(model.seed_digest->value());
             auto description = model.request_description->value();
-            auto id = model.request_id->value();
+            auto id = model.seed_request_id->value();
             return Request(body, description, id);
         } else {
             return nullopt;
@@ -169,11 +169,11 @@ DataNode<Response>* setup_seed_response(Model& model) {
     node->set_info("seed-response", "UR:CRYPTO-RESPONSE", "A response containing the requested seed.");
     node->set_to_string([](const Response& response) { return response.ur(); });
     node->set_from_string([](const string& s) -> Response { return Response(s); });
-    model.add_derivation("seed-response <- [request-id, seed-ur]");
+    model.add_derivation("seed-response <- [seed-request-id, seed-ur]");
     node->set_derivation([&]() -> optional<Response> {
         if(model.seed_ur->has_value()) {
             auto body = model.seed_ur->value();
-            auto id = model.request_id->value();
+            auto id = model.seed_request_id->value();
             return Response(body, id);
         } else {
             return nullopt;

@@ -93,13 +93,13 @@ DataNode<ByteVector>* setup_seed_digest(Model& model) {
         }
         return data;
     });
-    model.add_derivation("seed-digest <- [seed-hex]");
+    model.add_derivation("seed-digest <- [seed]");
     model.add_derivation("seed-digest <- [seed-request]");
     node->set_derivation([&]() -> optional<ByteVector> {
         if(model.seed_request->has_assigned_value()) {
             return model.seed_request->value().seed_request().digest();
-        } else if(model.seed_hex->has_value()) {
-            return sha256(model.seed_hex->value());
+        } else if(model.seed->has_value()) {
+            return sha256(model.seed->value().data());
         } else {
             return nullopt;
         }

@@ -4,6 +4,7 @@
 #include "model-psbt.hpp"
 #include "model-seed.hpp"
 #include "model-seed-request.hpp"
+#include "model-hdkey-request.hpp"
 
 #include <algorithm>
 
@@ -59,12 +60,21 @@ Model::Model() {
     address_key = setup_address_key(*this);
     address_pub_key = setup_address_pub_key(*this);
     output_descriptor = setup_output_descriptor(*this);
-
     master_key_base58 = setup_master_key_base58(*this);
     account_key_base58 = setup_account_key_base58(*this);
     account_pub_key_base58 = setup_account_pub_key_base58(*this);
     address_key_base58 = setup_address_key_base58(*this);
     address_pub_key_base58 = setup_address_pub_key_base58(*this);
+
+    // hd-key-request
+    key_request_description = setup_key_request_description(*this);
+    key_request_type = setup_key_request_type(*this);
+    key_request_id = setup_key_request_id(*this);
+    source_key = setup_source_key(*this);
+    key_request_derivation_path = setup_key_request_derivation_path(*this);
+    key_request = setup_key_request(*this);
+    key_response = setup_key_response(*this);
+    derived_key = setup_derived_key(*this);
 
     // psbt
     psbt = setup_psbt(*this);

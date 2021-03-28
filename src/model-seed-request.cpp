@@ -57,7 +57,7 @@ DataNode<string>* setup_seed_request_description(Model& model) {
     node->set_from_string([](const string& s) -> string { return s; });
     model.add_derivation("seed-request-description <- [seed-request] (default: empty)");
     node->set_derivation([&]() -> optional<string> {
-        if(model.seed_request->has_value()) {
+        if(model.seed_request->has_assigned_value()) {
             return model.seed_request->value().description();
         } else {
             return "";

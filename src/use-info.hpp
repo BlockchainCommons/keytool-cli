@@ -19,7 +19,9 @@ public:
     uint32_t coin_type() const;
 
     void encode_cbor(ByteVector& cbor) const;
+    void encode_tagged_cbor(ByteVector& cbor) const;
     static UseInfo decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
+    static UseInfo decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
     uint8_t version_sh() const;
     uint8_t version_pkh() const;

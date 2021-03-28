@@ -21,13 +21,77 @@ SeedRequestBody SeedRequestBody::decode_cbor(ByteVector::const_iterator& pos, By
 }
 
 void KeyRequestBody::encode_cbor(ByteVector& cbor) const {
-    // TODO
-    throw runtime_error("Unimplemented.");
+    encodeTagAndValue(cbor, Major::semantic, Tag(501));
+
+    size_t map_size = 0;
+
+    // is-private
+    ByteVector is_private_map_entry;
+    map_size += 1;
+    encodeInteger(is_private_map_entry, 1);
+    bool is_private = key_type() == KeyType::private_key();
+    encodeBool(is_private_map_entry, is_private);
+
+    // path
+    ByteVector path_map_entry;
+    map_size += 1;
+    encodeInteger(path_map_entry, 2);
+    path().encode_tagged_cbor(path_map_entry);
+
+    // use-info
+    ByteVector use_info_map_entry;
+    if(!use_info().is_default()) {
+        map_size += 1;
+        encodeInteger(use_info_map_entry, 3);
+        use_info().encode_tagged_cbor(use_info_map_entry);
+    }
+
+    ur::CborLite::encodeMapSize(cbor, map_size);
+    ::append(cbor, is_private_map_entry);
+    ::append(cbor, path_map_entry);
+    ::append(cbor, use_info_map_entry);
 }
 
 KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
-    // TODO
-    throw runtime_error("Unimplemented.");
+    size_t map_len;
+    decodeMapSize(pos, end, map_len, cbor_decoding_flags);
+    set<int> labels;
+    optional<KeyType> key_type;
+    optional<DerivationPath2> path;
+    UseInfo use_info;
+    for(auto index = 0; index < map_len; index++) {
+        int label;
+        decodeInteger(pos, end, label, cbor_decoding_flags);
+        if(labels.find(label) != labels.end()) {
+            throw domain_error("Duplicate label.");
+        }
+        labels.insert(label);
+        switch(label) {
+            case 1: {
+                bool is_private;
+                decodeBool(pos, end, is_private, cbor_decoding_flags);
+                key_type = is_private ? KeyType::private_key() : KeyType::public_key();
+            }
+                break;
+            case 2: {
+                path = DerivationPath2::decode_tagged_cbor(pos, end);
+            }
+                break;
+            case 3: {
+                use_info = UseInfo::decode_tagged_cbor(pos, end);
+            }
+                break;
+            default:
+                throw domain_error("Unknown label.");
+        }
+    }
+    if(!key_type.has_value()) {
+        throw domain_error("Key request doesn't contain is-private.");
+    }
+    if(!path.has_value()) {
+        throw domain_error("Key request doesn't contain derivation.");
+    }
+    return KeyRequestBody(*key_type, *path, use_info);
 }
 
 void PSBTSignatureRequestBody::encode_cbor(ByteVector& cbor) const {

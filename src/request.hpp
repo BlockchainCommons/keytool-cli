@@ -3,6 +3,9 @@
 
 #include "uuid.hpp"
 #include "utils.hpp"
+#include "key-type.hpp"
+#include "derivation-path-2.hpp"
+#include "use-info.hpp"
 #include <string>
 #include <variant>
 #include <optional>
@@ -22,12 +25,27 @@ private:
 
 class KeyRequestBody final {
 public:
-    KeyRequestBody() { }
+    KeyRequestBody(
+        const KeyType& key_type,
+        const DerivationPath2& path,
+        const UseInfo& use_info
+    )
+        : _key_type(key_type)
+        , _path(path)
+        , _use_info(use_info)
+    { }
+
+    const KeyType& key_type() const { return _key_type; }
+    const DerivationPath2& path() const { return _path; }
+    const UseInfo& use_info() const { return _use_info; }
 
     void encode_cbor(ByteVector& cbor) const;
     static KeyRequestBody decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
 private:
+    KeyType _key_type;
+    DerivationPath2 _path;
+    UseInfo _use_info;
 };
 
 class PSBTSignatureRequestBody final {

@@ -56,6 +56,11 @@ void UseInfo::encode_cbor(ByteVector& cbor) const {
     ::append(cbor, network_map_entry);
 }
 
+void UseInfo::encode_tagged_cbor(ByteVector& cbor) const {
+    encodeTagAndValue(cbor, Major::semantic, Tag(305));
+    encode_cbor(cbor);
+}
+
 UseInfo UseInfo::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     size_t map_len;
     decodeMapSize(pos, end, map_len, cbor_decoding_flags);
@@ -81,6 +86,16 @@ UseInfo UseInfo::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_
         }
     }
     return UseInfo(asset, network);
+}
+
+UseInfo UseInfo::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    Tag major_tag;
+    Tag minor_tag;
+    decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
+    if(major_tag != Major::semantic || minor_tag != 305) {
+        throw domain_error("Invalid use-info.");
+    }
+    return decode_cbor(pos, end);
 }
 
 uint8_t UseInfo::version_sh() const {

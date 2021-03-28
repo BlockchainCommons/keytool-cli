@@ -37,7 +37,7 @@ public:
     void add_node(DataNodeProtocol*);
     void add_derivation(const std::string& d);
 
-    // seed-hex
+    // seed
     DataNode<ByteVector> *seed_hex;
     DataNode<std::string> *seed_name;
     DataNode<std::string> *seed_note;
@@ -76,12 +76,21 @@ public:
     DataNode<HDKey2> *address_key;
     DataNode<HDKey2> *address_pub_key;
     DataNode<OutputDescriptor> *output_descriptor;
-
     DataNode<HDKey2> *master_key_base58;
     DataNode<HDKey2> *account_key_base58;
     DataNode<HDKey2> *account_pub_key_base58;
     DataNode<HDKey2> *address_key_base58;
     DataNode<HDKey2> *address_pub_key_base58;
+
+    // hd-key-request
+    DataNode<std::string> *key_request_description;
+    DataNode<KeyType> *key_request_type;
+    DataNode<UUID> *key_request_id;
+    DataNode<HDKey2> *source_key;
+    DataNode<DerivationPath2> *key_request_derivation_path;
+    DataNode<Request> *key_request;
+    DataNode<Response> *key_response;
+    DataNode<HDKey2> *derived_key;
 
     // psbt
     DataNode<PSBT> *psbt;

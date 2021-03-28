@@ -58,6 +58,7 @@ OBJS = \
 	model-hdkey.o \
 	model-psbt.o \
 	model-seed.o \
+	model-seed-request.o \
 	network.o \
 	output-descriptor.o \
 	output-type.o \
@@ -105,11 +106,12 @@ ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp use-info.hpp
 hd-key-2.o: hd-key-2.hpp utils.hpp use-info.hpp derivation-path-2.hpp wally-utils.hpp seed.hpp ec-key.hpp
 keytool.o: params.hpp
 key-type.o: key-type.hpp
-model.o: model.hpp data-node.hpp asset-2.hpp hd-key-2.hpp ec-key.hpp utils.hpp wally-utils.hpp derivation-path.hpp chain-type.hpp output-type.hpp derivation-index-spec.hpp output-descriptor.hpp psbt.hpp transaction.hpp seed.hpp model-eckey.hpp model-hdkey.hpp model-psbt.hpp model-seed.hpp uuid.hpp request.hpp
+model.o: model.hpp data-node.hpp asset-2.hpp hd-key-2.hpp ec-key.hpp utils.hpp wally-utils.hpp derivation-path.hpp chain-type.hpp output-type.hpp derivation-index-spec.hpp output-descriptor.hpp psbt.hpp transaction.hpp seed.hpp model-eckey.hpp model-hdkey.hpp model-psbt.hpp model-seed.hpp model-seed-request.hpp uuid.hpp request.hpp
 model-eckey.o: model-eckey.hpp data-node.hpp utils.hpp model.hpp asset-2.hpp network.hpp ec-key.hpp
 model-hdkey.o: model-hdkey.hpp data-node.hpp utils.hpp model.hpp hd-key-2.hpp output-type.hpp derivation-path.hpp chain-type.hpp derivation-index-spec.hpp output-descriptor.hpp
 model-psbt.o: model-psbt.hpp data-node.hpp utils.hpp model.hpp psbt.hpp transaction.hpp
-model-seed.o: model-seed.hpp data-node.hpp utils.hpp model.hpp seed.hpp uuid.hpp request.hpp response.hpp
+model-seed.o: model-seed.hpp data-node.hpp utils.hpp model.hpp seed.hpp
+model-seed-request.o: model-seed-request.hpp data-node.hpp utils.hpp model.hpp seed.hpp uuid.hpp request.hpp response.hpp
 network.o: network.hpp utils.hpp
 output-descriptor.o: output-descriptor.hpp output-type.hpp derivation-path.hpp hd-key-2.hpp
 output-type.o: output-type.hpp

@@ -119,19 +119,19 @@ testRequestID()
 testRequestDescription()
 {
   assertEquals "${TEST_REQUEST_DESC}" \
-    "$(${KEYTOOL} --request-description "${TEST_REQUEST_DESC}" request-description)"
+    "$(${KEYTOOL} --seed-request-description "${TEST_REQUEST_DESC}" seed-request-description)"
 }
 
 testSeedRequest()
 {
   assertEquals ${TEST_SEED_REQUEST_UR} \
-    "$(${KEYTOOL} --seed-request-id ${TEST_REQUEST_ID} --seed-hex ${TEST_SEED_HEX} --request-description "${TEST_REQUEST_DESC}" seed-request)"
+    "$(${KEYTOOL} --seed-request-id ${TEST_REQUEST_ID} --seed-hex ${TEST_SEED_HEX} --seed-request-description "${TEST_REQUEST_DESC}" seed-request)"
 }
 
 testReadSeedRequest()
 {
   assertEquals "${TEST_REQUEST_ID}"$'\n'"${TEST_REQUEST_DESC}"$'\n'"${TEST_SEED_DIGEST}" \
-    "$(${KEYTOOL} --seed-request ${TEST_SEED_REQUEST_UR} seed-request-id request-description seed-digest)"
+    "$(${KEYTOOL} --seed-request ${TEST_SEED_REQUEST_UR} seed-request-id seed-request-description seed-digest)"
 }
 
 testSeedResponse1()

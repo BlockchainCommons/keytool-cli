@@ -14,8 +14,8 @@ HDKey2::HDKey2(
     const ByteVector& key_data,
     optional<ByteVector> chain_code,
     const UseInfo& use_info,
-    optional<DerivationPath2> origin,
-    optional<DerivationPath2> children,
+    optional<DerivationPath> origin,
+    optional<DerivationPath> children,
     optional<uint32_t> parent_fingerprint
 )
     : _is_master(is_master)
@@ -65,15 +65,15 @@ HDKey2 HDKey2::from_wally_ext_key(const ext_key& k) {
         throw domain_error("Unknown BIP-32 key version.");
     }
 
-    auto asset = Asset2::btc();
+    auto asset = Asset::btc();
     auto use_info = UseInfo(asset, network);
 
-    optional<DerivationPath2> origin = nullopt;
+    optional<DerivationPath> origin = nullopt;
     if(depth > 0) {
         auto index = k.child_num & 0x7fffffff;
         bool is_hardened = (k.child_num & 0x80000000) != 0;
         auto step = DerivationStep(index, is_hardened);
-        origin = DerivationPath2({step}, nullopt, depth);
+        origin = DerivationPath({step}, nullopt, depth);
     }
     auto children = nullopt;
 
@@ -93,7 +93,7 @@ ext_key HDKey2::wally_ext_key() const {
     ext_key k = {};
 
     if(auto opt_origin = origin()) {
-        DerivationPath2 origin = *opt_origin;
+        DerivationPath origin = *opt_origin;
         k.depth = origin.effective_depth();
 
         if(!origin.steps().empty()) {
@@ -199,7 +199,7 @@ HDKey2 HDKey2::derive(const KeyType& derived_key_type, DerivationStep child_deri
     auto key_data = derived_key_type.is_private() ? data_of(output.priv_key, sizeof(output.priv_key)) : data_of(output.pub_key, sizeof(output.pub_key));
     auto chain_code = data_of(output.chain_code, sizeof(output.chain_code));
     auto use_info = this->use_info();
-    auto origin = DerivationPath2({});
+    auto origin = DerivationPath({});
     if(auto parent_origin_opt = this->origin()) {
         auto parent_origin = *parent_origin_opt;
         auto steps = parent_origin.steps();
@@ -214,16 +214,16 @@ HDKey2 HDKey2::derive(const KeyType& derived_key_type, DerivationStep child_deri
         if(auto parent_depth_opt = parent_origin.depth()) {
             depth = *parent_depth_opt + 1;
         }
-        origin = DerivationPath2(steps, source_fingerprint, depth);
+        origin = DerivationPath(steps, source_fingerprint, depth);
     } else {
-        origin = DerivationPath2({child_derivation}, parent_fingerprint, 1);
+        origin = DerivationPath({child_derivation}, parent_fingerprint, 1);
     }
 
     auto children = nullopt;
     return HDKey2(is_master, derived_key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
 }
 
-HDKey2 HDKey2::derive(const KeyType& derived_key_type, const DerivationPath2& child_derivation_path) {
+HDKey2 HDKey2::derive(const KeyType& derived_key_type, const DerivationPath& child_derivation_path) {
     auto key = *this;
     for(auto step: child_derivation_path.steps()) {
         key = key.derive(key_type(), step);
@@ -328,8 +328,8 @@ HDKey2 HDKey2::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_it
     ByteVector key_data;
     optional<ByteVector> chain_code;
     UseInfo use_info;
-    optional<DerivationPath2> origin;
-    optional<DerivationPath2> children;
+    optional<DerivationPath> origin;
+    optional<DerivationPath> children;
     optional<uint32_t> parent_fingerprint;
 
     for(auto index = 0; index < map_len; index++) {
@@ -368,11 +368,11 @@ HDKey2 HDKey2::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_it
             }
                 break;
             case 6: { // origin
-                origin = DerivationPath2::decode_cbor(pos, end);
+                origin = DerivationPath::decode_cbor(pos, end);
             }
                 break;
             case 7: { // children
-                children = DerivationPath2::decode_cbor(pos, end);
+                children = DerivationPath::decode_cbor(pos, end);
             }
                 break;
             case 8: { // parent_fingerprint

@@ -2,17 +2,17 @@
 #define KEYTOOL_USE_INFO_HPP
 
 #include "network.hpp"
-#include "asset-2.hpp"
+#include "asset.hpp"
 #include "utils.hpp"
 
 class UseInfo final {
 public:
-    UseInfo(const Asset2& asset = Asset2::btc(), const Network& network = Network::mainnet())
+    UseInfo(const Asset& asset = Asset::btc(), const Network& network = Network::mainnet())
         : _asset(asset)
         , _network(network)
     { }
 
-    const Asset2& asset() const { return _asset; }
+    const Asset& asset() const { return _asset; }
     const Network& network() const { return _network; }
 
     bool is_default() const;
@@ -27,7 +27,7 @@ public:
     uint8_t version_pkh() const;
 
 private:
-    Asset2 _asset;
+    Asset _asset;
     Network _network;
 };
 

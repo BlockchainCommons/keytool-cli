@@ -57,7 +57,7 @@ KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::const_iterator& pos, Byte
     decodeMapSize(pos, end, map_len, cbor_decoding_flags);
     set<int> labels;
     optional<KeyType> key_type;
-    optional<DerivationPath2> path;
+    optional<DerivationPath> path;
     UseInfo use_info;
     for(auto index = 0; index < map_len; index++) {
         int label;
@@ -74,7 +74,7 @@ KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::const_iterator& pos, Byte
             }
                 break;
             case 2: {
-                path = DerivationPath2::decode_tagged_cbor(pos, end);
+                path = DerivationPath::decode_tagged_cbor(pos, end);
             }
                 break;
             case 3: {

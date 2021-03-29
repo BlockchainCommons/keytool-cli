@@ -2,12 +2,11 @@
 #define KEYTOOL_MODEL_HPP
 
 #include "data-node.hpp"
-#include "asset-2.hpp"
+#include "asset.hpp"
 #include "hd-key-2.hpp"
 #include "ec-key.hpp"
 #include "utils.hpp"
 #include "wally-utils.hpp"
-#include "derivation-path.hpp"
 #include "chain-type.hpp"
 #include "output-type.hpp"
 #include "derivation-index-spec.hpp"
@@ -49,7 +48,7 @@ public:
     DataNode<Response> *seed_response;
 
     // ec-key
-    DataNode<Asset2> *asset;
+    DataNode<Asset> *asset;
     DataNode<Network> *network;
     DataNode<ECPrivateKey> *address_ec_key;
     DataNode<std::string> *address_ec_key_wif;
@@ -65,14 +64,14 @@ public:
     DataNode<uint32_t> *purpose;
     DataNode<uint32_t> *coin_type;
     DataNode<uint32_t> *account_index;
-    DataNode<DerivationPath2> *account_derivation_path;
+    DataNode<DerivationPath> *account_derivation_path;
     DataNode<HDKey2> *account_key;
     DataNode<HDKey2> *account_pub_key;
     DataNode<ChainType> *chain_type;
     DataNode<uint32_t> *chain_type_int;
     DataNode<DerivationIndexSpec> *address_index;
-    DataNode<DerivationPath2> *address_derivation_path;
-    DataNode<DerivationPath2> *full_address_derivation_path;
+    DataNode<DerivationPath> *address_derivation_path;
+    DataNode<DerivationPath> *full_address_derivation_path;
     DataNode<HDKey2> *address_key;
     DataNode<HDKey2> *address_pub_key;
     DataNode<OutputDescriptor> *output_descriptor;
@@ -87,7 +86,7 @@ public:
     DataNode<KeyType> *key_request_type;
     DataNode<UUID> *key_request_id;
     DataNode<HDKey2> *source_key;
-    DataNode<DerivationPath2> *key_request_derivation_path;
+    DataNode<DerivationPath> *key_request_derivation_path;
     DataNode<Request> *key_request;
     DataNode<Response> *key_response;
     DataNode<HDKey2> *derived_key;

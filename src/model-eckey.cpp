@@ -4,14 +4,14 @@
 
 using namespace std;
 
-DataNode<Asset2>* setup_asset(Model& model) {
-    auto node = new DataNode<Asset2>();
+DataNode<Asset>* setup_asset(Model& model) {
+    auto node = new DataNode<Asset>();
     model.add_node(node);
     node->set_info("asset", "ENUM btc|btct", "A cryptocurrency asset.");
-    node->set_to_string([](const Asset2& asset) { return asset.symbol(); });
-    node->set_from_string([](const string& symbol) -> Asset2 { return Asset2::find(symbol); });
+    node->set_to_string([](const Asset& asset) { return asset.symbol(); });
+    node->set_from_string([](const string& symbol) -> Asset { return Asset::find(symbol); });
     model.add_derivation("asset (default: btc)");
-    node->set_value(Asset2::btc());
+    node->set_value(Asset::btc());
     return node;
 }
 

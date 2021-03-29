@@ -7,9 +7,9 @@
 #include "network.hpp"
 #include "utils.hpp"
 
-class Asset2 final {
+class Asset final {
 public:
-    Asset2(const std::string& name, const std::string& symbol, size_t coin_type)
+    Asset(const std::string& name, const std::string& symbol, size_t coin_type)
         : _name(name)
         , _symbol(symbol)
         , _coin_type(coin_type)
@@ -19,14 +19,14 @@ public:
     const std::string& symbol() const { return _symbol; }
     size_t coin_type() const { return _coin_type; }
 
-    static Asset2 btc();
-    static Asset2 eth();
-    static std::vector<Asset2> assets();
+    static Asset btc();
+    static Asset eth();
+    static std::vector<Asset> assets();
 
-    static Asset2 find(const std::string& symbol);
+    static Asset find(const std::string& symbol);
 
     void encode_cbor(ByteVector& cbor) const;
-    static Asset2 decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
+    static Asset decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
 private:
     std::string _name;
@@ -34,8 +34,8 @@ private:
     size_t _coin_type;
 };
 
-std::ostream& operator<< (std::ostream& os, const Asset2& asset);
-bool operator== (const Asset2& lhs, const Asset2& rhs);
-bool operator!= (const Asset2& lhs, const Asset2& rhs);
+std::ostream& operator<< (std::ostream& os, const Asset& asset);
+bool operator== (const Asset& lhs, const Asset& rhs);
+bool operator!= (const Asset& lhs, const Asset& rhs);
 
 #endif

@@ -5,7 +5,7 @@
 #include <optional>
 #include "utils.hpp"
 #include "use-info.hpp"
-#include "derivation-path-2.hpp"
+#include "derivation-path.hpp"
 #include "seed.hpp"
 #include "key-type.hpp"
 #include "ec-key.hpp"
@@ -20,8 +20,8 @@ public:
         const ByteVector& key_data,
         std::optional<ByteVector> chain_code,
         const UseInfo& use_info,
-        std::optional<DerivationPath2> origin,
-        std::optional<DerivationPath2> children,
+        std::optional<DerivationPath> origin,
+        std::optional<DerivationPath> children,
         std::optional<uint32_t> parent_fingerprint
     );
 
@@ -30,8 +30,8 @@ public:
     const ByteVector& key_data() const { return _key_data; }
     std::optional<ByteVector> chain_code() const { return _chain_code; }
     const UseInfo& use_info() const { return _use_info; }
-    std::optional<DerivationPath2> origin() const { return _origin; }
-    std::optional<DerivationPath2> children() const { return _children; }
+    std::optional<DerivationPath> origin() const { return _origin; }
+    std::optional<DerivationPath> children() const { return _children; }
     std::optional<uint32_t> parent_fingerprint() const { return _parent_fingerprint; }
 
     ByteVector key_fingerprint_data() const;
@@ -41,7 +41,7 @@ public:
 
     HDKey2 derive(const KeyType& derived_key_type) const;
     HDKey2 derive(const KeyType& derived_key_type, DerivationStep child_derivation);
-    HDKey2 derive(const KeyType& derived_key_type, const DerivationPath2& child_derivation_path);
+    HDKey2 derive(const KeyType& derived_key_type, const DerivationPath& child_derivation_path);
 
     ext_key wally_ext_key() const;
     static HDKey2 from_wally_ext_key(const ext_key& k);
@@ -69,8 +69,8 @@ private:
     ByteVector _key_data;
     std::optional<ByteVector> _chain_code;
     UseInfo _use_info;
-    std::optional<DerivationPath2> _origin;
-    std::optional<DerivationPath2> _children;
+    std::optional<DerivationPath> _origin;
+    std::optional<DerivationPath> _children;
     std::optional<uint32_t> _parent_fingerprint;
 };
 

@@ -4,7 +4,7 @@
 #include "uuid.hpp"
 #include "utils.hpp"
 #include "key-type.hpp"
-#include "derivation-path-2.hpp"
+#include "derivation-path.hpp"
 #include "use-info.hpp"
 #include <string>
 #include <variant>
@@ -27,7 +27,7 @@ class KeyRequestBody final {
 public:
     KeyRequestBody(
         const KeyType& key_type,
-        const DerivationPath2& path,
+        const DerivationPath& path,
         const UseInfo& use_info
     )
         : _key_type(key_type)
@@ -36,7 +36,7 @@ public:
     { }
 
     const KeyType& key_type() const { return _key_type; }
-    const DerivationPath2& path() const { return _path; }
+    const DerivationPath& path() const { return _path; }
     const UseInfo& use_info() const { return _use_info; }
 
     void encode_cbor(ByteVector& cbor) const;
@@ -44,7 +44,7 @@ public:
 
 private:
     KeyType _key_type;
-    DerivationPath2 _path;
+    DerivationPath _path;
     UseInfo _use_info;
 };
 

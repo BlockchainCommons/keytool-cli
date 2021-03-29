@@ -2,7 +2,7 @@
 #define KEYTOOL_WALLY_UTILS_HPP
 
 #include "utils.hpp"
-#include "asset-2.hpp"
+#include "asset.hpp"
 #include "hd-key-2.hpp"
 #include "ec-key.hpp"
 
@@ -57,7 +57,7 @@ public:
     ByteVector hash160(const ByteVector& bytes) const;
     std::string to_base58(const ByteVector& bytes, bool is_check) const;
     // std::string to_address(const ECCompressedPublicKey& key, uint8_t version) const;
-    // std::string to_address(const ECCompressedPublicKey& key, const Asset2& asset, bool is_sh) const;
+    // std::string to_address(const ECCompressedPublicKey& key, const Asset& asset, bool is_sh) const;
     // std::string to_segwit_address(const HDKey2& key, const Network& network) const;
 
     wally_psbt* psbt_from_data(const ByteVector& data) const;

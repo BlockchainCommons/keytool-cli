@@ -7,11 +7,11 @@ using namespace ur;
 using namespace ur::CborLite;
 
 bool UseInfo::is_default() const {
-    return asset() == Asset2::btc() && network() == Network::mainnet();
+    return asset() == Asset::btc() && network() == Network::mainnet();
 }
 
 uint32_t UseInfo::coin_type() const {
-    if(asset() == Asset2::btc()) {
+    if(asset() == Asset::btc()) {
         if(network() == Network::mainnet()) {
             return asset().coin_type();
         } else if(network() == Network::testnet()) {
@@ -19,7 +19,7 @@ uint32_t UseInfo::coin_type() const {
         } else {
             assert(false);
         }
-    } else if(asset() == Asset2::eth()) {
+    } else if(asset() == Asset::eth()) {
         if(network() == Network::mainnet()) {
             return asset().coin_type();
         } else if(network() == Network::testnet()) {
@@ -37,7 +37,7 @@ void UseInfo::encode_cbor(ByteVector& cbor) const {
 
     // asset
     ByteVector asset_map_entry;
-    if(asset() != Asset2::btc()) {
+    if(asset() != Asset::btc()) {
         map_size += 1;
         encodeInteger(asset_map_entry, 1);
         asset().encode_cbor(asset_map_entry);
@@ -65,7 +65,7 @@ UseInfo UseInfo::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_
     size_t map_len;
     decodeMapSize(pos, end, map_len, cbor_decoding_flags);
     set<int> labels;
-    auto asset = Asset2::btc();
+    auto asset = Asset::btc();
     auto network = Network::mainnet();
     for(auto index = 0; index < map_len; index++) {
         int label;
@@ -76,7 +76,7 @@ UseInfo UseInfo::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_
         labels.insert(label);
         switch(label) {
         case 1: // asset
-            asset = Asset2::decode_cbor(pos, end);
+            asset = Asset::decode_cbor(pos, end);
             break;
         case 2: // network
             network = Network::decode_cbor(pos, end);
@@ -99,7 +99,7 @@ UseInfo UseInfo::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector:
 }
 
 uint8_t UseInfo::version_sh() const {
-    if(asset() == Asset2::btc()) {
+    if(asset() == Asset::btc()) {
         if(network() == Network::mainnet()) {
             return 0x05;
         } else if(network() == Network::testnet()) {
@@ -113,7 +113,7 @@ uint8_t UseInfo::version_sh() const {
 }
 
 uint8_t UseInfo::version_pkh() const {
-    if(asset() == Asset2::btc()) {
+    if(asset() == Asset::btc()) {
         if(network() == Network::mainnet()) {
             return 0x00;
         } else if(network() == Network::testnet()) {

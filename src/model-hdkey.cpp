@@ -99,12 +99,12 @@ DataNode<uint32_t>* setup_account_index(Model& model) {
     return node;
 }
 
-DataNode<DerivationPath2>* setup_account_derivation_path(Model& model) {
-    auto node = new DataNode<DerivationPath2>();
+DataNode<DerivationPath>* setup_account_derivation_path(Model& model) {
+    auto node = new DataNode<DerivationPath>();
     model.add_node(node);
     node->set_info("account-derivation-path", "BIP32_PATH", "m/purpose'/coin-type'/accont-index'.");
-    node->set_to_string([](const DerivationPath2& path) { return path.to_string(); });
-    node->set_from_string([](const string& p) -> DerivationPath2 { return DerivationPath2::from_string(p); });
+    node->set_to_string([](const DerivationPath& path) { return path.to_string(); });
+    node->set_from_string([](const string& p) -> DerivationPath { return DerivationPath::from_string(p); });
     model.add_derivation("account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]");
     node->set_derivation([&]() {
         auto source_fingerprint = model.master_key_fingerprint->optional_value();
@@ -113,7 +113,7 @@ DataNode<DerivationPath2>* setup_account_derivation_path(Model& model) {
             DerivationStep(model.coin_type->value(), true),
             DerivationStep(model.account_index->value(), true)
         };
-        return DerivationPath2(steps, source_fingerprint);
+        return DerivationPath(steps, source_fingerprint);
     });
     return node;
 }
@@ -201,29 +201,29 @@ DataNode<DerivationIndexSpec>* setup_address_index(Model& model) {
     return node;
 }
 
-DataNode<DerivationPath2>* setup_address_derivation_path(Model& model) {
-    auto node = new DataNode<DerivationPath2>();
+DataNode<DerivationPath>* setup_address_derivation_path(Model& model) {
+    auto node = new DataNode<DerivationPath>();
     model.add_node(node);
     node->set_info("address-derivation-path", "BIP32_PATH", "The BIP-32 address derivation path, starting from the account-key.");
-    node->set_to_string([](const DerivationPath2& path) { return path.to_string(); });
-    node->set_from_string([](const string& p) -> DerivationPath2 { return DerivationPath2::from_string(p); });
+    node->set_to_string([](const DerivationPath& path) { return path.to_string(); });
+    node->set_from_string([](const string& p) -> DerivationPath { return DerivationPath::from_string(p); });
     model.add_derivation("address-derivation-path <- [chain-type-int, address-index]");
     node->set_derivation([&]() {
         vector<DerivationStep> steps {
             DerivationStep(model.chain_type_int->value(), false),
             DerivationStep(model.address_index->value(), false)
         };
-        return DerivationPath2(steps);
+        return DerivationPath(steps);
     });
     return node;
 }
 
-DataNode<DerivationPath2>* setup_full_address_derivation_path(Model& model) {
-    auto node = new DataNode<DerivationPath2>();
+DataNode<DerivationPath>* setup_full_address_derivation_path(Model& model) {
+    auto node = new DataNode<DerivationPath>();
     model.add_node(node);
     node->set_info("full-address-derivation-path", "BIP32_PATH", "The BIP-32 address derivation path, starting from the master-key.");
-    node->set_to_string([](const DerivationPath2& path) { return path.to_string(); });
-    node->set_from_string([](const string& p) -> DerivationPath2 { return DerivationPath2::from_string(p); });
+    node->set_to_string([](const DerivationPath& path) { return path.to_string(); });
+    node->set_from_string([](const string& p) -> DerivationPath { return DerivationPath::from_string(p); });
     model.add_derivation("full-address-derivation-path <- [account-derivation-path, address-derivation-path]");
     node->set_derivation([&]() {
         auto path = model.account_derivation_path->value();

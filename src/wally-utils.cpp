@@ -258,7 +258,7 @@ string Wally::to_base58(const ByteVector& bytes, bool is_check) const {
 //     return to_base58(hashed, true);
 // }
 
-// string Wally::to_address(const ECCompressedPublicKey& key, const Asset2& asset, bool is_sh) const {
+// string Wally::to_address(const ECCompressedPublicKey& key, const Asset& asset, bool is_sh) const {
 //     auto version = is_sh ? asset.version_sh() : asset.version_pkh();
 //     return to_address(key, version);
 // }

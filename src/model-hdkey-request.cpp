@@ -78,15 +78,15 @@ DataNode<HDKey2>* setup_source_key(Model& model) {
     return node;
 }
 
-DataNode<DerivationPath2>* setup_key_request_derivation_path(Model& model) {
-    auto node = new DataNode<DerivationPath2>();
+DataNode<DerivationPath>* setup_key_request_derivation_path(Model& model) {
+    auto node = new DataNode<DerivationPath>();
     model.add_node(node);
     node->set_info("key-request-derivation-path", "BIP32_PATH", "The requested derivation steps.");
-    node->set_to_string([](const DerivationPath2& path) { return path.to_string(); });
-    node->set_from_string([](const string& p) -> DerivationPath2 { return DerivationPath2::from_string(p); });
+    node->set_to_string([](const DerivationPath& path) { return path.to_string(); });
+    node->set_from_string([](const string& p) -> DerivationPath { return DerivationPath::from_string(p); });
     model.add_derivation("key-request-derivation-path <- [full-address-derivation-path]");
     model.add_derivation("key-request-derivation-path <- [key-request]");
-    node->set_derivation([&]() -> optional<DerivationPath2> {
+    node->set_derivation([&]() -> optional<DerivationPath> {
         if(model.key_request->has_assigned_value()) {
             return model.key_request->value().key_request().path();
         } else if(model.full_address_derivation_path->has_value()) {

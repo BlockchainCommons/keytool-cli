@@ -1,4 +1,4 @@
-#include "derivation-path-2.hpp"
+#include "derivation-path.hpp"
 #include "utils.hpp"
 #include <set>
 #include <bc-ur/bc-ur.hpp>
@@ -11,7 +11,7 @@ using namespace std;
 using namespace ur;
 using namespace ur::CborLite;
 
-DerivationPath2::DerivationPath2(
+DerivationPath::DerivationPath(
     const vector<DerivationStep>& steps,
     optional<uint32_t> source_fingerprint,
     optional<uint8_t> depth
@@ -21,13 +21,13 @@ DerivationPath2::DerivationPath2(
     , _depth(depth)
 { }
 
-DerivationPath2::DerivationPath2(uint32_t source_fingerprint)
+DerivationPath::DerivationPath(uint32_t source_fingerprint)
     : _steps{}
     , _source_fingerprint(source_fingerprint)
     , _depth(nullopt)
 { }
 
-uint8_t DerivationPath2::effective_depth() const {
+uint8_t DerivationPath::effective_depth() const {
     if(depth().has_value()) {
         return *depth();
     } else {
@@ -35,7 +35,7 @@ uint8_t DerivationPath2::effective_depth() const {
     }
 }
 
-DerivationPath2 DerivationPath2::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+DerivationPath DerivationPath::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     size_t map_len;
     decodeMapSize(pos, end, map_len, cbor_decoding_flags);
     set<int> labels;
@@ -85,10 +85,10 @@ DerivationPath2 DerivationPath2::decode_cbor(ByteVector::const_iterator& pos, By
                 throw domain_error("Unknown label.");
         }
     }
-    return DerivationPath2(steps, source_fingerprint, depth);
+    return DerivationPath(steps, source_fingerprint, depth);
 }
 
-DerivationPath2 DerivationPath2::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+DerivationPath DerivationPath::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     Tag major_tag;
     Tag minor_tag;
     decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
@@ -98,7 +98,7 @@ DerivationPath2 DerivationPath2::decode_tagged_cbor(ByteVector::const_iterator& 
     return decode_cbor(pos, end);
 }
 
-void DerivationPath2::encode_cbor(ByteVector& cbor) const {
+void DerivationPath::encode_cbor(ByteVector& cbor) const {
     size_t map_size = 0;
 
     // steps
@@ -134,12 +134,12 @@ void DerivationPath2::encode_cbor(ByteVector& cbor) const {
     ::append(cbor, depth_map_entry);
 }
 
-void DerivationPath2::encode_tagged_cbor(ByteVector& cbor) const {
+void DerivationPath::encode_tagged_cbor(ByteVector& cbor) const {
     encodeTagAndValue(cbor, Major::semantic, Tag(304));
     encode_cbor(cbor);
 }
 
-ostream& operator<< (ostream& os, const DerivationPath2& rhs) {
+ostream& operator<< (ostream& os, const DerivationPath& rhs) {
     StringVector result;
 
     if(rhs.source_fingerprint().has_value()) {
@@ -157,13 +157,13 @@ ostream& operator<< (ostream& os, const DerivationPath2& rhs) {
     return os << ::join(result, "/");
 }
 
-string DerivationPath2::to_string() const {
+string DerivationPath::to_string() const {
     ostringstream o;
     o << *this;
     return o.str();
 }
 
-DerivationPath2 DerivationPath2::from_string(const string& path) {
+DerivationPath DerivationPath::from_string(const string& path) {
     auto elems = ::split(::to_lowercase(path), '/');
     if(elems.empty()) {
         throw domain_error("Invalid derivation path.");
@@ -175,7 +175,7 @@ DerivationPath2 DerivationPath2::from_string(const string& path) {
         source_fingerprint = hex_to_uint32(elems.front());
         elems.erase(elems.begin());
     }
-    DerivationPath2 result;
+    DerivationPath result;
     transform(elems.begin(), elems.end(), back_inserter(result._steps), [&](auto elem) {
         return parse_elem(elem);
     });
@@ -183,7 +183,7 @@ DerivationPath2 DerivationPath2::from_string(const string& path) {
     return result;
 }
 
-DerivationStep DerivationPath2::parse_elem(const std::string& elem) {
+DerivationStep DerivationPath::parse_elem(const std::string& elem) {
     string e = elem;
     if(e.empty()) {
         throw domain_error("Invalid derivation path element.");
@@ -200,6 +200,6 @@ DerivationStep DerivationPath2::parse_elem(const std::string& elem) {
     return DerivationStep(spec, is_hardened);
 }
 
-void DerivationPath2::append(const DerivationPath2& other) {
+void DerivationPath::append(const DerivationPath& other) {
     _steps.insert(_steps.end(), other._steps.begin(), other._steps.end());
 }

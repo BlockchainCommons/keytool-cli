@@ -90,11 +90,6 @@ endif
 
 $(toolname): $(OBJS)
 
-# asset.o: asset.hpp network.hpp
-# derivation-path.o: derivation-path.hpp utils.hpp index-bound.hpp
-# hd-key.o: hd-key.hpp utils.hpp network.hpp wally-utils.hpp derivation-path.hpp seed.hpp
-# index-bound.o: index-bound.hpp
-
 asset-2.o: asset-2.hpp utils.hpp
 chain-type.o: chain-type.hpp
 derivation-index.o: derivation-index.hpp utils.hpp

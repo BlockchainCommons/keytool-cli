@@ -61,14 +61,14 @@ DataNode<UUID>* setup_key_request_id(Model& model) {
     return node;
 }
 
-DataNode<HDKey2>* setup_source_key(Model& model) {
-    auto node = new DataNode<HDKey2>();
+DataNode<HDKey>* setup_source_key(Model& model) {
+    auto node = new DataNode<HDKey>();
     model.add_node(node);
     node->set_info("source-key", "UR:CRYPTO-HDKEY", "The BIP-32 HD key from which to derive another.");
-    node->set_to_string([](const HDKey2& key) { return key.ur(); });
-    node->set_from_string([](const string& ur) -> HDKey2 { return HDKey2::from_ur(ur); });
+    node->set_to_string([](const HDKey& key) { return key.ur(); });
+    node->set_from_string([](const string& ur) -> HDKey { return HDKey::from_ur(ur); });
     model.add_derivation("source-key <- [master-key]");
-    node->set_derivation([&]() -> optional<HDKey2> {
+    node->set_derivation([&]() -> optional<HDKey> {
         if(model.master_key->has_value()) {
             return model.master_key->value();
         } else {
@@ -159,14 +159,14 @@ DataNode<Response>* setup_key_response(Model& model) {
     return node;
 }
 
-DataNode<HDKey2>* setup_derived_key(Model& model) {
-    auto node = new DataNode<HDKey2>();
+DataNode<HDKey>* setup_derived_key(Model& model) {
+    auto node = new DataNode<HDKey>();
     model.add_node(node);
     node->set_info("derived-key", "UR:CRYPTO-HDKEY", "The derived key.");
-    node->set_to_string([](const HDKey2& key) { return key.ur(); });
-    node->set_from_string([](const string& ur) -> HDKey2 { return HDKey2::from_ur(ur); });
+    node->set_to_string([](const HDKey& key) { return key.ur(); });
+    node->set_from_string([](const string& ur) -> HDKey { return HDKey::from_ur(ur); });
     model.add_derivation("derived-key <- [key-response]");
-    node->set_derivation([&]() -> optional<HDKey2> {
+    node->set_derivation([&]() -> optional<HDKey> {
         if(model.key_response->has_value()) {
             return model.key_response->value().key_response();
         } else {

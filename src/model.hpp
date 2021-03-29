@@ -3,7 +3,7 @@
 
 #include "data-node.hpp"
 #include "asset.hpp"
-#include "hd-key-2.hpp"
+#include "hd-key.hpp"
 #include "ec-key.hpp"
 #include "utils.hpp"
 #include "wally-utils.hpp"
@@ -58,38 +58,38 @@ public:
     DataNode<std::string> *address_segwit;
 
     // hd-key
-    DataNode<HDKey2> *master_key;
+    DataNode<HDKey> *master_key;
     DataNode<uint32_t> *master_key_fingerprint;
     DataNode<OutputDescriptorType> *output_type;
     DataNode<uint32_t> *purpose;
     DataNode<uint32_t> *coin_type;
     DataNode<uint32_t> *account_index;
     DataNode<DerivationPath> *account_derivation_path;
-    DataNode<HDKey2> *account_key;
-    DataNode<HDKey2> *account_pub_key;
+    DataNode<HDKey> *account_key;
+    DataNode<HDKey> *account_pub_key;
     DataNode<ChainType> *chain_type;
     DataNode<uint32_t> *chain_type_int;
     DataNode<DerivationIndexSpec> *address_index;
     DataNode<DerivationPath> *address_derivation_path;
     DataNode<DerivationPath> *full_address_derivation_path;
-    DataNode<HDKey2> *address_key;
-    DataNode<HDKey2> *address_pub_key;
+    DataNode<HDKey> *address_key;
+    DataNode<HDKey> *address_pub_key;
     DataNode<OutputDescriptor> *output_descriptor;
-    DataNode<HDKey2> *master_key_base58;
-    DataNode<HDKey2> *account_key_base58;
-    DataNode<HDKey2> *account_pub_key_base58;
-    DataNode<HDKey2> *address_key_base58;
-    DataNode<HDKey2> *address_pub_key_base58;
+    DataNode<HDKey> *master_key_base58;
+    DataNode<HDKey> *account_key_base58;
+    DataNode<HDKey> *account_pub_key_base58;
+    DataNode<HDKey> *address_key_base58;
+    DataNode<HDKey> *address_pub_key_base58;
 
     // hd-key-request
     DataNode<std::string> *key_request_description;
     DataNode<KeyType> *key_request_type;
     DataNode<UUID> *key_request_id;
-    DataNode<HDKey2> *source_key;
+    DataNode<HDKey> *source_key;
     DataNode<DerivationPath> *key_request_derivation_path;
     DataNode<Request> *key_request;
     DataNode<Response> *key_response;
-    DataNode<HDKey2> *derived_key;
+    DataNode<HDKey> *derived_key;
 
     // psbt
     DataNode<PSBT> *psbt;

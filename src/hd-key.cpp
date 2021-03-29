@@ -1,4 +1,4 @@
-#include "hd-key-2.hpp"
+#include "hd-key.hpp"
 #include "wally.hpp"
 #include "wally-utils.hpp"
 #include <bc-ur/bc-ur.hpp>
@@ -8,7 +8,7 @@ using namespace std;
 using namespace ur;
 using namespace ur::CborLite;
 
-HDKey2::HDKey2(
+HDKey::HDKey(
     bool is_master,
     const KeyType& key_type,
     const ByteVector& key_data,
@@ -28,7 +28,7 @@ HDKey2::HDKey2(
     , _parent_fingerprint(parent_fingerprint)
 { }
 
-HDKey2 HDKey2::from_wally_ext_key(const ext_key& k) {
+HDKey HDKey::from_wally_ext_key(const ext_key& k) {
     optional<ByteVector> chain_code = nullopt;
     auto c = data_of(k.chain_code, sizeof(k.chain_code));
     if(!is_all_zero(c)) {
@@ -86,10 +86,10 @@ HDKey2 HDKey2::from_wally_ext_key(const ext_key& k) {
         assert(false);
     }
 
-    return HDKey2(is_master, key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
+    return HDKey(is_master, key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
 }
 
-ext_key HDKey2::wally_ext_key() const {
+ext_key HDKey::wally_ext_key() const {
     ext_key k = {};
 
     if(auto opt_origin = origin()) {
@@ -132,7 +132,7 @@ ext_key HDKey2::wally_ext_key() const {
     return k;
 }
 
-HDKey2 HDKey2::from_seed(const Seed& seed, const UseInfo& use_info) {
+HDKey HDKey::from_seed(const Seed& seed, const UseInfo& use_info) {
     auto& data = seed.data();
     if(!Wally::instance.bip39_is_entropy_length_valid(data.size())) {
         throw domain_error("Cannot construct HDKey from seed of invalid length.");
@@ -151,10 +151,10 @@ HDKey2 HDKey2::from_seed(const Seed& seed, const UseInfo& use_info) {
     auto children = nullopt;
     auto parent_fingerprint = nullopt;
 
-    return HDKey2(is_master, key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
+    return HDKey(is_master, key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
 }
 
-HDKey2 HDKey2::derive(const KeyType& derived_key_type) const {
+HDKey HDKey::derive(const KeyType& derived_key_type) const {
     if(key_type() == KeyType::public_key() && derived_key_type == KeyType::private_key()) {
         throw domain_error("Cannot derive private key from public key.");
     }
@@ -162,26 +162,26 @@ HDKey2 HDKey2::derive(const KeyType& derived_key_type) const {
     if(key_type() == derived_key_type) {
         // private -> private
         // public -> public
-        return HDKey2(*this);
+        return HDKey(*this);
     } else {
         // private -> public
         auto pub_key = data_of(wally_ext_key().pub_key, sizeof(ext_key::pub_key));
-        return HDKey2(is_master(), derived_key_type, pub_key, chain_code(), use_info(), origin(), children(), parent_fingerprint());
+        return HDKey(is_master(), derived_key_type, pub_key, chain_code(), use_info(), origin(), children(), parent_fingerprint());
     }
 }
 
-ByteVector HDKey2::key_fingerprint_data() const {
+ByteVector HDKey::key_fingerprint_data() const {
     auto k = wally_ext_key();
     uint8_t bytes[BIP32_KEY_FINGERPRINT_LEN];
     assert(bip32_key_get_fingerprint(&k, &bytes[0], BIP32_KEY_FINGERPRINT_LEN) == WALLY_OK);
     return ByteVector(&bytes[0], &bytes[0] + BIP32_KEY_FINGERPRINT_LEN);
 }
 
-uint32_t HDKey2::key_fingerprint() const {
+uint32_t HDKey::key_fingerprint() const {
     return data_to_uint32(key_fingerprint_data());
 }
 
-HDKey2 HDKey2::derive(const KeyType& derived_key_type, DerivationStep child_derivation) {
+HDKey HDKey::derive(const KeyType& derived_key_type, DerivationStep child_derivation) {
     if(key_type() == KeyType::public_key() && derived_key_type == KeyType::private_key()) {
         throw domain_error("Cannot derive private key from public key.");
     }
@@ -220,10 +220,10 @@ HDKey2 HDKey2::derive(const KeyType& derived_key_type, DerivationStep child_deri
     }
 
     auto children = nullopt;
-    return HDKey2(is_master, derived_key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
+    return HDKey(is_master, derived_key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
 }
 
-HDKey2 HDKey2::derive(const KeyType& derived_key_type, const DerivationPath& child_derivation_path) {
+HDKey HDKey::derive(const KeyType& derived_key_type, const DerivationPath& child_derivation_path) {
     auto key = *this;
     for(auto step: child_derivation_path.steps()) {
         key = key.derive(key_type(), step);
@@ -231,7 +231,7 @@ HDKey2 HDKey2::derive(const KeyType& derived_key_type, const DerivationPath& chi
     return key.derive(derived_key_type);
 }
 
-void HDKey2::encode_cbor(ByteVector& cbor) const {
+void HDKey::encode_cbor(ByteVector& cbor) const {
     size_t map_size = 0;
 
     // is_master
@@ -307,18 +307,18 @@ void HDKey2::encode_cbor(ByteVector& cbor) const {
     ::append(cbor, parent_fingerprint_map_entry);
 }
 
-void HDKey2::encode_tagged_cbor(ByteVector &cbor) const {
+void HDKey::encode_tagged_cbor(ByteVector &cbor) const {
     encodeTagAndValue(cbor, Major::semantic, Tag(303));
     encode_cbor(cbor);
 }
 
-ByteVector HDKey2::tagged_cbor() const {
+ByteVector HDKey::tagged_cbor() const {
     ByteVector v;
     encode_tagged_cbor(v);
     return v;
 }
 
-HDKey2 HDKey2::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+HDKey HDKey::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     size_t map_len;
     decodeMapSize(pos, end, map_len, cbor_decoding_flags);
     set<int> labels;
@@ -395,10 +395,10 @@ HDKey2 HDKey2::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_it
         throw domain_error("Invalid key data.");
     }
 
-    return HDKey2(is_master, key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
+    return HDKey(is_master, key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
 }
 
-HDKey2 HDKey2::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+HDKey HDKey::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     Tag major_tag;
     Tag minor_tag;
     decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
@@ -408,7 +408,7 @@ HDKey2 HDKey2::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::c
     return decode_cbor(pos, end);
 }
 
-string HDKey2::to_base58(KeyType key_type) const {
+string HDKey::to_base58(KeyType key_type) const {
     auto hd_key = this->derive(key_type);
     auto k = hd_key.wally_ext_key();
     auto flags = key_type.bip32_flag();
@@ -419,11 +419,11 @@ string HDKey2::to_base58(KeyType key_type) const {
     return result;
 }
 
-string HDKey2::to_base58() const {
+string HDKey::to_base58() const {
     return to_base58(key_type());
 }
 
-HDKey2 HDKey2::from_base58(const std::string& base58) {
+HDKey HDKey::from_base58(const std::string& base58) {
     ext_key key;
     if(bip32_key_from_base58(base58.c_str(), &key) != WALLY_OK) {
         throw domain_error("Invalid Base58 key.");
@@ -431,13 +431,13 @@ HDKey2 HDKey2::from_base58(const std::string& base58) {
     return from_wally_ext_key(key);
 }
 
-string HDKey2::ur() const {
+string HDKey::ur() const {
     ByteVector cbor;
     encode_cbor(cbor);
     return UREncoder::encode(UR("crypto-hdkey", cbor));
 }
 
-HDKey2 HDKey2::from_ur(const string& ur_string) {
+HDKey HDKey::from_ur(const string& ur_string) {
     auto ur = URDecoder::decode(ur_string);
     if(ur.type() != "crypto-hdkey") {
         throw domain_error("Unexpected UR type: " + ur.type() + ". Expected crypto-hdkey.");
@@ -447,7 +447,7 @@ HDKey2 HDKey2::from_ur(const string& ur_string) {
     return decode_cbor(pos, end);
 }
 
-ECPrivateKey HDKey2::to_ec_private() const {
+ECPrivateKey HDKey::to_ec_private() const {
     if(key_type() != KeyType::private_key()) {
         throw domain_error("Cannot derive private key from public key.");
     }
@@ -457,14 +457,14 @@ ECPrivateKey HDKey2::to_ec_private() const {
     return ECPrivateKey(v);
 }
 
-ECCompressedPublicKey HDKey2::to_ec_public() const {
+ECCompressedPublicKey HDKey::to_ec_public() const {
     auto k = wally_ext_key();
     auto a = k.pub_key;
     auto v = ByteVector(a, a + EC_PUBLIC_KEY_LEN);
     return ECCompressedPublicKey(v);
 }
 
-string HDKey2::to_segwit_address() const {
+string HDKey::to_segwit_address() const {
     string address_family;
     if(use_info().network() == Network::mainnet()) {
         address_family = "bc";

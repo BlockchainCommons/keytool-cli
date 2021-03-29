@@ -59,7 +59,7 @@ bool Wally::bip32_is_seed_length_valid(size_t len) const {
     return any_of(valid_lengths.begin(), valid_lengths.end(), [&](size_t l) { return l == len; });
 }
 
-// HDKey2 Wally::bip32_key_from_seed(const ByteVector& seed, const Network& network) const {
+// HDKey Wally::bip32_key_from_seed(const ByteVector& seed, const Network& network) const {
 //     if(!bip32_is_seed_length_valid(seed.size())) {
 //         throw HDKeyInvalidSeedLength();
 //     }
@@ -69,20 +69,20 @@ bool Wally::bip32_is_seed_length_valid(size_t len) const {
 //         throw HDKeyInvalidSeed();
 //     }
 
-//     return HDKey2(key);
+//     return HDKey(key);
 // }
 
-// HDKey2 Wally::bip32_key_from_base58(const string& base58) const {
+// HDKey Wally::bip32_key_from_base58(const string& base58) const {
 //     ext_key* key = NULL;
 //     if(::
 //     bip32_key_from_base58_alloc(base58.c_str(), &key) != WALLY_OK) {
 //         throw HDKeyInvalidKey();
 //     }
-//     return HDKey2(key);
+//     return HDKey(key);
 // }
 
 
-// HDKey2 Wally::bip32_key_from_entropy(const ByteVector& entropy, const Network& network) const {
+// HDKey Wally::bip32_key_from_entropy(const ByteVector& entropy, const Network& network) const {
 //     auto mnemonic = bip39_mnemonic_from_entropy(entropy);
 //     auto seed = bip39_mnemonic_to_bip32_seed(mnemonic);
 //     return bip32_key_from_seed(seed, network);
@@ -116,7 +116,7 @@ void Wally::print_key(const ext_key& k) const {
     cout << result.str() << endl;
 }
 
-// HDKey2 Wally::bip32_key_from_parent(const HDKey2& parent, uint32_t index, bool is_hardened, bool is_private) const {
+// HDKey Wally::bip32_key_from_parent(const HDKey& parent, uint32_t index, bool is_hardened, bool is_private) const {
 //     if(!parent.is_private()) {
 //         if(is_private) {
 //             throw domain_error("Cannot derive a private key from a public key.");
@@ -131,34 +131,34 @@ void Wally::print_key(const ext_key& k) const {
 //     // print_key(*parent._key.get());
 //     assert(bip32_key_from_parent_alloc(parent._key.get(), index, flags_for_private(is_private), &out_key) == WALLY_OK);
 //     // print_key(*out_key);
-//     return HDKey2(out_key);
+//     return HDKey(out_key);
 // }
 
-// ByteVector Wally::bip32_key_serialize(const HDKey2& key, bool is_private) const {
+// ByteVector Wally::bip32_key_serialize(const HDKey& key, bool is_private) const {
 //     ByteVector bytes(BIP32_SERIALIZED_LEN);
 //     assert(::bip32_key_serialize(key._key.get(), flags_for_private(is_private), &bytes[0], bytes.size()) == WALLY_OK);
 //     return bytes;
 // }
 
-// HDKey2 Wally::bip32_key_unserialize(const ByteVector& serialized) const {
+// HDKey Wally::bip32_key_unserialize(const ByteVector& serialized) const {
 //     ext_key* out_key = NULL;
 //     assert(::bip32_key_unserialize_alloc(&serialized[0], serialized.size(), &out_key) == WALLY_OK);
-//     return HDKey2(out_key);
+//     return HDKey(out_key);
 // }
 
-// HDKey2 Wally::bip32_key_to_public(const HDKey2& key) const {
+// HDKey Wally::bip32_key_to_public(const HDKey& key) const {
 //     // It's a shame LibWally doesn't appear to have a call to do this in one step.
 //     auto pub_serialized = bip32_key_serialize(key, false);
 //     return bip32_key_unserialize(pub_serialized);
 // }
 
-// ByteVector Wally::bip32_key_get_fingerprint(const HDKey2& key) const {
+// ByteVector Wally::bip32_key_get_fingerprint(const HDKey& key) const {
 //     uint8_t buf[BIP32_KEY_FINGERPRINT_LEN];
 //     assert(::bip32_key_get_fingerprint(key._key.get(), buf, BIP32_KEY_FINGERPRINT_LEN) == WALLY_OK);
 //     return ByteVector(buf, buf + BIP32_KEY_FINGERPRINT_LEN);
 // }
 
-// ECPrivateKey Wally::bip32_key_to_ec_private(const HDKey2& key) const {
+// ECPrivateKey Wally::bip32_key_to_ec_private(const HDKey& key) const {
 //     if(!key.is_private()) {
 //         throw domain_error("Cannot derive private key from public key.");
 //     }
@@ -167,7 +167,7 @@ void Wally::print_key(const ext_key& k) const {
 //     return ECPrivateKey(k);
 // }
 
-// ECCompressedPublicKey Wally::bip32_key_to_ec_public(const HDKey2& key) const {
+// ECCompressedPublicKey Wally::bip32_key_to_ec_public(const HDKey& key) const {
 //     auto a = key._key.get()->pub_key;
 //     ByteVector k = ByteVector(a, a + EC_PUBLIC_KEY_LEN);
 //     return ECCompressedPublicKey(k);
@@ -263,7 +263,7 @@ string Wally::to_base58(const ByteVector& bytes, bool is_check) const {
 //     return to_address(key, version);
 // }
 
-// string Wally::to_segwit_address(const HDKey2& key, const Network& network) const {
+// string Wally::to_segwit_address(const HDKey& key, const Network& network) const {
 //     string address_family;
 //     if(network == Network::mainnet()) {
 //         address_family = "bc";

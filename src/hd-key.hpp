@@ -12,9 +12,9 @@
 
 struct ext_key;
 
-class HDKey2 final {
+class HDKey final {
 public:
-    HDKey2(
+    HDKey(
         bool is_master,
         const KeyType& key_type,
         const ByteVector& key_data,
@@ -37,27 +37,27 @@ public:
     ByteVector key_fingerprint_data() const;
     uint32_t key_fingerprint() const;
 
-    static HDKey2 from_seed(const Seed& seed, const UseInfo& use_info);
+    static HDKey from_seed(const Seed& seed, const UseInfo& use_info);
 
-    HDKey2 derive(const KeyType& derived_key_type) const;
-    HDKey2 derive(const KeyType& derived_key_type, DerivationStep child_derivation);
-    HDKey2 derive(const KeyType& derived_key_type, const DerivationPath& child_derivation_path);
+    HDKey derive(const KeyType& derived_key_type) const;
+    HDKey derive(const KeyType& derived_key_type, DerivationStep child_derivation);
+    HDKey derive(const KeyType& derived_key_type, const DerivationPath& child_derivation_path);
 
     ext_key wally_ext_key() const;
-    static HDKey2 from_wally_ext_key(const ext_key& k);
+    static HDKey from_wally_ext_key(const ext_key& k);
 
     std::string to_base58(KeyType key_type) const;
     std::string to_base58() const;
-    static HDKey2 from_base58(const std::string& base58);
+    static HDKey from_base58(const std::string& base58);
 
     void encode_cbor(ByteVector& cbor) const;
     void encode_tagged_cbor(ByteVector &cbor) const;
     ByteVector tagged_cbor() const;
-    static HDKey2 decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
-    static HDKey2 decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
+    static HDKey decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
+    static HDKey decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
     std::string ur() const;
-    static HDKey2 from_ur(const std::string& ur);
+    static HDKey from_ur(const std::string& ur);
 
     ECPrivateKey to_ec_private() const;
     ECCompressedPublicKey to_ec_public() const;

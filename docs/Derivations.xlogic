@@ -295,10 +295,10 @@
             </entityClass>
         </domain>
     </domains>
-    <displaySettings addEntityAsSuccessor="false" annotationToBrowse="false" bias="Bias.start" confidenceVisible="false" edgeNotesVisible="false" edgeWeightsVisible="false" entityIdVisible="false"
+    <displaySettings addEntityAsSuccessor="false" annotationToBrowse="false" bias="Bias.end" confidenceVisible="false" edgeNotesVisible="false" edgeWeightsVisible="false" entityIdVisible="false"
         noteNumbersVisible="false" orientation="Orientation.leftToRight" projectManagementVisible="false"/>
     <documentInfo author="" comments="" keywords="" title=""/>
-    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="424.0" zoom="0.565"/>
+    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="0.0" zoom="0.468"/>
     <chartSettings classVisible="true" classWidth="90" completionVisible="true" effortVisible="true" finishDateVisible="true" resourceVisible="true" resourceWidth="60" startDateVisible="true" titleWidth="104"/>
     <inspectorSettings visibility="true" width="284">
         <inspector title="operators" visibility="minimized"/>
@@ -1092,7 +1092,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="369" outEdgeOrder="398 399 400">
+                    <vertex eid="369" outEdgeOrder="398 399 400 462">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">seed-request</attribute>
@@ -1107,7 +1107,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="371" inEdgeOrder="400 401" outEdgeOrder="372 381">
+                    <vertex eid="371" inEdgeOrder="400 401">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">seed-request-id (default: unique)</attribute>
@@ -1163,7 +1163,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="379" inEdgeOrder="378 381">
+                    <vertex eid="379" inEdgeOrder="378 462">
                         <attributes>
                             <attribute class="java.lang.String" key="type">junctor</attribute>
                             <attribute class="com.flyinglogic.logicgraph.operator.FuzzyAndVertexOperator" key="forwardOperator">
@@ -1185,17 +1185,17 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="386" grouped="356 89 382 358 360">
+                    <vertex eid="386" grouped="356 89 382 358 360 456">
                         <attributes>
                             <attribute class="java.lang.String" key="title">Seed</attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="391" grouped="129 257 289 97 98 232 297 299 236 301 238 112 113 242 245 214 248 218 286 222 95 131 110 291 294 210 402 404 406 408 410">
+                    <vertex eid="391" grouped="129 257 289 97 98 232 297 299 236 301 238 112 113 242 245 214 248 218 286 222 95 131 110 291 294 210 402 404 406 408 410 439">
                         <attributes>
                             <attribute class="java.lang.String" key="title">HDKey</attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="392" grouped="337 115 278 182 183 280 284 220 317 318 335 255 99 459">
+                    <vertex eid="392" grouped="337 115 278 182 183 280 284 220 317 318 335">
                         <attributes>
                             <attribute class="java.lang.String" key="title">ECKey</attribute>
                         </attributes>
@@ -2254,17 +2254,6 @@
                             </attribute>
                         </attributes>
                     </edge>
-                    <edge eid="381" source="371" target="379">
-                        <attributes>
-                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
-                                <multiply/>
-                            </attribute>
-                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
-                                <fuzzyBoolean true="0.5"/>
-                            </attribute>
-                        </attributes>
-                    </edge>
                     <edge eid="383" source="382" target="356">
                         <attributes>
                             <attribute class="java.lang.Double" key="weight">1.0</attribute>
@@ -2685,6 +2674,17 @@
                         </attributes>
                     </edge>
                     <edge eid="461" source="459" target="432">
+                        <attributes>
+                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
+                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
+                                <multiply/>
+                            </attribute>
+                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
+                                <fuzzyBoolean true="0.5"/>
+                            </attribute>
+                        </attributes>
+                    </edge>
+                    <edge eid="462" source="369" target="379">
                         <attributes>
                             <attribute class="java.lang.Double" key="weight">1.0</attribute>
                             <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">

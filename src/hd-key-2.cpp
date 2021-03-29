@@ -312,6 +312,12 @@ void HDKey2::encode_tagged_cbor(ByteVector &cbor) const {
     encode_cbor(cbor);
 }
 
+ByteVector HDKey2::tagged_cbor() const {
+    ByteVector v;
+    encode_tagged_cbor(v);
+    return v;
+}
+
 HDKey2 HDKey2::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
     size_t map_len;
     decodeMapSize(pos, end, map_len, cbor_decoding_flags);

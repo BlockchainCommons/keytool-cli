@@ -44,9 +44,7 @@ Response::Response(const string& s) {
                     if(minor_tag == 300) {
                         _body = Seed::decode_cbor(pos, end);
                     } else if(minor_tag == 303) {
-                        // TODO
                         _body = HDKey2::decode_cbor(pos, end);
-                        throw runtime_error("Unimplemented.");
                     } else if(minor_tag == 310) {
                         // TODO
                         // _body = PSBT::decode_cbor(pos, end);
@@ -77,8 +75,7 @@ string Response::ur() const {
     if(is_seed_response()) {
         ::append(body_map_entry, seed_response().tagged_cbor());
     } else if(is_key_response()) {
-        // TODO
-        // ::append(body_map_entry, key_response().tagged_cbor());
+        ::append(body_map_entry, key_response().tagged_cbor());
     } else if(is_psbt_signature_response()) {
         // TODO
         // ::append(body_map_entry, psbt_signature_response().tagged_cbor());

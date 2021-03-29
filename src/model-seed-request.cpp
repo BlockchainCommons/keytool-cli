@@ -91,12 +91,21 @@ DataNode<Response>* setup_seed_response(Model& model) {
     model.add_node(node);
     node->set_info("seed-response", "UR:CRYPTO-RESPONSE", "A response containing the requested seed.");
     node->set_to_string([](const Response& response) { return response.ur(); });
-    node->set_from_string([](const string& s) -> Response { return Response(s); });
-    model.add_derivation("seed-response <- [seed-request-id, seed]");
+    node->set_from_string([](const string& s) -> Response {
+        auto response = Response(s);
+        if(!response.is_seed_response()) {
+            throw domain_error("Seed-response can only contain a ur:crypto-response with a seed.");
+        }
+        return response;
+    });
+    model.add_derivation("seed-response <- [seed-request, seed]");
     node->set_derivation([&]() -> optional<Response> {
         if(model.seed->has_value()) {
             auto body = model.seed->value();
-            auto id = model.seed_request_id->value();
+            auto id = model.seed_request->value().id();
+            if(body.digest() != model.seed_request->value().seed_request().digest()) {
+                throw domain_error("Digest of seed does not match digest in request.");
+            }
             return Response(body, id);
         } else {
             return nullopt;

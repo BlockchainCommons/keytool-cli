@@ -59,6 +59,9 @@ public:
     std::string ur() const;
     static HDKey from_ur(const std::string& ur);
 
+    // UR or Base58
+    static HDKey parse_key(const std::string& s);
+
     ECPrivateKey to_ec_private() const;
     ECCompressedPublicKey to_ec_public() const;
     std::string to_segwit_address() const;

@@ -127,22 +127,9 @@
             <entityClass>
                 <attributes>
                     <attribute class="java.util.UUID" key="uuid">c21786b6-fc5c-458d-afc1-413516c78589</attribute>
-                    <attribute class="java.lang.String" key="name">XPRV</attribute>
+                    <attribute class="java.lang.String" key="name">Base58</attribute>
                     <attribute class="com.arciem.graphics.ColorRGB" key="color">
                         <colorRGB blue="0.20000000298023224" green="0.20000000298023224" red="1.0"/>
-                    </attribute>
-                    <attribute class="java.lang.Double" key="edgeWeight">1.0</attribute>
-                    <attribute class="java.lang.Boolean" key="milestone">false</attribute>
-                    <attribute class="java.lang.Boolean" key="builtIn">false</attribute>
-                    <attribute class="java.lang.String" key="assignment">ResourceAssignment.fixedeffort</attribute>
-                </attributes>
-            </entityClass>
-            <entityClass>
-                <attributes>
-                    <attribute class="java.util.UUID" key="uuid">8bfc2d57-0a3d-49d8-9e67-2653d294b2a1</attribute>
-                    <attribute class="java.lang.String" key="name">XPUB</attribute>
-                    <attribute class="com.arciem.graphics.ColorRGB" key="color">
-                        <colorRGB blue="0.0" green="1.0" red="0.20000000298023224"/>
                     </attribute>
                     <attribute class="java.lang.Double" key="edgeWeight">1.0</attribute>
                     <attribute class="java.lang.Boolean" key="milestone">false</attribute>
@@ -217,21 +204,8 @@
             </entityClass>
             <entityClass>
                 <attributes>
-                    <attribute class="java.util.UUID" key="uuid">ca9d6b5e-0d2a-4cb9-8d38-68d20b69b1f9</attribute>
-                    <attribute class="java.lang.String" key="name">ur:crypto-tx</attribute>
-                    <attribute class="com.arciem.graphics.ColorRGB" key="color">
-                        <colorRGB blue="0.8470588326454163" green="0.9450980424880981" red="0.5568627715110779"/>
-                    </attribute>
-                    <attribute class="java.lang.Double" key="edgeWeight">1.0</attribute>
-                    <attribute class="java.lang.Boolean" key="milestone">false</attribute>
-                    <attribute class="java.lang.Boolean" key="builtIn">false</attribute>
-                    <attribute class="java.lang.String" key="assignment">ResourceAssignment.fixedeffort</attribute>
-                </attributes>
-            </entityClass>
-            <entityClass>
-                <attributes>
                     <attribute class="java.util.UUID" key="uuid">7d72a849-dd01-439a-ab54-be3f86ee2c59</attribute>
-                    <attribute class="java.lang.String" key="name">ur:crypto-seed</attribute>
+                    <attribute class="java.lang.String" key="name">Seed</attribute>
                     <attribute class="com.arciem.graphics.ColorRGB" key="color">
                         <colorRGB blue="0.4000000059604645" green="1.0" red="0.4000000059604645"/>
                     </attribute>
@@ -244,7 +218,7 @@
             <entityClass>
                 <attributes>
                     <attribute class="java.util.UUID" key="uuid">ca97a964-61b9-4692-82ec-8e6de1b0dd9a</attribute>
-                    <attribute class="java.lang.String" key="name">ur:crypto-request</attribute>
+                    <attribute class="java.lang.String" key="name">Request</attribute>
                     <attribute class="com.arciem.graphics.ColorRGB" key="color">
                         <colorRGB blue="0.6000000238418579" green="1.0" red="0.800000011920929"/>
                     </attribute>
@@ -257,7 +231,7 @@
             <entityClass>
                 <attributes>
                     <attribute class="java.util.UUID" key="uuid">a13d05b7-44ef-4d09-85c5-ce3c1773b433</attribute>
-                    <attribute class="java.lang.String" key="name">ur:crypto-response</attribute>
+                    <attribute class="java.lang.String" key="name">Response</attribute>
                     <attribute class="com.arciem.graphics.ColorRGB" key="color">
                         <colorRGB blue="0.6000000238418579" green="0.800000011920929" red="1.0"/>
                     </attribute>
@@ -270,7 +244,7 @@
             <entityClass>
                 <attributes>
                     <attribute class="java.util.UUID" key="uuid">a184a9df-22e2-4703-a57c-b13b4adcea7f</attribute>
-                    <attribute class="java.lang.String" key="name">ur:crypto-psbt</attribute>
+                    <attribute class="java.lang.String" key="name">Base64</attribute>
                     <attribute class="com.arciem.graphics.ColorRGB" key="color">
                         <colorRGB blue="0.6000000238418579" green="1.0" red="0.4000000059604645"/>
                     </attribute>
@@ -283,7 +257,7 @@
             <entityClass>
                 <attributes>
                     <attribute class="java.util.UUID" key="uuid">04a76bdd-b6b5-4a79-a36f-3e2765f78a52</attribute>
-                    <attribute class="java.lang.String" key="name">ur:crypto-hdkey</attribute>
+                    <attribute class="java.lang.String" key="name">HDKey</attribute>
                     <attribute class="com.arciem.graphics.ColorRGB" key="color">
                         <colorRGB blue="0.800000011920929" green="1.0" red="0.800000011920929"/>
                     </attribute>
@@ -298,7 +272,7 @@
     <displaySettings addEntityAsSuccessor="false" annotationToBrowse="false" bias="Bias.end" confidenceVisible="false" edgeNotesVisible="false" edgeWeightsVisible="false" entityIdVisible="false"
         noteNumbersVisible="false" orientation="Orientation.leftToRight" projectManagementVisible="false"/>
     <documentInfo author="" comments="" keywords="" title=""/>
-    <canvasSettings canvasMode="graph" horizScroll="0.0" vertScroll="0.0" zoom="0.468"/>
+    <canvasSettings canvasMode="graph" horizScroll="420.0" vertScroll="785.0" zoom="0.649"/>
     <chartSettings classVisible="true" classWidth="90" completionVisible="true" effortVisible="true" finishDateVisible="true" resourceVisible="true" resourceWidth="60" startDateVisible="true" titleWidth="104"/>
     <inspectorSettings visibility="true" width="284">
         <inspector title="operators" visibility="minimized"/>
@@ -349,7 +323,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="XPRV" uuid="c21786b6-fc5c-458d-afc1-413516c78589"/>
+                                <entityClass name="Base58" uuid="c21786b6-fc5c-458d-afc1-413516c78589"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -379,11 +353,11 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="XPRV" uuid="c21786b6-fc5c-458d-afc1-413516c78589"/>
+                                <entityClass name="Base58" uuid="c21786b6-fc5c-458d-afc1-413516c78589"/>
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="99" outEdgeOrder="209 247 426">
+                    <vertex eid="99" outEdgeOrder="209 426">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">asset (default "btc")</attribute>
@@ -409,7 +383,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="XPUB" uuid="8bfc2d57-0a3d-49d8-9e67-2653d294b2a1"/>
+                                <entityClass name="Base58" uuid="c21786b6-fc5c-458d-afc1-413516c78589"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -424,7 +398,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="XPRV" uuid="c21786b6-fc5c-458d-afc1-413516c78589"/>
+                                <entityClass name="Base58" uuid="c21786b6-fc5c-458d-afc1-413516c78589"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -484,7 +458,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="XPUB" uuid="8bfc2d57-0a3d-49d8-9e67-2653d294b2a1"/>
+                                <entityClass name="Base58" uuid="c21786b6-fc5c-458d-afc1-413516c78589"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -834,7 +808,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="310" outEdgeOrder="313 343 349">
+                    <vertex eid="310" outEdgeOrder="313 343 349 466">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">psbt-finalized</attribute>
@@ -960,7 +934,7 @@
                     <vertex eid="342">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
-                            <attribute class="java.lang.String" key="title">psbt-finalized-hex</attribute>
+                            <attribute class="java.lang.String" key="title">psbt-finalized-base64</attribute>
                             <attribute class="com.arciem.FuzzyBoolean" key="confidence">
                                 <fuzzyBoolean true="0.5"/>
                             </attribute>
@@ -968,7 +942,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="Hex" uuid="2294c7a1-5093-40c4-8290-e784c2ebd866"/>
+                                <entityClass name="Base64" uuid="a184a9df-22e2-4703-a57c-b13b4adcea7f"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -990,7 +964,7 @@
                     <vertex eid="346">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
-                            <attribute class="java.lang.String" key="title">psbt-ur</attribute>
+                            <attribute class="java.lang.String" key="title">psbt-base64</attribute>
                             <attribute class="com.arciem.FuzzyBoolean" key="confidence">
                                 <fuzzyBoolean true="0.5"/>
                             </attribute>
@@ -998,14 +972,14 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-psbt" uuid="a184a9df-22e2-4703-a57c-b13b4adcea7f"/>
+                                <entityClass name="Base64" uuid="a184a9df-22e2-4703-a57c-b13b4adcea7f"/>
                             </attribute>
                         </attributes>
                     </vertex>
                     <vertex eid="348">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
-                            <attribute class="java.lang.String" key="title">psbt-finalized-ur</attribute>
+                            <attribute class="java.lang.String" key="title">psbt-finalized-base64</attribute>
                             <attribute class="com.arciem.FuzzyBoolean" key="confidence">
                                 <fuzzyBoolean true="0.5"/>
                             </attribute>
@@ -1013,14 +987,14 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-psbt" uuid="a184a9df-22e2-4703-a57c-b13b4adcea7f"/>
+                                <entityClass name="Base64" uuid="a184a9df-22e2-4703-a57c-b13b4adcea7f"/>
                             </attribute>
                         </attributes>
                     </vertex>
                     <vertex eid="350">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
-                            <attribute class="java.lang.String" key="title">psbt-signed-ur</attribute>
+                            <attribute class="java.lang.String" key="title">psbt-signed-base64</attribute>
                             <attribute class="com.arciem.FuzzyBoolean" key="confidence">
                                 <fuzzyBoolean true="0.5"/>
                             </attribute>
@@ -1028,14 +1002,14 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-psbt" uuid="a184a9df-22e2-4703-a57c-b13b4adcea7f"/>
+                                <entityClass name="Base64" uuid="a184a9df-22e2-4703-a57c-b13b4adcea7f"/>
                             </attribute>
                         </attributes>
                     </vertex>
                     <vertex eid="352">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
-                            <attribute class="java.lang.String" key="title">transaction-ur</attribute>
+                            <attribute class="java.lang.String" key="title">transaction-hex</attribute>
                             <attribute class="com.arciem.FuzzyBoolean" key="confidence">
                                 <fuzzyBoolean true="0.5"/>
                             </attribute>
@@ -1043,7 +1017,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-tx" uuid="ca9d6b5e-0d2a-4cb9-8d38-68d20b69b1f9"/>
+                                <entityClass name="Hex" uuid="2294c7a1-5093-40c4-8290-e784c2ebd866"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1058,7 +1032,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-seed" uuid="7d72a849-dd01-439a-ab54-be3f86ee2c59"/>
+                                <entityClass name="Seed" uuid="7d72a849-dd01-439a-ab54-be3f86ee2c59"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1103,7 +1077,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-request" uuid="ca97a964-61b9-4692-82ec-8e6de1b0dd9a"/>
+                                <entityClass name="Request" uuid="ca97a964-61b9-4692-82ec-8e6de1b0dd9a"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1159,7 +1133,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-response" uuid="a13d05b7-44ef-4d09-85c5-ce3c1773b433"/>
+                                <entityClass name="Response" uuid="a13d05b7-44ef-4d09-85c5-ce3c1773b433"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1200,7 +1174,7 @@
                             <attribute class="java.lang.String" key="title">ECKey</attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="393" grouped="352 324 340 309 310 326 342 312 344 346 348 350">
+                    <vertex eid="393" grouped="352 324 340 309 310 326 342 312 344 346 348 350 465">
                         <attributes>
                             <attribute class="java.lang.String" key="title">PSBT</attribute>
                         </attributes>
@@ -1220,7 +1194,7 @@
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="402" inEdgeOrder="403 420" outEdgeOrder="416 290 234 244 444">
+                    <vertex eid="402" outEdgeOrder="416 290 234 244 444">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">master-key</attribute>
@@ -1231,11 +1205,11 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-hdkey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
+                                <entityClass name="HDKey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="404" inEdgeOrder="405 421" outEdgeOrder="417 409 201">
+                    <vertex eid="404" outEdgeOrder="417 409 201">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">account-key</attribute>
@@ -1246,11 +1220,11 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-hdkey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
+                                <entityClass name="HDKey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="406" inEdgeOrder="219 243 424 454" outEdgeOrder="423 118 173">
+                    <vertex eid="406" inEdgeOrder="219 243 454" outEdgeOrder="423 118 173">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">address-key</attribute>
@@ -1261,11 +1235,11 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-hdkey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
+                                <entityClass name="HDKey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="408" inEdgeOrder="409 422" outEdgeOrder="418 208 293">
+                    <vertex eid="408" outEdgeOrder="418 208 293">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">account-pub-key</attribute>
@@ -1276,11 +1250,11 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-hdkey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
+                                <entityClass name="HDKey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
                             </attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="410" inEdgeOrder="173 211 425" outEdgeOrder="419 336 191">
+                    <vertex eid="410" inEdgeOrder="173 211" outEdgeOrder="419 336 191">
                         <attributes>
                             <attribute class="java.lang.String" key="type">entity</attribute>
                             <attribute class="java.lang.String" key="title">address-pub-key</attribute>
@@ -1291,7 +1265,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-hdkey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
+                                <entityClass name="HDKey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1336,7 +1310,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-request" uuid="ca97a964-61b9-4692-82ec-8e6de1b0dd9a"/>
+                                <entityClass name="Request" uuid="ca97a964-61b9-4692-82ec-8e6de1b0dd9a"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1397,7 +1371,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-response" uuid="a13d05b7-44ef-4d09-85c5-ce3c1773b433"/>
+                                <entityClass name="Response" uuid="a13d05b7-44ef-4d09-85c5-ce3c1773b433"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1423,7 +1397,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-hdkey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
+                                <entityClass name="HDKey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1438,7 +1412,7 @@
                                 <fuzzyOr/>
                             </attribute>
                             <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
-                                <entityClass name="ur:crypto-hdkey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
+                                <entityClass name="HDKey" uuid="04a76bdd-b6b5-4a79-a36f-3e2765f78a52"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1447,7 +1421,7 @@
                             <attribute class="java.lang.String" key="title">SeedRequest</attribute>
                         </attributes>
                     </vertex>
-                    <vertex eid="459" inEdgeOrder="426 256" outEdgeOrder="460 461">
+                    <vertex eid="459" inEdgeOrder="426 256" outEdgeOrder="460 461 247">
                         <attributes>
                             <attribute class="java.lang.String" key="type">junctor</attribute>
                             <attribute class="com.flyinglogic.logicgraph.operator.FuzzyAndVertexOperator" key="forwardOperator">
@@ -1455,6 +1429,21 @@
                             </attribute>
                             <attribute class="com.arciem.FuzzyBoolean" key="confidence">
                                 <fuzzyBoolean true="0.5"/>
+                            </attribute>
+                        </attributes>
+                    </vertex>
+                    <vertex eid="465">
+                        <attributes>
+                            <attribute class="java.lang.String" key="type">entity</attribute>
+                            <attribute class="java.lang.String" key="title">psbt-finalized-hex</attribute>
+                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
+                                <fuzzyBoolean true="0.5"/>
+                            </attribute>
+                            <attribute class="com.flyinglogic.logicgraph.operator.FuzzyOrVertexOperator" key="forwardOperator">
+                                <fuzzyOr/>
+                            </attribute>
+                            <attribute class="com.flyinglogic.logicgraph.entityclass.EntityClass" key="entityClass">
+                                <entityClass name="Hex" uuid="2294c7a1-5093-40c4-8290-e784c2ebd866"/>
                             </attribute>
                         </attributes>
                     </vertex>
@@ -1691,7 +1680,7 @@
                             </attribute>
                         </attributes>
                     </edge>
-                    <edge eid="247" source="99" target="257">
+                    <edge eid="247" source="459" target="257">
                         <attributes>
                             <attribute class="java.lang.Double" key="weight">1.0</attribute>
                             <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
@@ -2429,33 +2418,6 @@
                             </attribute>
                         </attributes>
                     </edge>
-                    <edge eid="420" source="95" target="402">
-                        <attributes>
-                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
-                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
-                                <multiply/>
-                            </attribute>
-                        </attributes>
-                    </edge>
-                    <edge eid="421" source="98" target="404">
-                        <attributes>
-                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
-                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
-                                <multiply/>
-                            </attribute>
-                        </attributes>
-                    </edge>
-                    <edge eid="422" source="110" target="408">
-                        <attributes>
-                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
-                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
-                                <multiply/>
-                            </attribute>
-                        </attributes>
-                    </edge>
                     <edge eid="423" source="406" target="112">
                         <attributes>
                             <attribute class="java.lang.Double" key="weight">1.0</attribute>
@@ -2464,24 +2426,6 @@
                             </attribute>
                             <attribute class="com.arciem.FuzzyBoolean" key="confidence">
                                 <fuzzyBoolean true="0.5"/>
-                            </attribute>
-                        </attributes>
-                    </edge>
-                    <edge eid="424" source="112" target="406">
-                        <attributes>
-                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
-                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
-                                <multiply/>
-                            </attribute>
-                        </attributes>
-                    </edge>
-                    <edge eid="425" source="131" target="410">
-                        <attributes>
-                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
-                            <attribute class="java.lang.Boolean" key="backEdge">true</attribute>
-                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
-                                <multiply/>
                             </attribute>
                         </attributes>
                     </edge>
@@ -2685,6 +2629,17 @@
                         </attributes>
                     </edge>
                     <edge eid="462" source="369" target="379">
+                        <attributes>
+                            <attribute class="java.lang.Double" key="weight">1.0</attribute>
+                            <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">
+                                <multiply/>
+                            </attribute>
+                            <attribute class="com.arciem.FuzzyBoolean" key="confidence">
+                                <fuzzyBoolean true="0.5"/>
+                            </attribute>
+                        </attributes>
+                    </edge>
+                    <edge eid="466" source="310" target="465">
                         <attributes>
                             <attribute class="java.lang.Double" key="weight">1.0</attribute>
                             <attribute class="com.flyinglogic.logicgraph.operator.MultiplyEdgeOperator" key="forwardOperator">

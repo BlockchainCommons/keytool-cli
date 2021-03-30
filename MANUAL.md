@@ -8,148 +8,187 @@
 
 Keytool is a CLI tool that implements a data flow graph for deriving cryptocurrency keys and addresses, and signing transactions.
 
-As its inputs, Keytool can be supplied with any of the attributes for the nodes, and as its outputs Keytool can be asked for any of the attribues of the existing or derivable nodes. In this way, Keytool can implement a very short derivation such as "Derive a master HD key from a seed," or a long sequence of derivations from a seed all the way to a payment address, also outputting any of the intermediate steps along the way.
+As its inputs, Keytool can be supplied with any of the attributes for the nodes, and as its outputs Keytool can be asked for any of the attributes of the existing or derivable nodes. In this way, Keytool can implement a very short derivation such as "Derive a master HD key from a seed," or a long sequence of derivations from a seed all the way to a payment address, also outputting any of the intermediate steps along the way.
 
 ## Derivations
-
-Below are the single-step derivations that Keytool performs, in the form `A <- [B, C, ...]` where `A` is the derived attributed and `[B, C, ...]` are the attribues required to derive it.
-
-If an attribute is listed more than once, then it has more than one derivation path. If the first derivation path cannot be used, the second one will be tried.
-
-All the attributes except `entropy` are either derivable from other attributes or have a default value. The default values are suitable for use with Bitcoin mainnet. If these attributes are supplied on the command line, they override the defaults.
-
-```
-seed
-asset (default: btc)
-network <- [asset]
-master-key <- [network, seed]
-master-key-fingerprint <- [master-key]
-output-type (default: wpkh)
-purpose <- [output-type]
-coin-type <- [asset]
-account-index (default: 0)
-account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
-account-key <- [master-key, account-derivation-path]
-account-pub-key <- [account-key]
-chain-type (default: external)
-chain-type-int <- [chain-type];
-address-index (default: 0)
-address-derivation-path <- [chain-type-int, address-index]
-full-address-derivation-path <- [account-derivation-path, address-derivation-path]
-address-key <- [master-key, full-address-derivation-path]
-address-key <- [account-key, address-derivation-path]
-address-pub-key <- [address-key]
-address-pub-key <- [account-pub-key, address-derivation-path]
-address-ec-key <- [address-key]
-address-ec-key <- [address-ec-key-wif, network]
-address-ec-key-wif <- [address-ec-key, network]
-address-pub-ec-key <- [address-ec-key]
-address-pub-ec-key <- [address-pub-key]
-address-pkh <- [address-pub-ec-key, asset]
-address-sh <- [address-pub-ec-key, asset]
-address-segwit <- [address-pub-key, network]
-output-descriptor <- [output-type, account-derivation-path, address-derivation-path, account-pub-key]
-psbt
-psbt-hex <- [psbt]
-psbt-ur <- [psbt]
-psbt-finalized <- [psbt]
-psbt-finalized-hex <- [psbt-finalized]
-psbt-finalized-ur <- [psbt-finalized]
-psbt-signed <- [psbt, address-ec-key]
-psbt-signed-hex <- [psbt-signed]
-psbt-signed-ur <- [psbt-signed]
-transaction <- [psbt-finalized]
-transaction-ur <- [transaction]
-```
 
 These derivations are expressed visually in the graph below. Each node in the graph is a specific attribute that can be supplied directly on the command line, or derived from its predecessors. Two or more arrows entering a node indicate more than one possible set of inputs can be used to derive it. AND junctors indicate that *all* predecessor attributes must be supplied, unless a predecessor is marked `optional`.
 
 ![](docs/Derivations.jpg)
 
+Below is a list of the single-step derivations that Keytool can perform, in the form `A <- [B, C, ...]` where `A` is the derived attributed and `[B, C, ...]` are the attributes required to derive it.
+
+If an attribute is listed more than once, then it has more than one derivation path. If the first derivation path cannot be used, the second one will be tried, and so on.
+
+All the attributes except `seed` are either derivable from other attributes or have a default value. The default values are suitable for use with Bitcoin mainnet. If these attributes are supplied on the command line, they override the defaults.
+
+```
+seed-hex <- [seed]
+seed-name <- [seed]
+seed-note <- [seed]
+seed <- [seed-hex, seed-name (optional), seed-note (optional)]
+seed-digest <- [seed-request]
+seed-digest <- [seed]
+seed-request-id <- [seed-request]
+seed-request-id (default: unique)
+seed-request-description <- [seed-request]
+seed-request-description (default: empty)
+seed-request <- [seed-digest seed-request-id seed-request-description]
+seed-response <- [seed-request, seed]
+asset (default: btc)
+network (default: mainnet)
+address-ec-key <- [address-key]
+address-ec-key <- [address-ec-key-wif, network]
+address-ec-key-wif <- [address-ec-key, network]
+address-pub-ec-key <- [address-ec-key]
+address-pub-ec-key <- [address-pub-key]
+address-pkh <- [address-pub-ec-key, asset, network]
+address-sh <- [address-pub-ec-key, asset, network]
+address-segwit <- [address-pub-key]
+master-key <- [master-key-base58]
+master-key <- [seed, asset, network]
+master-key-fingerprint <- [master-key]
+output-type (default: wpkh)
+purpose <- [output-type]
+coin-type <- [asset, network]
+account-index (default: 0)
+account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
+account-key <- [account-key-base58]
+account-key <- [master-key, account-derivation-path]
+account-pub-key <- [account-pub-key-base58]
+account-pub-key <- [account-key]
+chain-type (default: external)
+chain-type-int <- [chain-type]
+address-index (default: 0)
+address-derivation-path <- [chain-type-int, address-index]
+full-address-derivation-path <- [account-derivation-path, address-derivation-path]
+address-key <- [address-key-base58]
+address-key <- [master-key, full-address-derivation-path]
+address-key <- [account-key, address-derivation-path]
+address-key <- [derived-key]
+address-pub-key <- [address-pub-key-base58]
+address-pub-key <- [address-key]
+address-pub-key <- [account-pub-key, address-derivation-path]
+output-descriptor <- [output-type, account-derivation-path, address-derivation-path, account-pub-key]
+master-key-base58 <- [master-key]
+account-key-base58 <- [account-key]
+account-pub-key-base58 <- [account-pub-key]
+address-key-base58 <- [address-key]
+address-pub-key-base58 <- [address-pub-key]
+key-request-description <- [key-request]
+key-request-description (default: empty)
+key-request-type <- [key-request]
+key-request-type (default: private)
+key-request-id <- [key-request]
+key-request-id <- [key-response]
+key-request-id (default: unique)
+source-key <- [master-key]
+key-request-derivation-path <- [key-request]
+key-request-derivation-path <- [full-address-derivation-path]
+key-request <- [key-request-derivation-path, key-request-type, key-request-id, key-request-description, asset network]
+key-response <- [key-request, source-key]
+derived-key <- [key-response]
+psbt-hex <- [psbt]
+psbt-base64 <- [psbt]
+psbt-finalized <- [psbt]
+psbt-finalized-hex <- [psbt-finalized]
+psbt-finalized-base64 <- [psbt-finalized]
+psbt-signed <- [psbt, address-ec-key]
+psbt-signed-hex <- [psbt-signed]
+psbt-signed-base64 <- [psbt-signed]
+transaction <- [psbt-finalized]
+transaction-hex <- [transaction]
+```
+
 ## Formats
 
-Keytool uses particular text formats for input and output attributes:
+Keytool uses particular formats for input and output attributes:
 
-|    |    |
+|Type | Description |
 |:---|:---|
-| HEX | A string of hexadecimal digits, case-insensitive. |
-| ENUM | A specific, defined enumerated value. For example `asset` can currently have the value `btc` (Bitcoin) or `btct` (Bitcoin testnet).
-| INDEX | A non-negative integer.
-| INDEX_BOUND | An INDEX or the wildcard `*` (note that on the Unix command line, you will need to enclose `*` in single quotes to avoid shell globbing.)-
-| BIP32_PATH | A series of BIP-32 path elements, starting with `m` (for "master key") and followed by integers, which may optionally be followed by `h` (for hardened derivation). Example | `m/44h/0h/0h/0/123`.
-| XPRV | A BIP-32 HD private key starting with `xprv`.
-| XPUB | A BIP-32 HD public key starting with `xpub`.
+| ADDRESS | An address in Base58 check format.
+| BASE58 | [An HD private key starting with `xprv`, `xpub` or similar.](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
+| BASE64 | Data in Base64 format.
+| BIP32_PATH | A series of BIP-32 path elements, possibly starting with the source fingerprint as 8 hex digits and followed by integers, which may optionally be followed by `h` (for hardened derivation). Example: `1a2b3c4d/44h/0h/0h/0/123`.
 | ECPRV | An elliptic curve private key in hex format.
 | ECPUB | A compressed elliptic curve public key in hex format.
-| WIF | An elliptic curve private key in Wallet Import Format.
-| ADDRESS | An address in base-58 check format.
-| PSBT | A partially-signed Bitcoin transaction (PSBT) in base-64, hex, or `ur:crypto-psbt` format.
-| UR:CRYPTO-PSBT | A PSBT in Uniform Resource (UR) format 
-| TRANSACTION | A raw Bitcoin transaction in hex or `ur:crypto-tx` format.
-| UR:CRYPTO-TX | A raw Bitcoin transaction in Uniform Resource (UR) format.
+| ENUM | A specific, value from a set of enumerated values. For example `network` can have the value `mainnet` or `testnet`.
+| HDKEY | [A BIP-32 HD key.](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-007-hdkey.md)
+| HEX | A string of hexadecimal digits, case-insensitive.
+| INDEX | A non-negative integer.
+| INDEX_BOUND | An INDEX or the wildcard `*`. Note that on the Unix command line, you will need to enclose `*` in single quotes (`'*'`) to avoid shell globbing.
+| OUTPUT_DESCRIPTOR | [A single-signature output descriptor.](https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md)
+| PSBT | [A partially-signed Bitcoin transaction (PSBT).](https://github.com/bitcoin/bips/blob/master/bip-0174.mediawiki)
+| REQUEST | [A request for a seed, derived HD key, or other service.](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2021-001-request.md)
+| RESPONSE | [The response to a corresponding request.](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2021-001-request.md)
+| TEXT | A text annotation.
+| TRANSACTION | A raw Bitcoin transaction.
+| UUID | [A Universally Unique Identifier.](https://en.wikipedia.org/wiki/Universally_unique_identifier)
+| WIF | [An elliptic curve private key in Wallet Import Format.](https://en.bitcoin.it/wiki/Wallet_import_format)
 
 The Uniform Resource (UR) format is described [here](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-005-ur.md).
 
-The specific formats of the `ur:crypto-psbt` and `ur:crypto-tx` are defined [here](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2020-006-urtypes.md#partially-signed-bitcoin-transaction-psbt-crypto-psbt).
+## Converting Formats
+
+Nodes that hold the types below accept input in Uniform Resource (UR) format and others as well. They output their contents in UR format, but other nodes may derive from them that provide output in other formats.
+
+|Type | Primary type | Other accepted input types | Nodes for output formats
+|:---|:---|:---|:---
+SEED | ur:crypto-seed | hex | hex
+HDKEY | ur:crypto-hdkey | Base58 | Base58
+PSBT | ur:crypto-psbt | Hex, Base64 | Hex, Base64
+REQUEST | ur:crypto-request
+RESPONSE | ur:crypto-response
+TRANSACTION | ur:crypto-tx | Hex | Hex
 
 ## Usage
 
 ```
-keytool [-?V]
-  [--account-derivation-path=BIP32_PATH]
-  [--account-index=INDEX] 
-  [--account-key=XPRV]
-  [--account-pub-key=XPUB]
-  [--address-derivation-path=BIP32_PATH]
-  [--address-ec-key=ECPRV]
-  [--address-ec-key-wif=WIF]
-  [--address-index=INDEX_BOUND]
-  [--address-key=XPRV]
-  [--address-pkh=ADDRESS]
-  [--address-pub-ec-key=ECPUB]
-  [--address-pub-key=XPUB]
-  [--address-segwit=ADDRESS]
-  [--address-sh=ADDRESS]
-  [--asset=ENUM btc|btct]
-  [--chain-type=ENUM internal|external|identity]
-  [--chain-type-int=INDEX]
-  [--coin-type=INDEX]
-  [--full-address-derivation-path=BIP32_PATH]
-  [--master-key=XPRV]
-  [--master-key-fingerprint=HEX]
-  [--network=ENUM mainnet|testnet]
-  [--output-descriptor=OUTPUT_DESCRIPTOR]
-  [--output-type=ENUM pkh|wpkh|sh-wpkh]
-  [--psbt=BASE64 | HEX | UR:CRYPTO-PSBT]
-  [--psbt-finalized=BASE64 | HEX | UR:CRYPTO-PSBT]
-  [--psbt-finalized-hex=HEX]
-  [--psbt-finalized-ur=UR:CRYPTO-PSBT]
-  [--psbt-hex=HEX]
-  [--psbt-signed=BASE64 | HEX | UR:CRYPTO-PSBT]
-  [--psbt-signed-hex=HEX]
-  [--psbt-signed-ur=UR:CRYPTO-PSBT]
-  [--psbt-ur=UR:CRYPTO-PSBT]
-  [--purpose=INDEX]
-  [--seed=HEX]
-  [--transaction=HEX | UR:CRYPTO-TX]
-  [--transaction-ur=UR:CRYPTO-TX]
-  [--help]
-  [--usage]
-  [--version]
+Usage: keytool [-?V] [--account-derivation-path=BIP32_PATH]
+            [--account-index=INDEX] [--account-key=HDKEY]
+            [--account-key-base58=BASE58] [--account-pub-key=HDKEY]
+            [--account-pub-key-base58=BASE58]
+            [--address-derivation-path=BIP32_PATH] [--address-ec-key=ECPRV]
+            [--address-ec-key-wif=WIF] [--address-index=INDEX_BOUND]
+            [--address-key=HDKEY] [--address-key-base58=BASE58]
+            [--address-pkh=ADDRESS] [--address-pub-ec-key=ECPUB]
+            [--address-pub-key=HDKEY] [--address-pub-key-base58=BASE58]
+            [--address-segwit=ADDRESS] [--address-sh=ADDRESS] [--asset=ENUM btc
+            | eth] [--chain-type=ENUM internal | external | identity]
+            [--chain-type-int=INDEX] [--coin-type=INDEX] [--derived-key=HDKEY]
+            [--full-address-derivation-path=BIP32_PATH]
+            [--key-request=REQUEST] [--key-request-derivation-path=BIP32_PATH]
+            [--key-request-description=TEXT] [--key-request-id=UUID]
+            [--key-request-type=ENUM private | public]
+            [--key-response=RESPONSE] [--master-key=HDKEY]
+            [--master-key-base58=BASE58] [--master-key-fingerprint=HEX]
+            [--network=ENUM mainnet | testnet]
+            [--output-descriptor=OUTPUT_DESCRIPTOR] [--output-type=ENUM wpkh |
+            pkh | sh-wpkh] [--psbt=PSBT] [--psbt-base64=BASE64]
+            [--psbt-finalized=PSBT] [--psbt-finalized-base64=BASE64]
+            [--psbt-finalized-hex=HEX] [--psbt-hex=HEX] [--psbt-signed=PSBT]
+            [--psbt-signed-base64=BASE64] [--psbt-signed-hex=HEX]
+            [--purpose=INDEX] [--seed=SEED] [--seed-digest=HEX]
+            [--seed-hex=HEX] [--seed-name=TEXT] [--seed-note=TEXT]
+            [--seed-request=REQUEST] [--seed-request-description=TEXT]
+            [--seed-request-id=UUID] [--seed-response=RESPONSE]
+            [--source-key=HDKEY] [--transaction=TRANSACTION]
+            [--transaction-hex=HEX] [--help] [--usage] [--version]
   
   output-attributes...
 ```
 
 ## Example Usages
 
-### Derive master HD key from seed
+### Derive a master HD key from seed and display it in both UR and Base58 formats.
 
 ```
 $ keytool \
-    --seed 1eb5338edac6fae54cbb172091ae6c1a \
-    --asset btc \
-    master-key
+	--seed 1eb5338edac6fae54cbb172091ae6c1a \
+	master-key \
+	master-key-base58
 
+ur:crypto-hdkey/oxadykaoykaxhdclaeqzwzssbnzczmkneccestferochaeryiheycpynwllertqztasseskslkidjofelfaahdcxuynskidktswzeejshsdldsfykbtloeemfhgluttycxvaennykenbghhfuyampddidavsjpze
 xprv9s21ZrQH143K4FAunaSG9eYwrAaaChpSYwYF22eJiZJrz5zSBKTg7NJcFqWR2UZc7EhneSMJhHLmPsKx96UDgv9CdoLc6JfQo3AncKhYNSc
 ```
 
@@ -157,21 +196,21 @@ xprv9s21ZrQH143K4FAunaSG9eYwrAaaChpSYwYF22eJiZJrz5zSBKTg7NJcFqWR2UZc7EhneSMJhHLm
 
 ```
 $ keytool \
-    --master-key xprv9s21ZrQH143K4FAunaSG9eYwrAaaChpSYwYF22eJiZJrz5zSBKTg7NJcFqWR2UZc7EhneSMJhHLmPsKx96UDgv9CdoLc6JfQo3AncKhYNSc \
-    --address-index 1234 \
-    address-key
+	--master-key ur:crypto-hdkey/oxadykaoykaxhdclaeqzwzssbnzczmkneccestferochaeryiheycpynwllertqztasseskslkidjofelfaahdcxuynskidktswzeejshsdldsfykbtloeemfhgluttycxvaennykenbghhfuyampddidavsjpze \
+	--address-index 1234 \
+	address-key
 
-xprvA33qYVBGLwEiCQNFTTpga5EHqJy1EnswzgzuSsBC3tPqz29qQ8PGDwyNuwearjiReYB8DK7nbJj52gKLjvGXsUx7RqmqtVgaYMun9CCQ3h8
+ur:crypto-hdkey/onaoykaxhdclaelthegdiskssarfbatlpeenayuofghsoeenvegmqzmstpgtwksbcywspkroleaaztaahdcxmevdctknhdaonyeypllfmezeksnllgieolyabnfnonfdftidndmtbkwefmfpecbsamoeadlecsghykaeykaeykaewkcfaatdwkaocyselpnldsaycyghsbyngdvojzlywm
 ```
 
 ### Derive an arbitrary BIP32 private and public keys from master HD key
 
 ```
 $ keytool \
-    --master-key xprv9s21ZrQH143K4FAunaSG9eYwrAaaChpSYwYF22eJiZJrz5zSBKTg7NJcFqWR2UZc7EhneSMJhHLmPsKx96UDgv9CdoLc6JfQo3AncKhYNSc \
+    --master-key-base58 xprv9s21ZrQH143K4FAunaSG9eYwrAaaChpSYwYF22eJiZJrz5zSBKTg7NJcFqWR2UZc7EhneSMJhHLmPsKx96UDgv9CdoLc6JfQo3AncKhYNSc \
     --full-address-derivation-path m/99h/1h/2h/3 \
-    address-key \
-    address-pub-key
+    address-key-base58 \
+    address-pub-key-base58
 
 xprv9zvzy7RBcHUqSY5uPpz5jMgA4f98yCxW21Qrwg5qQu3GcqTSBsAgpRXfTnmE4SqSbLJVHx4NdWFEc1CzwVps15ynZtFPEtpaNh9uDkd3auw
 xpub6DvMNcx5Sf38f2ANVrX66VctcgydNfgMPELTk4VSyEaFVdnajQUwNDr9K54VQ2SRM7gmcQmJcMa23xyWEwU2ehdU9tgFBozSUnLaWJAhmBk
@@ -179,13 +218,13 @@ xpub6DvMNcx5Sf38f2ANVrX66VctcgydNfgMPELTk4VSyEaFVdnajQUwNDr9K54VQ2SRM7gmcQmJcMa2
 
 * Note: Since `'` is a UNIX command-line quote mark, BIP32 paths given to Keytool use `h` to denote hardened derivations.
 
-### Derive 10 successive bitcoin addreses from a seed
+### Derive 10 successive bitcoin addresses from a seed
 
 ```
 for (( i=0; i <= 9; ++i ))
 do
-    src/keytool \
-        --asset btct \
+    keytool \
+		--network testnet \
     	--seed e48225bd3c8d508f45a86607a8eca277 \
     	--address-index $i \
     	address-index \
@@ -251,38 +290,38 @@ wpkh([01577231/84h/0h/0h]xpub6CaE5t6vuSJpRZ4mUb8SX27bmZcinKzUfpn2ZFMYTK81vvrrA9X
 When providing inputs to Keytool, any input values provided as an empty string are then expected via STDIN:
 
 ```
-CLI:    $ keytool --seed '' master-key
+CLI:    $ keytool --seed '' master-key-base58
 STDIN:  8935a8068526d84da555cdb741a3b8a8
 STDOUT: xprv9s21ZrQH143K3rJgfaUmUCueBxbDT1bbksxayh7ik1nZN41zAy2kQNop8REXEAAwqwes1E8rxk1313tyzsNmMq69h4vDyyrXkmjDZ2Nf3pN
 ```
 
-You can of course use argument replacement with Seedtool to generate a seed, and from that a master key in one line:
+You can of course use shell argument replacement with Seedtool to generate a seed, and from that a master key in one line:
 
 ```
 $ keytool --seed `seedtool` master-key
-xprv9s21ZrQH143K3SEi9YN67JXQxHRY4F2ignHZJxtVfMEh5D4NKcUYHrn75rZyt8nLMfzBc1enHGz9hqsbP98rp8i12DaiyYygUiss8YJ5qDC
+ur:crypto-hdkey/oxadykaoykaxhdclaedynbntlglkzctoueutbenynnwyhhcnfxjotnosbwcpstbdveehiolplstbaxdnesaahdcxhncnjevwcaltahcsamlakptlehattipejswksnrfhfleadcmamhkndmndkledttpjtfpbbme
 ```
 
 Because you can provide inputs on STDIN, you can also use the shell to pipe the result of Seedtool to Keytool:
 
 ```
 $ seedtool | keytool --seed '' master-key
-xprv9s21ZrQH143K2QkBam5u1X5gwoLTvfk7QE2pfbr8ePDPNW4dZ6cmDtXgcRwjFBvPU1L8hC5o4nzxJB7L9hAzTY1VvHmo6M1EdTPfwxF15Bs
+ur:crypto-hdkey/oxadykaoykaxhdclaeplrliolfpldipdkkatttmslfmswfrftpnljzftrhyndrylknlahfgwwkcnkiayuraahdcxbawegrdtdldmtlfxytkbdkvyfxehztvokowypdlfayuyctchzosamdmtptdpteuroxfrpdyk
 ```
 
 You can use Keytool to print out both the seed generated by Seedtool and the master key:
 
 ```
 $ seedtool | keytool --seed '' seed master-key
-9c802cc9fe2fee3fc9c75550f36dbc48
-xprv9s21ZrQH143K2xbqevShzSjm4RCpeBgVfhM9enjHfrPpKnuH3f4NZYSHLFeoDYtRSQWCw1Df4xGkK2FjJQZTFYLNovKEJZrToCFMjH6xkp9
+ur:crypto-seed/oyadgdeeaefdttoejnsptegmmwflcscxtpuoswgslycpin
+ur:crypto-hdkey/oxadykaoykaxhdclaemeptlffhinplayjocwkokbnemozsfmselunlmhioqdhhrlfzjypmcywzfdzmleghaahdcxayjkasgtdlpasroeotltpreohyiejkkpwdldcecnterftpurcphkgodrhhcmdagyknfydidy
 ```
 
 Other scripts can provide all the necessary inputs to keytool:
 
 ```
-$ { seedtool && echo 'btct'; } | keytool --seed '' --asset '' master-key
-tprv8ZgxMBicQKsPd1ieDbsts8QA9LzMbaeYE5pw7wL9k1QNteoZSbo62XK3HuP2WqByrRnBasP4jjEJUBf9mQSZVCCtMFAtSargNrByCkfFXh8
+$ { seedtool && echo 'testnet'; } | keytool --seed '' --network '' master-key
+ur:crypto-hdkey/onadykaoykaxhdclaepehscecabainlaytsffhtddsktonvytdrsynytsbtpoyoxpsytmnieonrtcwkogtaahdcxlsvtswoewpghwebgadldrspynepmnytybtprylpkwdvyzmuebtlfsnjeynmupyskahoyaoadehiakklf
 ```
 
 ## Signing Transactions
@@ -291,7 +330,7 @@ Keytool can add a signature to a partially-signed Bitcoin transaction (PSBT).
 
 ```
 keytool \
-  --asset btct \
+  --network testnet \
   --psbt "cHNidP8BAMMCAAAAA0DcshmpIS/ZW94f7roto1MhBNhk6Rz/ZaetRRfcedh9AAAAAAD9////wm+mbFIbTYiPlNNhB8P1/vBcwKG/ZryOHMKkL7dSqTYAAAAAAP3///+CmZgUyFrdKNCZUoqfgBhCAFORPdiP/qr0OOt4I5n+CgAAAAAA/f///wJAQg8AAAAAABYAFCBk78yn2RApIqWfuXigrti3WcQRncYQAAAAAAAWABSMyh/Y85oXJKUZQJT+IeAZJk/MeAAAAAAAAQD9PgECAAAABnPYBYJW735g7YMuaFrrK2ZgQj2XELyHukIJmdvOUB4sAAAAAAD+////bmU42jLXSFq3iLHmsyOR/OrF/x0ZQ2lAbecy8CeanlsAAAAAAP7///87WWkGf++EI4Um41R9YUGj00Z0+wvW0fmPYJ+81lWZOAEAAAAA/v///++syYWL4jBkYbhPlOrxJkozfdkL/XJWnhl2nVzVxa2OAAAAAAD+////UAL64CRRErlwBwQM+X5opqpiI0JmpsKs2a1MzGtZh8QAAAAAAP7///8chEjupyVpNkPdCyBE1wpPrS8MGI9EjEGpj7CTgZAXtgAAAAAA/v///wKghgEAAAAAABYAFMzoxnRhxnGxMSMykm4rhwto1dz6vkMPAAAAAAAWABTzi7rfXv1coXc7HvFo2QoeYq4U1E54HAABAR+ghgEAAAAAABYAFMzoxnRhxnGxMSMykm4rhwto1dz6IgYCtKMsZPEI+kb9daMTFeF/+8io6poDvTx+cinpPo9y1EQYDwVpQ1QAAIABAACAAAAAgAAAAAAQAAAAAAEAUgIAAAABbEc0zoXZ/16+PtvwSQ43BytcwpYvO6gGU11xDcaGH7YAAAAAAAEAAAABgEEPAAAAAAAWABQMEbJbdDyzQi5GH1/cPH4QeuPCiwAAAAABAR+AQQ8AAAAAABYAFAwRslt0PLNCLkYfX9w8fhB648KLIgYDcV7jKmCV/4gwmyIZjcVj1LXh1/M4er/DpkPbYiUikt8YDwVpQ1QAAIABAACAAAAAgAAAAACIAAAAAAEAUgIAAAABtvIk4LNoWJem4tfDI5qeVZKR954vLCVJBiqv3pSFR8AAAAAAAAEAAAAB0kEPAAAAAAAWABT93jySCCHYPSeMHxs0jj9i+0UtmAAAAAABAR/SQQ8AAAAAABYAFP3ePJIIIdg9J4wfGzSOP2L7RS2YIgYDhA94BGdguQJPUq61nFoMNrVM4VUaSEJwM7lZcPGyFPUYDwVpQ1QAAIABAACAAAAAgAAAAACGAAAAACICAgFa3FuEwDkszXFDVxN6KU6pVUV/f6d1JSWZ1RsD4CNtGA8FaUNUAACAAQAAgAAAAIAAAAAAiQAAAAAiAgJZ8CLw/Bdus5hyuOPx7cnFfkBkRoTavnS6BRAHi5GOLBgPBWlDVAAAgAEAAIAAAACAAQAAAFIAAAAA" \
   --address-ec-key-wif "cSyLgU8rSvYNU1j6XR2vo5ebSQqza7PR9iFNtkkYrFMwyB5or5gH" \
   psbt-signed
@@ -316,21 +355,21 @@ PSBT_TO_SIGN=cHNidP8BAMMCAAAAA0DcshmpIS/ZW94f7roto1MhBNhk6Rz/ZaetRRfcedh9AAAAAAD
 KEY_1=cSyLgU8rSvYNU1j6XR2vo5ebSQqza7PR9iFNtkkYrFMwyB5or5gH
 KEY_2=cVok3VJ1fGhdT2yAndKHFWvgTbDsdVFXb8xE9rsAcQASuS4JV9HG
 KEY_3=cMaqfcb16JjrCdfYTfT2vRKFpGjdAugAucEAxw3VuhN91XgjKqzF
-keytool --asset btct --psbt ${PSBT_TO_SIGN} --address-ec-key-wif ${KEY_1} psbt-signed \
-  | keytool --asset btct --psbt '' --address-ec-key-wif ${KEY_2} psbt-signed \
-  | keytool --asset btct --psbt '' --address-ec-key-wif ${KEY_3} psbt-signed \
+keytool --network testnet --psbt ${PSBT_TO_SIGN} --address-ec-key-wif ${KEY_1} psbt-signed \
+  | keytool --network testnet --psbt '' --address-ec-key-wif ${KEY_2} psbt-signed \
+  | keytool --network testnet --psbt '' --address-ec-key-wif ${KEY_3} psbt-signed \
   | keytool --psbt '' transaction
   
 0200000000010340dcb219a9212fd95bde1feeba2da3532104d864e91cff65a7ad4517dc79d87d0000000000fdffffffc26fa66c521b4d888f94d36107c3f5fef05cc0a1bf66bc8e1cc2a42fb752a9360000000000fdffffff82999814c85add28d099528a9f8018420053913dd88ffeaaf438eb782399fe0a0000000000fdffffff0240420f00000000001600142064efcca7d9102922a59fb978a0aed8b759c4119dc61000000000001600148cca1fd8f39a1724a5194094fe21e019264fcc7802483045022100e49b0e63ffba6e684f6971436b38a7b81cba5780fdb0784acd12c145254590600220280aa566aba4bc78911a3672b0cbb5180189460cd9c728dd11a9f71194d1ac6c012102b4a32c64f108fa46fd75a31315e17ffbc8a8ea9a03bd3c7e7229e93e8f72d44402483045022100de1732ee1350d171012fc097af03e91ff26f00cbd2c96e7a0fe2a6abb61b9d1d02206329366501086ef5d2143877eed4c6f6ed93db8ed26c27f360db1b2c55b80156012103715ee32a6095ff88309b22198dc563d4b5e1d7f3387abfc3a643db62252292df024730440220500b1db89395d62c5049414adc52e79d0b5527180669ac811ad61963d57ebec4022000d64181fe2b1c9d0adb2672ad0612c40c4e0cb027e22e340d35a92307ef4c8e012103840f78046760b9024f52aeb59c5a0c36b54ce1551a48427033b95970f1b214f500000000
 ```
 
-## Converting Formats
-
-Nodes that hold partially-signed Bitcoin Transactions (PSBTs) accept input to them in three formats: Base64, hex, and Uniform Resources (URs) of the type `ur:crypto-psbt`. These nodes always output PSBTs in Base64 format, but have two other associated nodes that produce output in the other formats. So for instance, the `signed-psbt` node also has two nodes that derive from it: `signed-psbt-hex` and `signed-psbt-ur` that convert the PSBT to the corresponding output types.
-
-Similarly, the `transaction` node accepts input in either hex or as a UR of the type `ur:crypto-tx`. The `transaction` node always outputs hex, but the `transaction-ur` node that derives from it outputs the transaction as a UR.
-
 ## Version History
+
+### 0.5.0, 3/29/2021
+
+* UR is now the primary format for types that support it, e.g. `master-key`. Such nodes can still take other forms of input (HD Key nodes can take Base58 or UR) but output in Base58 is now done via separate nodes (e.g., `master-key-base58`).
+* `network` is no longer derived from `asset`; they are separate. The two supported assets are currently Bitcoin `btc` and Ethereum `eth`. To use Bitcoin Testnet, use asset `btc` (the default) and network `testnet`.
+* Support for UR:CRYPTO-REQUEST and UR:CRYPTO-RESPONSE types for requesting and delivering seeds and derived keys.
 
 ### 0.4.0, 11/12/2020
 

@@ -93,16 +93,16 @@ public:
 
     // psbt
     DataNode<PSBT> *psbt;
-    DataNode<std::string> *psbt_hex;
-    DataNode<std::string> *psbt_ur;
+    DataNode<PSBT> *psbt_hex;
+    DataNode<PSBT> *psbt_base64;
     DataNode<PSBT> *psbt_finalized;
-    DataNode<std::string> *psbt_finalized_hex;
-    DataNode<std::string> *psbt_finalized_ur;
+    DataNode<PSBT> *psbt_finalized_hex;
+    DataNode<PSBT> *psbt_finalized_base64;
     DataNode<PSBT> *psbt_signed;
-    DataNode<std::string> *psbt_signed_hex;
-    DataNode<std::string> *psbt_signed_ur;
+    DataNode<PSBT> *psbt_signed_hex;
+    DataNode<PSBT> *psbt_signed_base64;
     DataNode<Transaction> *transaction;
-    DataNode<std::string> *transaction_ur;
+    DataNode<Transaction> *transaction_hex;
 
 private:
     std::vector<DataNodeProtocol*> _all_nodes;

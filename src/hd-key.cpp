@@ -481,3 +481,15 @@ string HDKey::to_segwit_address() const {
     wally_free_string(addr_segwit);
     return result;
 }
+
+HDKey HDKey::parse_key(const std::string& s) {
+    try {
+        return from_ur(s);
+    } catch(...) {
+        try {
+            return from_base58(s);
+        } catch(...) {
+            throw domain_error("Invalid HD Key. Must be ur:crypto-hdkey or base58 format.");
+        }
+    }
+}

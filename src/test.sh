@@ -182,10 +182,6 @@ testMasterKeyBase58()
   # master-key-base58 <- [master-key]
   assertEquals ${TEST_MASTER_KEY_BASE58} \
     "$(${KEYTOOL} --master-key ${TEST_MASTER_KEY_UR} master-key-base58)"
-
-  # master-key <- [master-key-base58]
-  assertEquals ${TEST_MASTER_KEY_UR} \
-    "$(${KEYTOOL} --master-key-base58 ${TEST_MASTER_KEY_BASE58} master-key)"
 }
 
 testMasterKeyFingerprint()
@@ -219,10 +215,6 @@ testAccountKeyBase58()
   # account-key-base58 <- [account-key]
   assertEquals ${TEST_ACCOUNT_KEY_BASE58} \
     "$(${KEYTOOL} --account-key ${TEST_ACCOUNT_KEY_MINIMAL_UR} account-key-base58)"
-
-  # account-key <- [account-key-base58]
-  assertEquals ${TEST_ACCOUNT_KEY_MINIMAL_UR} \
-    "$(${KEYTOOL} --account-key-base58 ${TEST_ACCOUNT_KEY_BASE58} account-key)"
 }
 
 testPartialAddressDerivationPath()
@@ -254,10 +246,6 @@ testAccountPubKeyBase58()
   # account-pub-key-base58 <- [account-pub-key]
   assertEquals ${TEST_ACCOUNT_PUB_KEY_BASE58} \
     "$(${KEYTOOL} --account-pub-key ${TEST_ACCOUNT_PUB_KEY_MINIMAL_UR} account-pub-key-base58)"
-
-  # account-pub-key <- [account-pub-key-base58]
-  assertEquals ${TEST_ACCOUNT_PUB_KEY_MINIMAL_UR} \
-    "$(${KEYTOOL} --account-pub-key-base58 ${TEST_ACCOUNT_PUB_KEY_BASE58} account-pub-key)"
 }
 
 testAddressKey()
@@ -283,10 +271,6 @@ testAddressKeyBase58()
   # address-key-base58 <- [address-key]
   assertEquals ${TEST_ADDRESS_KEY_BASE58} \
     "$(${KEYTOOL} --address-key ${TEST_ADDRESS_KEY_MINIMAL_UR} address-key-base58)"
-
-  # address-key <- [address-key-base58]
-  assertEquals ${TEST_ADDRESS_KEY_MINIMAL_UR} \
-    "$(${KEYTOOL} --address-key-base58 ${TEST_ADDRESS_KEY_BASE58} address-key)"
 }
 
 testAddressPubKey()
@@ -309,10 +293,6 @@ testAddressPubKeyBase58()
   # address-pub-key-base58 <- [address-pub-key]
   assertEquals ${TEST_ADDRESS_PUB_KEY_BASE58} \
     "$(${KEYTOOL} --address-pub-key ${TEST_ADDRESS_PUB_KEY_MINIMAL_UR} address-pub-key-base58)"
-
-  # address-pub-key <- [address-pub-key-base58]
-  assertEquals ${TEST_ADDRESS_PUB_KEY_MINIMAL_UR} \
-    "$(${KEYTOOL} --address-pub-key-base58 ${TEST_ADDRESS_PUB_KEY_BASE58} address-pub-key)"
 }
 
 testAddressECKey1()
@@ -379,20 +359,20 @@ testPSBT()
     transaction="0200000000010258e87a21b56daf0c23be8e7070456c336f7cbaa5c8757924f545887bb2abdd7500000000da00473044022074018ad4180097b873323c0015720b3684cc8123891048e7dbcd9b55ad679c99022073d369b740e3eb53dcefa33823c8070514ca55a7dd9544f157c167913261118c01483045022100f61038b308dc1da865a34852746f015772934208c6d24454393cd99bdf2217770220056e675a675a6d0a02b85b14e5e29074d8a25a9b5760bea2816f661910a006ea01475221029583bf39ae0a609747ad199addd634fa6108559d6c5cd39b4c2183f1ab96e07f2102dab61ff49a14db6a7d02b0cd1fbb78fc4b18312b5b4e54dae4dba2fbfef536d752aeffffffff838d0427d0ec650a68aa46bb0b098aea4422c071b2ca78352a077959d07cea1d01000000232200208c2353173743b595dfb4a07b72ba8e42e3797da74e87fe7d9d7497e3b2028903ffffffff0270aaf00800000000160014d85c2b71d0060b09c9886aeb815e50991dda124d00e1f5050000000016001400aea9a2e5f0f876a588df5546e8742d1d87008f000400473044022062eb7a556107a7c73f45ac4ab5a1dddf6f7075fb1275969a7f383efff784bcb202200c05dbb7470dbf2f08557dd356c7325c1ed30913e996cd3840945db12228da5f01473044022065f45ba5998b59a27ffe1a7bed016af1f1f90d54b3aa8f7450aa5f56a25103bd02207f724703ad1edb96680b284b56d4ffcb88f7fb759eabbe08aa30f29b851383d20147522103089dc10c7ac6db54f91329af617333db388cead0c231f723379d1b99030b02dc21023add904f3d6dcf59ddb906b0dee23529b7ffb9ed50e5e86151926860221f0e7352ae00000000"
 
     assertEquals $combined_psbt \
-      "$(${KEYTOOL} --psbt ${combined_psbt} psbt)"
+      "$(${KEYTOOL} --psbt ${combined_psbt} psbt-base64)"
 
     assertEquals $finalized_psbt \
-      "$(${KEYTOOL} --psbt ${combined_psbt} psbt-finalized)"
+      "$(${KEYTOOL} --psbt ${combined_psbt} psbt-finalized-base64)"
 
     # Assigning a non-finalized PSBT to psbt-finalized should fail.
     assertEquals $'' \
-      "$(${KEYTOOL} 2>/dev/null --psbt-finalized ${combined_psbt} psbt-finalized)"
+      "$(${KEYTOOL} 2>/dev/null --psbt-finalized ${combined_psbt} psbt-finalized-base64)"
 
     assertEquals $transaction \
-      "$(${KEYTOOL} --transaction ${transaction} transaction)"
+      "$(${KEYTOOL} --transaction ${transaction} transaction-hex)"
 
     assertEquals $transaction \
-      "$(${KEYTOOL} --psbt ${combined_psbt} transaction)"
+      "$(${KEYTOOL} --psbt ${combined_psbt} transaction-hex)"
 )
 
 testPSBT2()
@@ -403,10 +383,10 @@ testPSBT2()
   key2='cR6SXDoyfQrcp4piaiHE97Rsgta9mNhGTen9XeonVgwsh4iSgw6d'
 
   assertEquals $key1 \
-    "$(${KEYTOOL} --network testnet --master-key-base58 ${master_key} --full-address-derivation-path m/0h/0h/0h address-ec-key-wif)"
+    "$(${KEYTOOL} --network testnet --master-key ${master_key} --full-address-derivation-path m/0h/0h/0h address-ec-key-wif)"
 
   assertEquals $key2 \
-    "$(${KEYTOOL} --network testnet --master-key-base58 ${master_key} --full-address-derivation-path m/0h/0h/2h address-ec-key-wif)"
+    "$(${KEYTOOL} --network testnet --master-key ${master_key} --full-address-derivation-path m/0h/0h/2h address-ec-key-wif)"
 )
 
 testPSBTSigning()
@@ -420,7 +400,7 @@ testPSBTSigning()
     "$(${KEYTOOL} --network testnet --psbt ${psbt_to_sign} --address-ec-key-wif ${key1} psbt-signed \
       | ${KEYTOOL} --network testnet --psbt '' --address-ec-key-wif ${key2} psbt-signed \
       | ${KEYTOOL} --network testnet --psbt '' --address-ec-key-wif ${key3} psbt-signed \
-      | ${KEYTOOL} --psbt '' transaction)"
+      | ${KEYTOOL} --psbt '' transaction-hex)"
 )
 
 testPSBTHex()
@@ -428,7 +408,7 @@ testPSBTHex()
   psbt_hex='70736274ff0100750200000001268171371edff285e937adeea4b37b78000c0566cbb3ad64641713ca42171bf60000000000feffffff02d3dff505000000001976a914d0c59903c5bac2868760e90fd521a4665aa7652088ac00e1f5050000000017a9143545e6e33b832c47050f24d3eeb93c9c03948bc787b32e1300000100fda5010100000000010289a3c71eab4d20e0371bbba4cc698fa295c9463afa2e397f8533ccb62f9567e50100000017160014be18d152a9b012039daf3da7de4f53349eecb985ffffffff86f8aa43a71dff1448893a530a7237ef6b4608bbb2dd2d0171e63aec6a4890b40100000017160014fe3e9ef1a745e974d902c4355943abcb34bd5353ffffffff0200c2eb0b000000001976a91485cff1097fd9e008bb34af709c62197b38978a4888ac72fef84e2c00000017a914339725ba21efd62ac753a9bcd067d6c7a6a39d05870247304402202712be22e0270f394f568311dc7ca9a68970b8025fdd3b240229f07f8a5f3a240220018b38d7dcd314e734c9276bd6fb40f673325bc4baa144c800d2f2f02db2765c012103d2e15674941bad4a996372cb87e1856d3652606d98562fe39c5e9e7e413f210502483045022100d12b852d85dcd961d2f5f4ab660654df6eedcc794c0c33ce5cc309ffb5fce58d022067338a8e0e1725c197fb1a88af59f51e44e4255b20167c8684031c05d1f2592a01210223b72beef0965d10be0778efecd61fcac6f79a4ea169393380734464f84f2ab300000000000000'
   psbt_base64='cHNidP8BAHUCAAAAASaBcTce3/KF6Tet7qSze3gADAVmy7OtZGQXE8pCFxv2AAAAAAD+////AtPf9QUAAAAAGXapFNDFmQPFusKGh2DpD9UhpGZap2UgiKwA4fUFAAAAABepFDVF5uM7gyxHBQ8k0+65PJwDlIvHh7MuEwAAAQD9pQEBAAAAAAECiaPHHqtNIOA3G7ukzGmPopXJRjr6Ljl/hTPMti+VZ+UBAAAAFxYAFL4Y0VKpsBIDna89p95PUzSe7LmF/////4b4qkOnHf8USIk6UwpyN+9rRgi7st0tAXHmOuxqSJC0AQAAABcWABT+Pp7xp0XpdNkCxDVZQ6vLNL1TU/////8CAMLrCwAAAAAZdqkUhc/xCX/Z4Ai7NK9wnGIZeziXikiIrHL++E4sAAAAF6kUM5cluiHv1irHU6m80GfWx6ajnQWHAkcwRAIgJxK+IuAnDzlPVoMR3HyppolwuAJf3TskAinwf4pfOiQCIAGLONfc0xTnNMkna9b7QPZzMlvEuqFEyADS8vAtsnZcASED0uFWdJQbrUqZY3LLh+GFbTZSYG2YVi/jnF6efkE/IQUCSDBFAiEA0SuFLYXc2WHS9fSrZgZU327tzHlMDDPOXMMJ/7X85Y0CIGczio4OFyXBl/saiK9Z9R5E5CVbIBZ8hoQDHAXR8lkqASECI7cr7vCWXRC+B3jv7NYfysb3mk6haTkzgHNEZPhPKrMAAAAAAAAA'
   assertEquals ${psbt_base64} \
-    "$(${KEYTOOL} --psbt ${psbt_hex} psbt)"
+    "$(${KEYTOOL} --psbt ${psbt_hex} psbt-base64)"
   assertEquals ${psbt_hex} \
     "$(${KEYTOOL} --psbt ${psbt_base64} psbt-hex)"
 )
@@ -441,7 +421,7 @@ testPSBTUR()
   assertEquals ${psbt_hex} \
     "$(${KEYTOOL} --psbt ${psbt_ur} psbt-hex)"
   assertEquals ${psbt_ur} \
-    "$(${KEYTOOL} --psbt ${psbt_hex} psbt-ur)"
+    "$(${KEYTOOL} --psbt ${psbt_hex} psbt)"
 )
 
 testTXUR()
@@ -449,9 +429,9 @@ testTXUR()
   transaction_hex='0200000000010258e87a21b56daf0c23be8e7070456c336f7cbaa5c8757924f545887bb2abdd7500000000da00473044022074018ad4180097b873323c0015720b3684cc8123891048e7dbcd9b55ad679c99022073d369b740e3eb53dcefa33823c8070514ca55a7dd9544f157c167913261118c01483045022100f61038b308dc1da865a34852746f015772934208c6d24454393cd99bdf2217770220056e675a675a6d0a02b85b14e5e29074d8a25a9b5760bea2816f661910a006ea01475221029583bf39ae0a609747ad199addd634fa6108559d6c5cd39b4c2183f1ab96e07f2102dab61ff49a14db6a7d02b0cd1fbb78fc4b18312b5b4e54dae4dba2fbfef536d752aeffffffff838d0427d0ec650a68aa46bb0b098aea4422c071b2ca78352a077959d07cea1d01000000232200208c2353173743b595dfb4a07b72ba8e42e3797da74e87fe7d9d7497e3b2028903ffffffff0270aaf00800000000160014d85c2b71d0060b09c9886aeb815e50991dda124d00e1f5050000000016001400aea9a2e5f0f876a588df5546e8742d1d87008f000400473044022062eb7a556107a7c73f45ac4ab5a1dddf6f7075fb1275969a7f383efff784bcb202200c05dbb7470dbf2f08557dd356c7325c1ed30913e996cd3840945db12228da5f01473044022065f45ba5998b59a27ffe1a7bed016af1f1f90d54b3aa8f7450aa5f56a25103bd02207f724703ad1edb96680b284b56d4ffcb88f7fb759eabbe08aa30f29b851383d20147522103089dc10c7ac6db54f91329af617333db388cead0c231f723379d1b99030b02dc21023add904f3d6dcf59ddb906b0dee23529b7ffb9ed50e5e86151926860221f0e7352ae00000000'
   transaction_ur='ur:crypto-tx/hkaojyaoaeaeaeaeadaohdvsknclrejnpebncnrnmnjojofejzeojlkerdonspkpkkdkykfelokgprpyutkpaeaeaeaetnaefldyfyaocxjyadletycsaemsrojkeyfnaebzjpbdenlrsflycnldbefdvduysnndgopmionsnlaocxjkteinrlfzvlwmguuowsotetcnspatahbbsggoosutmdfywnhgseiomeeyhsbylkadfddyfeaoclaeynbeetqdayuocapdihotfdgmjyjladhgjpmufwayswtdfyghesfntandurcpchktaocxahjtiohtiohtjnbkaorohpbbvwvomhjytpoehtndhghnrnoelyjliycfbenbamwdadflgmclaomdlsrsesplbkhnmsflpmcfnyuttbeezshsaygontjzhhtendgscllswnpymtvtlbclaotnrpctwknybbuyimkiaopfsnctrkksztgrcsehdnhpglghtnveuyoezozeykentsgmplzmzmzmzmlslgaaditiwpihbkispkfgrkbdaslewdfycprtjsprsgksecdratkkhktikewdcaadaeaeaecncpaecxlkcnguchemfxremdurqznbkgjprdmnfwvlkkkiosglltzekintjymsvlpraoldaxzmzmzmzmaojopkwtayaeaeaeaecmaebbtphhdnjstiambdassoloimwmlyhygdnlcatnbggtaevyykahaeaeaeaecmaebbaeplptoevwwtyakoonlourgofgvsjydpcaltaemyaeaaaefldyfyaocxidwmkngohsatosstfhfepsgereoyuturjljokpzobgkpmtnylbetfmzmyllrrfpraocxbnahuyrlflbtrsdlaygokitehfsteyhhckteasbwwlmtsnetfzmwhlpacpdetnheadfldyfyaocxihwkhponnlluhkoelbzecykgweadimwnwnytbtghqdpkmyjygdpkhehfoegyaxryaocxlbjpflaxpmckuymtisbddegrhftyzmsbloylzokpnnpyrnaypkdywzndlpbwlstdadflgmclaxayntsebnknswuyghytbwdtpehsjkeouyetlkwdtisaehylcnemntcwnlaxbdaouoclaoftutmhgwfsjntkhkutrhampfuevoecdtrlzmrhwegdvwvshsgymoishncpctbajkgmplaeaeaeaedlrfdkro'
   assertEquals ${transaction_ur} \
-    "$(${KEYTOOL} --transaction ${transaction_hex} transaction-ur)"
+    "$(${KEYTOOL} --transaction ${transaction_hex} transaction)"
   assertEquals ${transaction_hex} \
-    "$(${KEYTOOL} --transaction ${transaction_ur} transaction)"
+    "$(${KEYTOOL} --transaction ${transaction_ur} transaction-hex)"
 )
 
 testKeyRequestID()

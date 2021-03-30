@@ -79,15 +79,15 @@ Model::Model() {
     // psbt
     psbt = setup_psbt(*this);
     psbt_hex = setup_psbt_hex(*this);
-    psbt_ur = setup_psbt_ur(*this);
+    psbt_base64 = setup_psbt_base64(*this);
     psbt_finalized = setup_psbt_finalized(*this);
     psbt_finalized_hex = setup_psbt_finalized_hex(*this);
-    psbt_finalized_ur = setup_psbt_finalized_ur(*this);
+    psbt_finalized_base64 = setup_psbt_finalized_base64(*this);
     psbt_signed = setup_psbt_signed(*this);
     psbt_signed_hex = setup_psbt_signed_hex(*this);
-    psbt_signed_ur = setup_psbt_signed_ur(*this);
+    psbt_signed_base64 = setup_psbt_signed_base64(*this);
     transaction = setup_transaction(*this);
-    transaction_ur = setup_transaction_ur(*this);
+    transaction_hex = setup_transaction_hex(*this);
 
     int next_tag = -1;
     for(auto node: all_nodes()) {

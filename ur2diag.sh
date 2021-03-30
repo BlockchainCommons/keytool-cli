@@ -1,9 +1,11 @@
 #!/bin/bash
+
+# Requires:
+#   https://www.npmjs.com/package/cbor-cli
+#   https://github.com/blockchaincommons/bc-seedtool-cli
+
 UR=${1}
-# echo ${UR}
 BYTEWORDS=`echo ${UR} | sed -e "s/^.*\///"`
-# echo ${BYTEWORDS}
 HEX=`seedtool --in btwm ${BYTEWORDS}`
-# echo ${HEX}
 DIAG=`cbor2diag -x ${HEX}`
 echo ${DIAG}

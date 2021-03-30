@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([bc-keytool-cli], [0.4.0])
+AC_INIT([bc-keytool-cli], [0.5.0])
 AC_CONFIG_SRCDIR([src/keytool.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 

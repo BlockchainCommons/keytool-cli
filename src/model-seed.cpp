@@ -63,7 +63,7 @@ DataNode<Seed>* setup_seed(Model& model) {
     model.add_derivation("seed <- [seed-hex, seed-name (optional), seed-note (optional)]");
     auto node = new DataNode<Seed>();
     model.add_node(node);
-    node->set_info("seed", "UR:CRYPTO-SEED", "A seed in UR format.");
+    node->set_info("seed", "SEED", "A seed in UR or HEX format.");
     node->set_to_string([](const Seed& seed) { return seed.ur(); });
     node->set_from_string([](const string& s) -> Seed { return Seed(s); });
     node->set_derivation([&]() -> optional<Seed> {

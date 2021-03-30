@@ -7,7 +7,7 @@ using namespace std;
 DataNode<ByteVector>* setup_seed_digest(Model& model) {
     auto node = new DataNode<ByteVector>();
     model.add_node(node);
-    node->set_info("seed-digest", "HEX (16 bytes)", "The SHA-256 digest of a seed.");
+    node->set_info("seed-digest", "HEX", "The 16-byte SHA-256 digest of a seed.");
     node->set_to_string([](const ByteVector& data) { return data_to_hex(data); });
     node->set_from_string([](const string& s) -> ByteVector {
         auto data = hex_to_data(s);
@@ -16,8 +16,8 @@ DataNode<ByteVector>* setup_seed_digest(Model& model) {
         }
         return data;
     });
-    model.add_derivation("seed-digest <- [seed]");
     model.add_derivation("seed-digest <- [seed-request]");
+    model.add_derivation("seed-digest <- [seed]");
     node->set_derivation([&]() -> optional<ByteVector> {
         if(model.seed_request->has_assigned_value()) {
             return model.seed_request->value().seed_request().digest();
@@ -33,10 +33,11 @@ DataNode<ByteVector>* setup_seed_digest(Model& model) {
 DataNode<UUID>* setup_seed_request_id(Model& model) {
     auto node = new DataNode<UUID>();
     model.add_node(node);
-    node->set_info("seed-request-id", "UUID (default: unique)", "The ID of the request and response.");
+    node->set_info("seed-request-id", "UUID", "The ID of the request and response.");
     node->set_to_string([](const UUID& uuid) { return uuid.str(); });
     node->set_from_string([](const string& s) -> UUID { return UUID(s); });
-    model.add_derivation("seed-request-id <- [seed-request] (default: unique)");
+    model.add_derivation("seed-request-id <- [seed-request]");
+    model.add_derivation("seed-request-id (default: unique)");
     node->set_derivation([&]() -> optional<UUID> {
         if(model.seed_request->has_assigned_value()) {
             return model.seed_request->value().id();
@@ -55,7 +56,8 @@ DataNode<string>* setup_seed_request_description(Model& model) {
     node->set_info("seed-request-description", "TEXT", "An informational note about the request.");
     node->set_to_string([](const string& s) { return s; });
     node->set_from_string([](const string& s) -> string { return s; });
-    model.add_derivation("seed-request-description <- [seed-request] (default: empty)");
+    model.add_derivation("seed-request-description <- [seed-request]");
+    model.add_derivation("seed-request-description (default: empty)");
     node->set_derivation([&]() -> optional<string> {
         if(model.seed_request->has_assigned_value()) {
             return model.seed_request->value().description();
@@ -69,7 +71,7 @@ DataNode<string>* setup_seed_request_description(Model& model) {
 DataNode<Request>* setup_seed_request(Model& model) {
     auto node = new DataNode<Request>();
     model.add_node(node);
-    node->set_info("seed-request", "UR:CRYPTO-REQUEST", "A request for a seed with the given digest.");
+    node->set_info("seed-request", "REQUEST", "A request for a seed with the given digest.");
     node->set_to_string([](const Request& request) { return request.ur(); });
     node->set_from_string([](const string& s) -> Request { return Request(s); });
     model.add_derivation("seed-request <- [seed-digest seed-request-id seed-request-description]");
@@ -89,7 +91,7 @@ DataNode<Request>* setup_seed_request(Model& model) {
 DataNode<Response>* setup_seed_response(Model& model) {
     auto node = new DataNode<Response>();
     model.add_node(node);
-    node->set_info("seed-response", "UR:CRYPTO-RESPONSE", "A response containing the requested seed.");
+    node->set_info("seed-response", "RESPONSE", "A response containing the requested seed.");
     node->set_to_string([](const Response& response) { return response.ur(); });
     node->set_from_string([](const string& s) -> Response {
         auto response = Response(s);

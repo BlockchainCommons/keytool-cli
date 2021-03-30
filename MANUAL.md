@@ -1,6 +1,6 @@
 # 🔑 Keytool
 
-**Version 0.4.0**<br/>**November 12, 2020**
+**Version 0.5.0**<br/>**March 29, 2021**
 
 *Copyright © 2020 by Blockchain Commons, LLC*<br/>*Licensed under the "BSD-2-Clause Plus Patent License"*
 

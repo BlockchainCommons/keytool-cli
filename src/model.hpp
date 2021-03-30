@@ -90,6 +90,7 @@ public:
     DataNode<Request> *key_request;
     DataNode<Response> *key_response;
     DataNode<HDKey> *derived_key;
+    DataNode<HDKey> *derived_key_base58;
 
     // psbt
     DataNode<PSBT> *psbt;

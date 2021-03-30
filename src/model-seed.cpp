@@ -14,7 +14,7 @@ DataNode<ByteVector>* setup_seed_hex(Model& model) {
 
     model.add_derivation("seed-hex <- [seed]");
     node->set_derivation([&]() -> optional<ByteVector> {
-        if(model.seed->has_assigned_value()) {
+        if(model.seed->has_value()) {
             return model.seed->value().data();
         } else {
             return nullopt;

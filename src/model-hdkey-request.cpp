@@ -175,3 +175,15 @@ DataNode<HDKey>* setup_derived_key(Model& model) {
     });
     return node;
 }
+
+DataNode<HDKey>* setup_derived_key_base58(Model& model) {
+    auto node = new DataNode<HDKey>();
+    model.add_node(node);
+    node->set_info("derived-key-base58", "BASE58", "The derived key in Base58 format.");
+    node->set_to_string([](const HDKey& key) { return key.to_base58(); });
+    model.add_derivation("derived-key-base58 <- [derived-key]");
+    node->set_derivation([&]() -> optional<HDKey> {
+        return model.derived_key->optional_value();
+    });
+    return node;
+}

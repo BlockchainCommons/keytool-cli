@@ -252,7 +252,6 @@ DataNode<HDKey>* setup_address_key(Model& model) {
     model.add_derivation("address-key <- [address-key-base58]");
     model.add_derivation("address-key <- [master-key, full-address-derivation-path]");
     model.add_derivation("address-key <- [account-key, address-derivation-path]");
-    model.add_derivation("address-key <- [derived-key]");
     node->set_derivation([&]() -> optional<HDKey> {
         if(model.address_key_base58->has_assigned_value()) {
             return model.address_key_base58->value();
@@ -264,8 +263,6 @@ DataNode<HDKey>* setup_address_key(Model& model) {
             auto account_key = model.account_key->value();
             auto path = model.address_derivation_path->value();
             return account_key.derive(KeyType::private_key(), path);
-        } else if(model.derived_key->has_value()) {
-            return model.derived_key->value();
         } else {
             return nullopt;
         }

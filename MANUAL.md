@@ -65,7 +65,6 @@ full-address-derivation-path <- [account-derivation-path, address-derivation-pat
 address-key <- [address-key-base58]
 address-key <- [master-key, full-address-derivation-path]
 address-key <- [account-key, address-derivation-path]
-address-key <- [derived-key]
 address-pub-key <- [address-pub-key-base58]
 address-pub-key <- [address-key]
 address-pub-key <- [account-pub-key, address-derivation-path]
@@ -88,6 +87,7 @@ key-request-derivation-path <- [full-address-derivation-path]
 key-request <- [key-request-derivation-path, key-request-type, key-request-id, key-request-description, asset network]
 key-response <- [key-request, source-key]
 derived-key <- [key-response]
+derived-key-base58 <- [derived-key]
 psbt-hex <- [psbt]
 psbt-base64 <- [psbt]
 psbt-finalized <- [psbt]
@@ -207,7 +207,7 @@ ur:crypto-hdkey/onaoykaxhdclaelthegdiskssarfbatlpeenayuofghsoeenvegmqzmstpgtwksb
 
 ```
 $ keytool \
-    --master-key-base58 xprv9s21ZrQH143K4FAunaSG9eYwrAaaChpSYwYF22eJiZJrz5zSBKTg7NJcFqWR2UZc7EhneSMJhHLmPsKx96UDgv9CdoLc6JfQo3AncKhYNSc \
+    --master-key xprv9s21ZrQH143K4FAunaSG9eYwrAaaChpSYwYF22eJiZJrz5zSBKTg7NJcFqWR2UZc7EhneSMJhHLmPsKx96UDgv9CdoLc6JfQo3AncKhYNSc \
     --full-address-derivation-path m/99h/1h/2h/3 \
     address-key-base58 \
     address-pub-key-base58
@@ -223,13 +223,13 @@ xpub6DvMNcx5Sf38f2ANVrX66VctcgydNfgMPELTk4VSyEaFVdnajQUwNDr9K54VQ2SRM7gmcQmJcMa2
 ```
 for (( i=0; i <= 9; ++i ))
 do
-    keytool \
+	keytool \
 		--network testnet \
-    	--seed e48225bd3c8d508f45a86607a8eca277 \
-    	--address-index $i \
-    	address-index \
-    	full-address-derivation-path \
-    	address-segwit
+		--seed e48225bd3c8d508f45a86607a8eca277 \
+		--address-index $i \
+		address-index \
+		full-address-derivation-path \
+		address-segwit
 done
 
 0
@@ -282,6 +282,7 @@ $ keytool \
     --seed 1b1454fab426f2729ddcec1b2a6fb539aa2ff0a36d078902994e2fde561d6550 \
     --address-index '*' \
     output-descriptor
+
 wpkh([01577231/84h/0h/0h]xpub6CaE5t6vuSJpRZ4mUb8SX27bmZcinKzUfpn2ZFMYTK81vvrrA9XJZyT8bypiz7gMsjPnpdAJDaQDwvsErnAYi9ZFbDSSSxKR7PtM8msR29D/0/*)
 ```
 
@@ -335,7 +336,7 @@ keytool \
   --address-ec-key-wif "cSyLgU8rSvYNU1j6XR2vo5ebSQqza7PR9iFNtkkYrFMwyB5or5gH" \
   psbt-signed
  
-cHNidP8BAMMCAAAAA0DcshmpIS/ZW94f7roto1MhBNhk6Rz/ZaetRRfcedh9AAAAAAD9////wm+mbFIbTYiPlNNhB8P1/vBcwKG/ZryOHMKkL7dSqTYAAAAAAP3///+CmZgUyFrdKNCZUoqfgBhCAFORPdiP/qr0OOt4I5n+CgAAAAAA/f///wJAQg8AAAAAABYAFCBk78yn2RApIqWfuXigrti3WcQRncYQAAAAAAAWABSMyh/Y85oXJKUZQJT+IeAZJk/MeAAAAAAAAQD9PgECAAAABnPYBYJW735g7YMuaFrrK2ZgQj2XELyHukIJmdvOUB4sAAAAAAD+////bmU42jLXSFq3iLHmsyOR/OrF/x0ZQ2lAbecy8CeanlsAAAAAAP7///87WWkGf++EI4Um41R9YUGj00Z0+wvW0fmPYJ+81lWZOAEAAAAA/v///++syYWL4jBkYbhPlOrxJkozfdkL/XJWnhl2nVzVxa2OAAAAAAD+////UAL64CRRErlwBwQM+X5opqpiI0JmpsKs2a1MzGtZh8QAAAAAAP7///8chEjupyVpNkPdCyBE1wpPrS8MGI9EjEGpj7CTgZAXtgAAAAAA/v///wKghgEAAAAAABYAFMzoxnRhxnGxMSMykm4rhwto1dz6vkMPAAAAAAAWABTzi7rfXv1coXc7HvFo2QoeYq4U1E54HAABAR+ghgEAAAAAABYAFMzoxnRhxnGxMSMykm4rhwto1dz6IgICtKMsZPEI+kb9daMTFeF/+8io6poDvTx+cinpPo9y1ERIMEUCIQDkmw5j/7puaE9pcUNrOKe4HLpXgP2weErNEsFFJUWQYAIgKAqlZqukvHiRGjZysMu1GAGJRgzZxyjdEan3EZTRrGwBIgYCtKMsZPEI+kb9daMTFeF/+8io6poDvTx+cinpPo9y1EQYDwVpQ1QAAIABAACAAAAAgAAAAAAQAAAAAAEAUgIAAAABbEc0zoXZ/16+PtvwSQ43BytcwpYvO6gGU11xDcaGH7YAAAAAAAEAAAABgEEPAAAAAAAWABQMEbJbdDyzQi5GH1/cPH4QeuPCiwAAAAABAR+AQQ8AAAAAABYAFAwRslt0PLNCLkYfX9w8fhB648KLIgYDcV7jKmCV/4gwmyIZjcVj1LXh1/M4er/DpkPbYiUikt8YDwVpQ1QAAIABAACAAAAAgAAAAACIAAAAAAEAUgIAAAABtvIk4LNoWJem4tfDI5qeVZKR954vLCVJBiqv3pSFR8AAAAAAAAEAAAAB0kEPAAAAAAAWABT93jySCCHYPSeMHxs0jj9i+0UtmAAAAAABAR/SQQ8AAAAAABYAFP3ePJIIIdg9J4wfGzSOP2L7RS2YIgYDhA94BGdguQJPUq61nFoMNrVM4VUaSEJwM7lZcPGyFPUYDwVpQ1QAAIABAACAAAAAgAAAAACGAAAAACICAgFa3FuEwDkszXFDVxN6KU6pVUV/f6d1JSWZ1RsD4CNtGA8FaUNUAACAAQAAgAAAAIAAAAAAiQAAAAAiAgJZ8CLw/Bdus5hyuOPx7cnFfkBkRoTavnS6BRAHi5GOLBgPBWlDVAAAgAEAAIAAAACAAQAAAFIAAAAA
+ur:crypto-psbt/hkaarfjojkidjyzmadaesraoaeaeaeaxfzuoprcfptcldltahpuectwyrddpotguclaatpiewlcezmihospmfechuokktpkiaeaeaeaeaezczmzmzmsajloljzgmcwgtlomymwtehsatsrykzewthhrtoyrsiyrfmncesaoxdlrlgmptenaeaeaeaeaezczmzmzmlfnlmkbbsphtutdetinlgmlenelacsfwaegumefstpmyzepkwketwmkscnnlzebkaeaeaeaeaezczmzmzmaofzfwbsaeaeaeaeaecmaebbcxiewssfostabedtcponnerhksnbpltprlhkssbyntswbeaeaeaeaeaecmaebblksgcttpwfnychdkoncffzmwzeclvtcfdsgwsfksaeaeaeaeaeadaezcfmadaoaeaeaeamjktpahlfhfwskbhnwelsdmishtwmdniyhnfwfsmsberfltrdfwasnluytogdckdwaeaeaeaeaezezmzmzmjtihettneytsfdhtrllopavaqdcnmeztwdskzmcacffxinfzjnvdeywtdinynnhpaeaeaeaeaezezmzmzmfrhkinamlbwslrcnlpdsvlghkihsfpottefgjyzobdtbttytmyhnnerftbgonletadaeaeaeaezezmzmzmwspssolpluvodyiehsrogwmwwdwndsgeeokitabdzcjphfnncfkonthhtlskpmmnaeaeaeaeaezezmzmzmgdaozsvtdkgybgrhjoataabnytkbisolpkidcnfwiyolsapstapmgssfjehkltssaeaeaeaeaezezmzmzmcelrfdwyosdainenfxutbdcxfytsbkgwpmdlbncsmyfylkfpptmypfmulymhchrpaeaeaeaeaezezmzmzmaonblnadaeaeaeaeaecmaebbsfvsswjyhsswjspaehcneymojtdnltbdistluozsrnfxbsaeaeaeaeaecmaebbwflurdurhyzchhoyktfrckwnistabkckidplbbtyglksceaeadadctnblnadaeaeaeaeaecmaebbsfvsswjyhsswjspaehcneymojtdnltbdistluozscpaoaoqzotdwiewnayzsfgzckpotbwbzvylbzosppdwdnyaxryfnkbjpdtwlfmmyjptyfyfddyfeaoclaevendbaiazmrdjtisgwinjsfxjeetosrocerdhglazcpfksgesnbgsefedafemhhnaocxdebkoniypyoxrfksmecyenjppfsbrecsadldfgbntastdeutbyptylbymwttpsjzadcpamaoqzotdwiewnayzsfgzckpotbwbzvylbzosppdwdnyaxryfnkbjpdtwlfmmyjptyfycsbsahinfxghaeaelaadaeaelaaeaeaelaaeaeaeaebeaeaeaeaeadaegmaoaeaeaeadjzfleetolptazmhyrnfmuywtgabaematdnhhsamtdlfrpdamguhljsbtswlnctrpaeaeaeaeaeadaeaeaeadlafpbsaeaeaeaeaecmaebbbnbyprhpjyfnqdfwdmfgctheuofnkbbeknvlsaluaeaeaeaeadadctlafpbsaeaeaeaeaecmaebbbnbyprhpjyfnqdfwdmfgctheuofnkbbeknvlsalucpamaxjshyvldrhnmdzmlodyndcpcflgskiatyrevytswfetknrssrolfxuyiddacpmourcsbsahinfxghaeaelaadaeaelaaeaeaelaaeaeaeaeloaeaeaeaeadaegmaoaeaeaeadrpwzdkvtqdishdmsolvotssrcnnynngomomeylnndldwdagaamdrpeuemwlpflrtaeaeaeaeaeadaeaeaeadtdfpbsaeaeaeaeaecmaebbzcuefnmoaycltpfsdilkctcweemnfhidzofedpmkaeaeaeaeadadcttdfpbsaeaeaeaeaecmaebbzcuefnmoaycltpfsdilkctcweemnfhidzofedpmkcpamaxlrbsksaaiohnrhaogwgmplrenshtbnenregsvygocyfdfwjoeorhhkjownprbbykcsbsahinfxghaeaelaadaeaelaaeaeaelaaeaeaeaelnaeaeaeaecpaoaoadhtuohplrrtesdwsnjsfxhgbwkndtglptgofelblboskpdadanltlcwaxvtcnjncsbsahinfxghaeaelaadaeaelaaeaeaelaaeaeaeaeldaeaeaeaecpaoaohkwtcpwtztchjtqdmkjprovlwnwesoskkbfziefglrtnrnjyrdahbeatlumemndwcsbsahinfxghaeaelaadaeaelaaeaeaelaadaeaeaegmaeaeaeaerdinonfp
 ```
 
 Once a transaction is fully signed, Keytool can extract the raw Bitcoin transaction, ready to be placed on the network.
@@ -343,8 +344,10 @@ Once a transaction is fully signed, Keytool can extract the raw Bitcoin transact
 ```
 keytool \
   --psbt "cHNidP8BAMMCAAAAA0DcshmpIS/ZW94f7roto1MhBNhk6Rz/ZaetRRfcedh9AAAAAAD9////wm+mbFIbTYiPlNNhB8P1/vBcwKG/ZryOHMKkL7dSqTYAAAAAAP3///+CmZgUyFrdKNCZUoqfgBhCAFORPdiP/qr0OOt4I5n+CgAAAAAA/f///wJAQg8AAAAAABYAFCBk78yn2RApIqWfuXigrti3WcQRncYQAAAAAAAWABSMyh/Y85oXJKUZQJT+IeAZJk/MeAAAAAAAAQD9PgECAAAABnPYBYJW735g7YMuaFrrK2ZgQj2XELyHukIJmdvOUB4sAAAAAAD+////bmU42jLXSFq3iLHmsyOR/OrF/x0ZQ2lAbecy8CeanlsAAAAAAP7///87WWkGf++EI4Um41R9YUGj00Z0+wvW0fmPYJ+81lWZOAEAAAAA/v///++syYWL4jBkYbhPlOrxJkozfdkL/XJWnhl2nVzVxa2OAAAAAAD+////UAL64CRRErlwBwQM+X5opqpiI0JmpsKs2a1MzGtZh8QAAAAAAP7///8chEjupyVpNkPdCyBE1wpPrS8MGI9EjEGpj7CTgZAXtgAAAAAA/v///wKghgEAAAAAABYAFMzoxnRhxnGxMSMykm4rhwto1dz6vkMPAAAAAAAWABTzi7rfXv1coXc7HvFo2QoeYq4U1E54HAABAR+ghgEAAAAAABYAFMzoxnRhxnGxMSMykm4rhwto1dz6IgICtKMsZPEI+kb9daMTFeF/+8io6poDvTx+cinpPo9y1ERIMEUCIQDkmw5j/7puaE9pcUNrOKe4HLpXgP2weErNEsFFJUWQYAIgKAqlZqukvHiRGjZysMu1GAGJRgzZxyjdEan3EZTRrGwBIgYCtKMsZPEI+kb9daMTFeF/+8io6poDvTx+cinpPo9y1EQYDwVpQ1QAAIABAACAAAAAgAAAAAAQAAAAAAEAUgIAAAABbEc0zoXZ/16+PtvwSQ43BytcwpYvO6gGU11xDcaGH7YAAAAAAAEAAAABgEEPAAAAAAAWABQMEbJbdDyzQi5GH1/cPH4QeuPCiwAAAAABAR+AQQ8AAAAAABYAFAwRslt0PLNCLkYfX9w8fhB648KLIgIDcV7jKmCV/4gwmyIZjcVj1LXh1/M4er/DpkPbYiUikt9IMEUCIQDeFzLuE1DRcQEvwJevA+kf8m8Ay9LJbnoP4qarthudHQIgYyk2ZQEIbvXSFDh37tTG9u2T247SbCfzYNsbLFW4AVYBIgYDcV7jKmCV/4gwmyIZjcVj1LXh1/M4er/DpkPbYiUikt8YDwVpQ1QAAIABAACAAAAAgAAAAACIAAAAAAEAUgIAAAABtvIk4LNoWJem4tfDI5qeVZKR954vLCVJBiqv3pSFR8AAAAAAAAEAAAAB0kEPAAAAAAAWABT93jySCCHYPSeMHxs0jj9i+0UtmAAAAAABAR/SQQ8AAAAAABYAFP3ePJIIIdg9J4wfGzSOP2L7RS2YIgIDhA94BGdguQJPUq61nFoMNrVM4VUaSEJwM7lZcPGyFPVHMEQCIFALHbiTldYsUElBStxS550LVScYBmmsgRrWGWPVfr7EAiAA1kGB/iscnQrbJnKtBhLEDE4MsCfiLjQNNakjB+9MjgEiBgOED3gEZ2C5Ak9SrrWcWgw2tUzhVRpIQnAzuVlw8bIU9RgPBWlDVAAAgAEAAIAAAACAAAAAAIYAAAAAIgICAVrcW4TAOSzNcUNXE3opTqlVRX9/p3UlJZnVGwPgI20YDwVpQ1QAAIABAACAAAAAgAAAAACJAAAAACICAlnwIvD8F26zmHK44/HtycV+QGRGhNq+dLoFEAeLkY4sGA8FaUNUAACAAQAAgAAAAIABAAAAUgAAAAA=" \
-  transaction
+  transaction \
+  transaction-hex
 
+ur:crypto-tx/hkaoayaoaeaeaeaeadaxfzuoprcfptcldltahpuectwyrddpotguclaatpiewlcezmihospmfechuokktpkiaeaeaeaeaezczmzmzmsajloljzgmcwgtlomymwtehsatsrykzewthhrtoyrsiyrfmncesaoxdlrlgmptenaeaeaeaeaezczmzmzmlfnlmkbbsphtutdetinlgmlenelacsfwaegumefstpmyzepkwketwmkscnnlzebkaeaeaeaeaezczmzmzmaofzfwbsaeaeaeaeaecmaebbcxiewssfostabedtcponnerhksnbpltprlhkssbyntswbeaeaeaeaeaecmaebblksgcttpwfnychdkoncffzmwzeclvtcfdsgwsfksaofddyfeaoclaevendbaiazmrdjtisgwinjsfxjeetosrocerdhglazcpfksgesnbgsefedafemhhnaocxdebkoniypyoxrfksmecyenjppfsbrecsadldfgbntastdeutbyptylbymwttpsjzadclaoqzotdwiewnayzsfgzckpotbwbzvylbzosppdwdnyaxryfnkbjpdtwlfmmyjptyfyaofddyfeaoclaeuecheywybwgdttjsaddlrtmspeaxwlctwzjlaesbtdsojtknbsvoolpyrpcwntcaaocxiadtenihadayjtyktdbbetktwytyswynwemuuymntdjzdiwfhnuycwdwgoroadhfadclaxjshyvldrhnmdzmlodyndcpcflgskiatyrevytswfetknrssrolfxuyiddacpmouraofldyfyaocxgdbdcaromumdtbdwgdgafpgeuogmvdntbdgodicsaminpslycytbcfiatlkbrnssaocxaetbfplyzedncentbkuydsjppmambgssbnglbnpfdivodmeebtecptcnatwsgsmnadclaxlrbsksaaiohnrhaogwgmplrenshtbnenregsvygocyfdfwjoeorhhkjownprbbykaeaeaeaegyzswkhd
 0200000000010340dcb219a9212fd95bde1feeba2da3532104d864e91cff65a7ad4517dc79d87d0000000000fdffffffc26fa66c521b4d888f94d36107c3f5fef05cc0a1bf66bc8e1cc2a42fb752a9360000000000fdffffff82999814c85add28d099528a9f8018420053913dd88ffeaaf438eb782399fe0a0000000000fdffffff0240420f00000000001600142064efcca7d9102922a59fb978a0aed8b759c4119dc61000000000001600148cca1fd8f39a1724a5194094fe21e019264fcc7802483045022100e49b0e63ffba6e684f6971436b38a7b81cba5780fdb0784acd12c145254590600220280aa566aba4bc78911a3672b0cbb5180189460cd9c728dd11a9f71194d1ac6c012102b4a32c64f108fa46fd75a31315e17ffbc8a8ea9a03bd3c7e7229e93e8f72d44402483045022100de1732ee1350d171012fc097af03e91ff26f00cbd2c96e7a0fe2a6abb61b9d1d02206329366501086ef5d2143877eed4c6f6ed93db8ed26c27f360db1b2c55b80156012103715ee32a6095ff88309b22198dc563d4b5e1d7f3387abfc3a643db62252292df024730440220500b1db89395d62c5049414adc52e79d0b5527180669ac811ad61963d57ebec4022000d64181fe2b1c9d0adb2672ad0612c40c4e0cb027e22e340d35a92307ef4c8e012103840f78046760b9024f52aeb59c5a0c36b54ce1551a48427033b95970f1b214f500000000
 ```
 
@@ -358,18 +361,134 @@ KEY_3=cMaqfcb16JjrCdfYTfT2vRKFpGjdAugAucEAxw3VuhN91XgjKqzF
 keytool --network testnet --psbt ${PSBT_TO_SIGN} --address-ec-key-wif ${KEY_1} psbt-signed \
   | keytool --network testnet --psbt '' --address-ec-key-wif ${KEY_2} psbt-signed \
   | keytool --network testnet --psbt '' --address-ec-key-wif ${KEY_3} psbt-signed \
-  | keytool --psbt '' transaction
+  | keytool --psbt '' transaction-hex
   
 0200000000010340dcb219a9212fd95bde1feeba2da3532104d864e91cff65a7ad4517dc79d87d0000000000fdffffffc26fa66c521b4d888f94d36107c3f5fef05cc0a1bf66bc8e1cc2a42fb752a9360000000000fdffffff82999814c85add28d099528a9f8018420053913dd88ffeaaf438eb782399fe0a0000000000fdffffff0240420f00000000001600142064efcca7d9102922a59fb978a0aed8b759c4119dc61000000000001600148cca1fd8f39a1724a5194094fe21e019264fcc7802483045022100e49b0e63ffba6e684f6971436b38a7b81cba5780fdb0784acd12c145254590600220280aa566aba4bc78911a3672b0cbb5180189460cd9c728dd11a9f71194d1ac6c012102b4a32c64f108fa46fd75a31315e17ffbc8a8ea9a03bd3c7e7229e93e8f72d44402483045022100de1732ee1350d171012fc097af03e91ff26f00cbd2c96e7a0fe2a6abb61b9d1d02206329366501086ef5d2143877eed4c6f6ed93db8ed26c27f360db1b2c55b80156012103715ee32a6095ff88309b22198dc563d4b5e1d7f3387abfc3a643db62252292df024730440220500b1db89395d62c5049414adc52e79d0b5527180669ac811ad61963d57ebec4022000d64181fe2b1c9d0adb2672ad0612c40c4e0cb027e22e340d35a92307ef4c8e012103840f78046760b9024f52aeb59c5a0c36b54ce1551a48427033b95970f1b214f500000000
+```
+
+## Requesting a Seed
+
+Generate a seed using Seedtool:
+
+```
+seedtool
+
+581fbdbf6b3eeababae7e7b51e3aabea
+```
+
+Generate the digest of the seed:
+
+```
+keytool \
+	--seed 581fbdbf6b3eeababae7e7b51e3aabea \
+	seed-digest
+
+faf717696382dff46fe473c75936a7df3990cd56e438aaad9953e94fba7f857f
+```
+
+Generate a request for the seed with the given digest, printing the request and the request ID:
+
+```
+keytool \
+	--seed-digest faf717696382dff46fe473c75936a7df3990cd56e438aaad9953e94fba7f857f \
+	seed-request \
+	seed-request-id
+
+ur:crypto-request/oeadtpdagdrpaswlkntlcegegmrpprgutelrsevdlfaotaadwkhdcxzsylchinialfurwkjlvejksthkenosuresmhsnhfveetpkpmnlguwlgwrdlblplblghtssad
+b609e97a-d51c-4a52-b6b2-53d384c1e782
+```
+
+Generate a response to the above request, printing the request and the request ID:
+
+```
+keytool \
+	--seed-request ur:crypto-request/oeadtpdagdrpaswlkntlcegegmrpprgutelrsevdlfaotaadwkhdcxzsylchinialfurwkjlvejksthkenosuresmhsnhfveetpkpmnlguwlgwrdlblplblghtssad \
+	--seed 581fbdbf6b3eeababae7e7b51e3aabea \
+	seed-response \
+	seed-request-id
+
+ur:crypto-response/oeadtpdagdrpaswlkntlcegegmrpprgutelrsevdlfaotaaddwoyadgdhdctryrsjefmwdrdrdvdvdreckftpywdmerfiyrs
+b609e97a-d51c-4a52-b6b2-53d384c1e782
+```
+
+Extract the hex seed from the above response:
+
+```
+keytool \
+	--seed-response ur:crypto-response/oeadtpdagdrpaswlkntlcegegmrpprgutelrsevdlfaotaaddwoyadgdhdctryrsjefmwdrdrdvdvdreckftpywdmerfiyrs \
+	seed-hex
+
+581fbdbf6b3eeababae7e7b51e3aabea
+```
+
+## Requesting a Key Derivation
+
+Generate a master HD key from the above seed:
+
+```
+keytool \
+	--seed 581fbdbf6b3eeababae7e7b51e3aabea \
+	master-key
+
+ur:crypto-hdkey/oxadykaoykaxhdclaeaozmfxfpvdvwmulklywyatdahypmknahkoaoiepkwztkidwevosbsoqdhgltnngoaahdcxdeeyoevetdtpehlslyaaoyhfkideiygytetkvdmechvokptnkoltgojzdllpfwpkrpmtjkhy
+```
+
+Get a testnet account derivation path for the master key:
+
+```
+keytool \
+	--network testnet \
+	--master-key ur:crypto-hdkey/oxadykaoykaxhdclaeaozmfxfpvdvwmulklywyatdahypmknahkoaoiepkwztkidwevosbsoqdhgltnngoaahdcxdeeyoevetdtpehlslyaaoyhfkideiygytetkvdmechvokptnkoltgojzdllpfwpkrpmtjkhy \
+	account-derivation-path
+
+0fd09078/84h/1h/0h
+```
+
+Generate a request for a public key derived from the master key, printing the request and the request ID:
+
+```
+keytool \
+	--key-request-type public \
+	--key-request-derivation-path 0fd09078/84h/1h/0h \
+	key-request \
+	key-request-id
+
+ur:crypto-request/oeadtpdagdhkckiepsgwqzfyoxnnmhgspfhtoerylraotaadykoeadwkaotaaddyoeadlncsghykadykaeykaocybstimhksfwrlosee
+591e64ac-4fb4-44a4-9e90-4cb05aa2bd84
+```
+
+Generate a response for the requested derived key.
+
+```
+src/keytool \
+	--key-request ur:crypto-request/oeadtpdagdhkckiepsgwqzfyoxnnmhgspfhtoerylraotaadykoeadwkaotaaddyoeadlncsghykadykaeykaocybstimhksfwrlosee \
+	--source-key ur:crypto-hdkey/oxadykaoykaxhdclaeaozmfxfpvdvwmulklywyatdahypmknahkoaoiepkwztkidwevosbsoqdhgltnngoaahdcxdeeyoevetdtpehlslyaaoyhfkideiygytetkvdmechvokptnkoltgojzdllpfwpkrpmtjkhy \
+	key-response
+
+ur:crypto-response/oeadtpdagdhkckiepsgwqzfyoxnnmhgspfhtoerylraotaaddloxaxhdclaondcfnsctgmqzgmcnpyurahykcfjklkcnjeolcfkimhattbkgglmtjlpddrwpzcktaahdcxrftpgmaoayaefgzmplesjskicmlamktnhgssmucnrytocmcftacxwlcedelneelyamoeadlncsghykadykaeykaocybstimhksaycywtwpeoeylgcnfysp
+```
+
+From the response, extract the key in UR and Base58 formats, and the request ID:
+
+```
+keytool \
+	--key-response ur:crypto-response/oeadtpdagdhkckiepsgwqzfyoxnnmhgspfhtoerylraotaaddloxaxhdclaondcfnsctgmqzgmcnpyurahykcfjklkcnjeolcfkimhattbkgglmtjlpddrwpzcktaahdcxrftpgmaoayaefgzmplesjskicmlamktnhgssmucnrytocmcftacxwlcedelneelyamoeadlncsghykadykaeykaocybstimhksaycywtwpeoeylgcnfysp \
+	derived-key \
+	derived-key-base58 \
+	key-request-id
+
+ur:crypto-hdkey/oxaxhdclaondcfnsctgmqzgmcnpyurahykcfjklkcnjeolcfkimhattbkgglmtjlpddrwpzcktaahdcxrftpgmaoayaefgzmplesjskicmlamktnhgssmucnrytocmcftacxwlcedelneelyamoeadlncsghykadykaeykaocybstimhksaycywtwpeoeyjohkterk
+xpub6DRUbxFn5yqrAkKgnsUNjPcbw5NtFjQnRNK4ytXwCxMKv3rks66xPKWK5YBUy9sDddCpta7FexygbmKUp7shSKeMRk1cWeDQSXvGyvX9s1i
+591e64ac-4fb4-44a4-9e90-4cb05aa2bd84
 ```
 
 ## Version History
 
 ### 0.5.0, 3/29/2021
 
-* UR is now the primary format for types that support it, e.g. `master-key`. Such nodes can still take other forms of input (HD Key nodes can take Base58 or UR) but output in Base58 is now done via separate nodes (e.g., `master-key-base58`).
+* UR is now the primary format for types that support it, e.g. `master-key`. Such nodes can still take other forms of input (for example HD Key nodes can take UR or Base58) but output in Base58 is now done via separate nodes (e.g., `master-key-base58`).
 * `network` is no longer derived from `asset`; they are separate. The two supported assets are currently Bitcoin `btc` and Ethereum `eth`. To use Bitcoin Testnet, use asset `btc` (the default) and network `testnet`.
-* Support for UR:CRYPTO-REQUEST and UR:CRYPTO-RESPONSE types for requesting and delivering seeds and derived keys.
+* Support for UR:CRYPTO-REQUEST and UR:CRYPTO-RESPONSE types for requesting and returning seeds and derived keys.
 
 ### 0.4.0, 11/12/2020
 

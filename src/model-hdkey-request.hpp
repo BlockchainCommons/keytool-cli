@@ -19,5 +19,6 @@ DataNode<DerivationPath>* setup_key_request_derivation_path(Model& model);
 DataNode<Request>* setup_key_request(Model& model);
 DataNode<Response>* setup_key_response(Model& model);
 DataNode<HDKey>* setup_derived_key(Model& model);
+DataNode<HDKey>* setup_derived_key_base58(Model& model);
 
 #endif

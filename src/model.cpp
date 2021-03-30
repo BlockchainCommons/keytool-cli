@@ -75,6 +75,7 @@ Model::Model() {
     key_request = setup_key_request(*this);
     key_response = setup_key_response(*this);
     derived_key = setup_derived_key(*this);
+    derived_key_base58 = setup_derived_key_base58(*this);
 
     // psbt
     psbt = setup_psbt(*this);

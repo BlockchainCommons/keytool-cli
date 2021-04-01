@@ -157,7 +157,7 @@ $ sudo ./llvm.sh 10  # version 10
 $ sudo apt-get -y install build-essential pkg-config autoconf libtool shunit2 libc++-10-dev libc++abi-10-dev python
 ```
 
-Then, you can clone and bit this repo:
+Then, you can clone and build this repo:
 
 ```bash
 $ git clone https://github.com/BlockchainCommons/bc-keytool-cli.git

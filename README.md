@@ -150,7 +150,7 @@ First, install the dependencies:
 ```bash
 $ sudo apt-get update
 
-$ sudo apt install lsb-release wget software-properties-common git
+$ sudo apt install lsb-release wget software-properties-common git apt-transport-https
 $ wget https://apt.llvm.org/llvm.sh
 $ chmod +x llvm.sh
 $ sudo ./llvm.sh 10  # version 10

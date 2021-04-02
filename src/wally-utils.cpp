@@ -192,7 +192,7 @@ bool Wally::is_version_valid(uint32_t ver, uint32_t flags) {
 void Wally::check_valid(const ext_key& k) {
     auto ver_flags = is_private(k) ? BIP32_FLAG_KEY_PRIVATE : BIP32_FLAG_KEY_PUBLIC;
     assert(is_version_valid(k.version, ver_flags));
-    assert(!is_all_zero(data_of(k.chain_code, sizeof(k.chain_code))));
+    //assert(!is_all_zero(data_of(k.chain_code, sizeof(k.chain_code))));
     assert(k.pub_key[0] == 0x2 || k.pub_key[0] == 0x3);
     assert(!is_all_zero(drop(data_of(k.pub_key, sizeof(k.pub_key)))));
     assert(k.priv_key[0] == BIP32_FLAG_KEY_PUBLIC || k.priv_key[0] == BIP32_FLAG_KEY_PRIVATE);

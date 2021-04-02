@@ -29,6 +29,7 @@ public:
     const KeyType& key_type() const { return _key_type; }
     const ByteVector& key_data() const { return _key_data; }
     std::optional<ByteVector> chain_code() const { return _chain_code; }
+    bool is_derivable() const { return _chain_code.has_value(); }
     const UseInfo& use_info() const { return _use_info; }
     std::optional<DerivationPath> origin() const { return _origin; }
     std::optional<DerivationPath> children() const { return _children; }
@@ -39,9 +40,9 @@ public:
 
     static HDKey from_seed(const Seed& seed, const UseInfo& use_info);
 
-    HDKey derive(const KeyType& derived_key_type) const;
-    HDKey derive(const KeyType& derived_key_type, DerivationStep child_derivation);
-    HDKey derive(const KeyType& derived_key_type, const DerivationPath& child_derivation_path);
+    HDKey derive(const KeyType& derived_key_type, bool is_derivable) const;
+    HDKey derive(const KeyType& derived_key_type, DerivationStep child_derivation) const;
+    HDKey derive(const KeyType& derived_key_type, const DerivationPath& child_derivation_path, bool is_derivable) const;
 
     ext_key wally_ext_key() const;
     static HDKey from_wally_ext_key(const ext_key& k);

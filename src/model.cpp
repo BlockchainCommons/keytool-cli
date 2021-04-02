@@ -60,6 +60,7 @@ Model::Model() {
     address_key = setup_address_key(*this);
     address_pub_key = setup_address_pub_key(*this);
     output_descriptor = setup_output_descriptor(*this);
+    is_derivable = setup_is_derivable(*this);
     master_key_base58 = setup_master_key_base58(*this);
     account_key_base58 = setup_account_key_base58(*this);
     account_pub_key_base58 = setup_account_pub_key_base58(*this);

@@ -23,79 +23,81 @@ If an attribute is listed more than once, then it has more than one derivation p
 All the attributes except `seed` are either derivable from other attributes or have a default value. The default values are suitable for use with Bitcoin mainnet. If these attributes are supplied on the command line, they override the defaults.
 
 ```
-seed-hex <- [seed]
-seed-name <- [seed]
-seed-note <- [seed]
+account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
+account-index (default: 0)
+account-key <- [account-key-base58]
+account-key <- [master-key, account-derivation-path]
+account-key-base58 <- [account-key]
+account-pub-key <- [account-key]
+account-pub-key <- [account-pub-key-base58]
+account-pub-key-base58 <- [account-pub-key]
+address-derivation-path <- [chain-type-int, address-index]
+address-ec-key <- [address-ec-key-wif, network]
+address-ec-key <- [address-key]
+address-ec-key-wif <- [address-ec-key, network]
+address-index (default: 0)
+address-key <- [account-key, address-derivation-path, is-derivable]
+address-key <- [address-key-base58]
+address-key <- [master-key, full-address-derivation-path, is-derivable]
+address-key-base58 <- [address-key]
+address-pkh <- [address-pub-ec-key, asset, network]
+address-pub-ec-key <- [address-ec-key]
+address-pub-ec-key <- [address-pub-key]
+address-pub-key <- [account-pub-key, address-derivation-path, is-derivable]
+address-pub-key <- [address-key]
+address-pub-key <- [address-pub-key-base58]
+address-pub-key-base58 <- [address-pub-key]
+address-segwit <- [address-pub-key]
+address-sh <- [address-pub-ec-key, asset, network]
+asset (default: btc)
+chain-type (default: external)
+chain-type-int <- [chain-type]
+coin-type <- [asset, network]
+derived-key <- [key-response]
+derived-key-base58 <- [derived-key]
+full-address-derivation-path <- [account-derivation-path, address-derivation-path]
+is-derivable <- [source-key]
+is-derivable (default: true)
+key-request <- [key-request-derivation-path, key-request-type, key-request-id, key-request-description, asset, network, is-derivable]
+key-request-derivation-path <- [full-address-derivation-path]
+key-request-derivation-path <- [key-request]
+key-request-description (default: empty)
+key-request-description <- [key-request]
+key-request-id (default: unique)
+key-request-id <- [key-request]
+key-request-id <- [key-response]
+key-request-type (default: private)
+key-request-type <- [key-request]
+key-response <- [key-request, source-key]
+master-key <- [master-key-base58]
+master-key <- [seed, asset, network]
+master-key-base58 <- [master-key]
+master-key-fingerprint <- [master-key]
+network (default: mainnet)
+output-descriptor <- [output-type, account-derivation-path, address-derivation-path, account-pub-key]
+output-type (default: wpkh)
+psbt-base64 <- [psbt]
+psbt-finalized <- [psbt]
+psbt-finalized-base64 <- [psbt-finalized]
+psbt-finalized-hex <- [psbt-finalized]
+psbt-hex <- [psbt]
+psbt-signed <- [psbt, address-ec-key]
+psbt-signed-base64 <- [psbt-signed]
+psbt-signed-hex <- [psbt-signed]
+purpose <- [output-type]
 seed <- [seed-hex, seed-name (optional), seed-note (optional)]
 seed-digest <- [seed-request]
 seed-digest <- [seed]
-seed-request-id <- [seed-request]
-seed-request-id (default: unique)
-seed-request-description <- [seed-request]
-seed-request-description (default: empty)
+seed-hex <- [seed]
+seed-name <- [seed]
+seed-note <- [seed]
 seed-request <- [seed-digest seed-request-id seed-request-description]
+seed-request-description (default: empty)
+seed-request-description <- [seed-request]
+seed-request-id (default: unique)
+seed-request-id <- [seed-request]
 seed-response <- [seed-request, seed]
-asset (default: btc)
-network (default: mainnet)
-address-ec-key <- [address-key]
-address-ec-key <- [address-ec-key-wif, network]
-address-ec-key-wif <- [address-ec-key, network]
-address-pub-ec-key <- [address-ec-key]
-address-pub-ec-key <- [address-pub-key]
-address-pkh <- [address-pub-ec-key, asset, network]
-address-sh <- [address-pub-ec-key, asset, network]
-address-segwit <- [address-pub-key]
-master-key <- [master-key-base58]
-master-key <- [seed, asset, network]
-master-key-fingerprint <- [master-key]
-output-type (default: wpkh)
-purpose <- [output-type]
-coin-type <- [asset, network]
-account-index (default: 0)
-account-derivation-path <- [master-key-fingerprint, purpose, coin-type, account-index]
-account-key <- [account-key-base58]
-account-key <- [master-key, account-derivation-path]
-account-pub-key <- [account-pub-key-base58]
-account-pub-key <- [account-key]
-chain-type (default: external)
-chain-type-int <- [chain-type]
-address-index (default: 0)
-address-derivation-path <- [chain-type-int, address-index]
-full-address-derivation-path <- [account-derivation-path, address-derivation-path]
-address-key <- [address-key-base58]
-address-key <- [master-key, full-address-derivation-path]
-address-key <- [account-key, address-derivation-path]
-address-pub-key <- [address-pub-key-base58]
-address-pub-key <- [address-key]
-address-pub-key <- [account-pub-key, address-derivation-path]
-output-descriptor <- [output-type, account-derivation-path, address-derivation-path, account-pub-key]
-master-key-base58 <- [master-key]
-account-key-base58 <- [account-key]
-account-pub-key-base58 <- [account-pub-key]
-address-key-base58 <- [address-key]
-address-pub-key-base58 <- [address-pub-key]
-key-request-description <- [key-request]
-key-request-description (default: empty)
-key-request-type <- [key-request]
-key-request-type (default: private)
-key-request-id <- [key-request]
-key-request-id <- [key-response]
-key-request-id (default: unique)
 source-key <- [master-key]
-key-request-derivation-path <- [key-request]
-key-request-derivation-path <- [full-address-derivation-path]
-key-request <- [key-request-derivation-path, key-request-type, key-request-id, key-request-description, asset network]
-key-response <- [key-request, source-key]
-derived-key <- [key-response]
-derived-key-base58 <- [derived-key]
-psbt-hex <- [psbt]
-psbt-base64 <- [psbt]
-psbt-finalized <- [psbt]
-psbt-finalized-hex <- [psbt-finalized]
-psbt-finalized-base64 <- [psbt-finalized]
-psbt-signed <- [psbt, address-ec-key]
-psbt-signed-hex <- [psbt-signed]
-psbt-signed-base64 <- [psbt-signed]
 transaction <- [psbt-finalized]
 transaction-hex <- [transaction]
 ```
@@ -110,6 +112,7 @@ Keytool uses particular formats for input and output attributes:
 | BASE58 | [An HD private key starting with `xprv`, `xpub` or similar.](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki)
 | BASE64 | Data in Base64 format.
 | BIP32_PATH | A series of BIP-32 path elements, possibly starting with the source fingerprint as 8 hex digits and followed by integers, which may optionally be followed by `h` (for hardened derivation). Example: `1a2b3c4d/44h/0h/0h/0/123`.
+| BOOLEAN | `true` or `false`.
 | ECPRV | An elliptic curve private key in hex format.
 | ECPUB | A compressed elliptic curve public key in hex format.
 | ENUM | A specific, value from a set of enumerated values. For example `network` can have the value `mainnet` or `testnet`.
@@ -482,7 +485,95 @@ xpub6DRUbxFn5yqrAkKgnsUNjPcbw5NtFjQnRNK4ytXwCxMKv3rks66xPKWK5YBUy9sDddCpta7Fexyg
 591e64ac-4fb4-44a4-9e90-4cb05aa2bd84
 ```
 
+## Derivable and Non-Derivable Keys
+
+Hierarchical Deterministic (HD) keys contain a field called the "chain code" that enables a key to be used to derive further keys. If the chain code is omitted, the key can still be used to produce Elliptic Curve (EC) keys used to verify transactions (or sign them if it is private key), but no further HD keys can be derived from it. The `ur:crypto-hdkey` format supports such "non-derivable" keys, and Keytool enables generating and using such keys via the `is-derivable` node. The `is-derivable` node contains a boolean value that, if set to `false`, causes keys derived from the `address-key` or `derived-key` nodes to be non-derivable. In addition, setting `is-derivable` to `false` causes generated `ur:crypto-requests` for keys to become requests for non-derivable keys, and causes generated `ur:crypto-response`s to produce non-derivable keys.
+
+The Base58 format for HD keys only supports derivable keys, so Keytool will produce an error if asked to produce a Base58 key from a non-derivable HD key.
+
+Generate derivable and non-derivable versions of a key:
+
+```
+keytool \
+	--seed 581fbdbf6b3eeababae7e7b51e3aabea \
+	address-key
+
+ur:crypto-hdkey/onaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeaahdcxjsvdzechamzcosfhsrksyasnurgturdposknjsteaomulkfswnrfaenbclhtzcwnamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkksskatmk
+
+keytool \
+	--seed 581fbdbf6b3eeababae7e7b51e3aabea \
+	--is-derivable false \
+	address-key
+
+ur:crypto-hdkey/oxaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkvatnuylf
+```
+
+Have Keytool report whether the keys generated above are or are not derivable:
+
+```
+keytool \
+	--source-key ur:crypto-hdkey/onaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeaahdcxjsvdzechamzcosfhsrksyasnurgturdposknjsteaomulkfswnrfaenbclhtzcwnamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkksskatmk \
+	is-derivable
+
+true
+
+keytool \
+	--source-key ur:crypto-hdkey/oxaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkvatnuylf \
+	is-derivable
+
+false
+```
+
+Attempt to derive a key from the derivable and non-derivable keys generated above:
+
+```
+keytool \
+	--source-key ur:crypto-hdkey/onaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeaahdcxjsvdzechamzcosfhsrksyasnurgturdposknjsteaomulkfswnrfaenbclhtzcwnamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkksskatmk \
+	--key-request-derivation-path 0 \
+	derived-key
+
+ur:crypto-hdkey/onaoykaxhdclaebzgybzdkvdctayyknntdsrgdpfurgmpyjthlkpzeynzthdislaetutdicsjtneuoaahdcxresaftkttytazthfticfjloychchmyjpotmybzrocwaofnotenvomtsnmovwqztdamoeadlkcsghykaeykaeykaewkaewkaewkaocybstimhksaycytacyrypfoswszcrh
+
+keytool \
+	--source-key ur:crypto-hdkey/oxaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkvatnuylf \
+	--key-request-derivation-path 0 \
+	derived-key
+
+keytool: Cannot derive from a non-derivable key.
+```
+
+Produce a request and the corresponding response for the non-derivable key above, and also print the key itself.
+
+```
+keytool \
+	--seed 581fbdbf6b3eeababae7e7b51e3aabea \
+	--is-derivable false \
+	key-request \
+	key-response \
+	derived-key
+
+ur:crypto-request/oeadtpdagdpratsratkisffymontntdmbsbnlramsnaotaadykotadykaotaaddyoeadlecsghykaeykaeykaewkaewkaocybstimhksaawkwzsogalt
+ur:crypto-response/oeadtpdagdpratsratkisffymontntdmbsbnlramsnaotaaddloxaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkjpqddidk
+ur:crypto-hdkey/oxaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkvatnuylf
+```
+
+Transform the derivable key above into a non-derivable key:
+
+```
+keytool \
+	--source-key ur:crypto-hdkey/onaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeaahdcxjsvdzechamzcosfhsrksyasnurgturdposknjsteaomulkfswnrfaenbclhtzcwnamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkksskatmk \
+	--key-request-derivation-path 'm' \
+	--is-derivable false \
+	derived-key
+
+ur:crypto-hdkey/oxaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkvatnuylf
+```
+
 ## Version History
+
+### 0.6.0, 4/1/2021
+
+* Support for non-derivable keys via the `is-derivable` node.
 
 ### 0.5.0, 3/29/2021
 

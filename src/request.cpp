@@ -46,10 +46,19 @@ void KeyRequestBody::encode_cbor(ByteVector& cbor) const {
         use_info().encode_tagged_cbor(use_info_map_entry);
     }
 
+    // is-derivable
+    ByteVector is_derivable_map_entry;
+    if(!is_derivable()) {
+        map_size += 1;
+        encodeInteger(is_derivable_map_entry, 4);
+        encodeBool(is_derivable_map_entry, false);
+    }
+
     ur::CborLite::encodeMapSize(cbor, map_size);
     ::append(cbor, is_private_map_entry);
     ::append(cbor, path_map_entry);
     ::append(cbor, use_info_map_entry);
+    ::append(cbor, is_derivable_map_entry);
 }
 
 KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
@@ -59,6 +68,7 @@ KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::const_iterator& pos, Byte
     optional<KeyType> key_type;
     optional<DerivationPath> path;
     UseInfo use_info;
+    bool is_derivable = true;
     for(auto index = 0; index < map_len; index++) {
         int label;
         decodeInteger(pos, end, label, cbor_decoding_flags);
@@ -81,6 +91,10 @@ KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::const_iterator& pos, Byte
                 use_info = UseInfo::decode_tagged_cbor(pos, end);
             }
                 break;
+            case 4: {
+                decodeBool(pos, end, is_derivable, cbor_decoding_flags);
+            }
+                break;
             default:
                 throw domain_error("Unknown label.");
         }
@@ -91,7 +105,7 @@ KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::const_iterator& pos, Byte
     if(!path.has_value()) {
         throw domain_error("Key request doesn't contain derivation.");
     }
-    return KeyRequestBody(*key_type, *path, use_info);
+    return KeyRequestBody(*key_type, *path, use_info, is_derivable);
 }
 
 void PSBTSignatureRequestBody::encode_cbor(ByteVector& cbor) const {

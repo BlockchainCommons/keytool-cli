@@ -75,6 +75,7 @@ public:
     DataNode<HDKey> *address_key;
     DataNode<HDKey> *address_pub_key;
     DataNode<OutputDescriptor> *output_descriptor;
+    DataNode<bool> *is_derivable;
     DataNode<HDKey> *master_key_base58;
     DataNode<HDKey> *account_key_base58;
     DataNode<HDKey> *account_pub_key_base58;

@@ -104,7 +104,7 @@ DataNode<Request>* setup_key_request(Model& model) {
     node->set_info("key-request", "REQUEST", "A request for a key with the given derivation.");
     node->set_to_string([](const Request& request) { return request.ur(); });
     node->set_from_string([](const string& s) -> Request { return Request(s); });
-    model.add_derivation("key-request <- [key-request-derivation-path, key-request-type, key-request-id, key-request-description, asset network]");
+    model.add_derivation("key-request <- [key-request-derivation-path, key-request-type, key-request-id, key-request-description, asset, network, is-derivable]");
     node->set_derivation([&]() -> optional<Request> {
         if(model.key_request_derivation_path->has_value()) {
             auto key_type = model.key_request_type->value();
@@ -112,7 +112,8 @@ DataNode<Request>* setup_key_request(Model& model) {
             auto asset = model.asset->value();
             auto network = model.network->value();
             auto use_info = UseInfo(asset, network);
-            auto body = KeyRequestBody(key_type, path, use_info);
+            auto is_derivable = model.is_derivable->value();
+            auto body = KeyRequestBody(key_type, path, use_info, is_derivable);
             auto description = model.key_request_description->value();
             auto id = model.key_request_id->value();
             return Request(body, description, id);
@@ -145,12 +146,13 @@ DataNode<Response>* setup_key_response(Model& model) {
             auto path = request_body.path();
             auto key_type = request_body.key_type();
             auto use_info = request_body.use_info();
+            auto is_derivable = request_body.is_derivable();
             if(auto source_fingerprint = path.source_fingerprint()) {
                 if(*source_fingerprint != source_key.key_fingerprint()) {
                     throw domain_error("Source key does not have same fingerprint as the one in the request.");
                 }
             }
-            auto derived_key = source_key.derive(key_type, path);
+            auto derived_key = source_key.derive(key_type, path, is_derivable);
             return Response(derived_key, request_id);
         } else {
             return nullopt;

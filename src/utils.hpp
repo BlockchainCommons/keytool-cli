@@ -131,4 +131,7 @@ uint32_t hex_to_uint32(const std::string& s);
 uint32_t data_to_uint32(const ByteVector& v);
 std::string uint32_to_hex(uint32_t n);
 
+bool string_to_bool(const std::string& s);
+std::string bool_to_string(bool b);
+
 #endif // KEYTOOL_UTILS_HPP

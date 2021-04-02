@@ -26,7 +26,13 @@ HDKey::HDKey(
     , _origin(origin)
     , _children(children)
     , _parent_fingerprint(parent_fingerprint)
-{ }
+{
+    if(_chain_code.has_value()) {
+        if(is_all_zero(*_chain_code)) {
+            _chain_code = nullopt;
+        }
+    }
+}
 
 HDKey HDKey::from_wally_ext_key(const ext_key& k) {
     optional<ByteVector> chain_code = nullopt;
@@ -154,36 +160,45 @@ HDKey HDKey::from_seed(const Seed& seed, const UseInfo& use_info) {
     return HDKey(is_master, key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
 }
 
-HDKey HDKey::derive(const KeyType& derived_key_type) const {
+HDKey HDKey::derive(const KeyType& derived_key_type, bool is_derivable) const {
     if(key_type() == KeyType::public_key() && derived_key_type == KeyType::private_key()) {
         throw domain_error("Cannot derive private key from public key.");
     }
 
+    auto chain_code = is_derivable ? this->_chain_code : nullopt;
     if(key_type() == derived_key_type) {
         // private -> private
         // public -> public
-        return HDKey(*this);
+        return HDKey(is_master(), derived_key_type, key_data(), chain_code, use_info(), origin(), children(), parent_fingerprint());
     } else {
         // private -> public
         auto pub_key = data_of(wally_ext_key().pub_key, sizeof(ext_key::pub_key));
-        return HDKey(is_master(), derived_key_type, pub_key, chain_code(), use_info(), origin(), children(), parent_fingerprint());
+        return HDKey(is_master(), derived_key_type, pub_key, chain_code, use_info(), origin(), children(), parent_fingerprint());
     }
 }
 
 ByteVector HDKey::key_fingerprint_data() const {
     auto k = wally_ext_key();
-    uint8_t bytes[BIP32_KEY_FINGERPRINT_LEN];
-    assert(bip32_key_get_fingerprint(&k, &bytes[0], BIP32_KEY_FINGERPRINT_LEN) == WALLY_OK);
-    return ByteVector(&bytes[0], &bytes[0] + BIP32_KEY_FINGERPRINT_LEN);
+
+    assert(wally_hash160(k.pub_key, sizeof(k.pub_key), k.hash160, sizeof(k.hash160)) == WALLY_OK);
+    return ByteVector(&k.hash160[0], &k.hash160[0] + BIP32_KEY_FINGERPRINT_LEN);
+
+    // This doesn't work with a non-derivable key, because LibWally thinks it's invalid.
+    // uint8_t bytes[BIP32_KEY_FINGERPRINT_LEN];
+    // assert(bip32_key_get_fingerprint(&k, &bytes[0], BIP32_KEY_FINGERPRINT_LEN) == WALLY_OK);
+    // return ByteVector(&bytes[0], &bytes[0] + BIP32_KEY_FINGERPRINT_LEN);
 }
 
 uint32_t HDKey::key_fingerprint() const {
     return data_to_uint32(key_fingerprint_data());
 }
 
-HDKey HDKey::derive(const KeyType& derived_key_type, DerivationStep child_derivation) {
+HDKey HDKey::derive(const KeyType& derived_key_type, DerivationStep child_derivation) const {
     if(key_type() == KeyType::public_key() && derived_key_type == KeyType::private_key()) {
         throw domain_error("Cannot derive private key from public key.");
+    }
+    if(!is_derivable()) {
+        throw domain_error("Cannot derive from a non-derivable key.");
     }
 
     auto is_master = false;
@@ -223,12 +238,12 @@ HDKey HDKey::derive(const KeyType& derived_key_type, DerivationStep child_deriva
     return HDKey(is_master, derived_key_type, key_data, chain_code, use_info, origin, children, parent_fingerprint);
 }
 
-HDKey HDKey::derive(const KeyType& derived_key_type, const DerivationPath& child_derivation_path) {
+HDKey HDKey::derive(const KeyType& derived_key_type, const DerivationPath& child_derivation_path, bool is_derivable) const {
     auto key = *this;
     for(auto step: child_derivation_path.steps()) {
         key = key.derive(key_type(), step);
     }
-    return key.derive(derived_key_type);
+    return key.derive(derived_key_type, is_derivable);
 }
 
 void HDKey::encode_cbor(ByteVector& cbor) const {
@@ -409,7 +424,10 @@ HDKey HDKey::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::con
 }
 
 string HDKey::to_base58(KeyType key_type) const {
-    auto hd_key = this->derive(key_type);
+    if(!is_derivable()) {
+        throw domain_error("Cannot convert a non-derivable key to base58.");
+    }
+    auto hd_key = this->derive(key_type, true);
     auto k = hd_key.wally_ext_key();
     auto flags = key_type.bip32_flag();
     char* output = nullptr;

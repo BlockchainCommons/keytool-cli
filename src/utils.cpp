@@ -253,3 +253,17 @@ std::string uint32_to_hex(uint32_t n) {
     push_uint32(v, n);
     return data_to_hex(v);
 }
+
+bool string_to_bool(const std::string& s) {
+    if(s == "true") {
+        return true;
+    } else if(s == "false") {
+        return false;
+    } else {
+        throw domain_error("Expected boolean 'true' or 'false'.");
+    }
+}
+
+std::string bool_to_string(bool b) {
+    return b ? "true" : "false";
+}

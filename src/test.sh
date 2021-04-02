@@ -37,6 +37,8 @@ TEST_ADDRESS_KEY_BASE58='xprvA2cpWAfRGtwAfZYb3gQ7aDw5H34a8kJszXZD6zXLtXsG58Mn3F3
 TEST_ADDRESS_KEY_MINIMAL_UR='ur:crypto-hdkey/onaoykaxhdclaefwmwpdrhbapygdplnbfwzmmwknglmtneaeurlakggwetenpeiedmbtgwvtmtvtasaahdcxeooeaedscmfdlotnmyvyjzroltoecfglgrjlldbgflkggsayaockrpveamnladfnamoeadlfaewkaxahaycycyceptprahosjsbz'
 TEST_ADDRESS_PUB_KEY_BASE58='xpub6FcAugCK7GVTt3d49hw7wMsoq4u4YD2jMkUouNvxSsQEwvgvanMWw6tQ4MghPAHedPshS8Nf7MdKuFbmrTBV4MQwYTqrbYYzVb1SWify2Kq'
 TEST_ADDRESS_PUB_KEY_MINIMAL_UR='ur:crypto-hdkey/oxaxhdclaolujplrprwzqzcfvymyosglflwkdnyldslrlnqdlnsfistpfwgdheimrscpbtlolnaahdcxeooeaedscmfdlotnmyvyjzroltoecfglgrjlldbgflkggsayaockrpveamnladfnamoeadlfaewkaxahaycycyceptpriodigymw'
+TEST_DERIVABLE_KEY_UR='ur:crypto-hdkey/onaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeaahdcxjsvdzechamzcosfhsrksyasnurgturdposknjsteaomulkfswnrfaenbclhtzcwnamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkksskatmk'
+TEST_NON_DERIVABLE_KEY_UR='ur:crypto-hdkey/oxaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoezsynjlehidmokeamoeadlecsghykaeykaeykaewkaewkaocybstimhksaycytssgtkwkvatnuylf'
 
 testDefaults()
 {
@@ -501,6 +503,39 @@ testReadKeyResponse()
 {
   assertEquals ${TEST_REQUEST_ID} \
     "$(${KEYTOOL} --key-response ${TEST_KEY_RESPONSE} key-request-id)"
+}
+
+testIsDerivable()
+{
+  assertEquals ${TEST_DERIVABLE_KEY_UR} \
+    "$(${KEYTOOL} --seed '581fbdbf6b3eeababae7e7b51e3aabea' address-key)"
+
+  assertEquals ${TEST_NON_DERIVABLE_KEY_UR} \
+    "$(${KEYTOOL} --is-derivable 'false' --seed '581fbdbf6b3eeababae7e7b51e3aabea' address-key)"
+}
+
+testReadIsDerivable()
+{
+  assertEquals 'true' \
+    "$(${KEYTOOL} --source-key ${TEST_DERIVABLE_KEY_UR} is-derivable)"
+
+  assertEquals 'false' \
+    "$(${KEYTOOL} --source-key ${TEST_NON_DERIVABLE_KEY_UR} is-derivable)"
+}
+
+testDeriveFromNonDerivable()
+{
+  assertEquals 'ur:crypto-hdkey/onaoykaxhdclaebzgybzdkvdctayyknntdsrgdpfurgmpyjthlkpzeynzthdislaetutdicsjtneuoaahdcxresaftkttytazthfticfjloychchmyjpotmybzrocwaofnotenvomtsnmovwqztdamoeadlkcsghykaeykaeykaewkaewkaewkaocybstimhksaycytacyrypfoswszcrh' \
+    "$(${KEYTOOL} --source-key ${TEST_DERIVABLE_KEY_UR} --key-request-derivation-path 0 derived-key)"
+
+  assertEquals '' \
+    "$(${KEYTOOL} 2>/dev/null --source-key ${TEST_NON_DERIVABLE_KEY_UR} --key-request-derivation-path 0 derived-key)"
+}
+
+testTransformDerivableToNonDerivable()
+{
+  assertEquals ${TEST_NON_DERIVABLE_KEY_UR} \
+    "$(${KEYTOOL} --source-key ${TEST_DERIVABLE_KEY_UR} --key-request-derivation-path m --is-derivable false derived-key)"
 }
 
 # Eat all command-line arguments before calling shunit2.

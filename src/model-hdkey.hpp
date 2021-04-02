@@ -30,6 +30,7 @@ DataNode<DerivationPath>* setup_full_address_derivation_path(Model& model);
 DataNode<HDKey>* setup_address_key(Model& model);
 DataNode<HDKey>* setup_address_pub_key(Model& model);
 DataNode<OutputDescriptor>* setup_output_descriptor(Model& model);
+DataNode<bool>* setup_is_derivable(Model& model);
 
 DataNode<HDKey>* setup_master_key_base58(Model& model);
 DataNode<HDKey>* setup_account_key_base58(Model& model);

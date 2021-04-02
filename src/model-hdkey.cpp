@@ -12,7 +12,7 @@ DataNode<HDKey>* setup_master_key(Model& model) {
     node->set_from_string([](const string& s) -> HDKey {
         auto k = HDKey::parse_key(s);
         if(k.key_type() != KeyType::private_key()) {
-            throw domain_error("master-key must be a private key.");
+            throw domain_error("Must be a private key.");
         }
         return k;
     });
@@ -141,7 +141,7 @@ DataNode<HDKey>* setup_account_key(Model& model) {
         } else if(model.master_key->has_value()) {
             auto master_key = model.master_key->value();
             auto path = model.account_derivation_path->value();
-            return master_key.derive(KeyType::private_key(), path);
+            return master_key.derive(KeyType::private_key(), path, true);
         } else {
             return nullopt;
         }
@@ -161,7 +161,7 @@ DataNode<HDKey>* setup_account_pub_key(Model& model) {
         if(model.account_pub_key_base58->has_assigned_value()) {
             return model.account_pub_key_base58->value();
         } else if(model.account_key->has_value()) {
-            return model.account_key->value().derive(KeyType::public_key());
+            return model.account_key->value().derive(KeyType::public_key(), true);
         } else {
             return nullopt;
         }
@@ -250,19 +250,21 @@ DataNode<HDKey>* setup_address_key(Model& model) {
         return k;
     });
     model.add_derivation("address-key <- [address-key-base58]");
-    model.add_derivation("address-key <- [master-key, full-address-derivation-path]");
-    model.add_derivation("address-key <- [account-key, address-derivation-path]");
+    model.add_derivation("address-key <- [master-key, full-address-derivation-path, is-derivable]");
+    model.add_derivation("address-key <- [account-key, address-derivation-path], is-derivable");
     node->set_derivation([&]() -> optional<HDKey> {
         if(model.address_key_base58->has_assigned_value()) {
             return model.address_key_base58->value();
         } else if(model.master_key->has_value() && model.full_address_derivation_path->has_value()) {
             auto master_key = model.master_key->value();
             auto path = model.full_address_derivation_path->value();
-            return master_key.derive(KeyType::private_key(), path);
+            auto is_derivable = model.is_derivable->value();
+            return master_key.derive(KeyType::private_key(), path, is_derivable);
         } else if(model.account_key->has_value() && model.address_derivation_path->has_value()) {
             auto account_key = model.account_key->value();
             auto path = model.address_derivation_path->value();
-            return account_key.derive(KeyType::private_key(), path);
+            auto is_derivable = model.is_derivable->value();
+            return account_key.derive(KeyType::private_key(), path, is_derivable);
         } else {
             return nullopt;
         }
@@ -278,16 +280,20 @@ DataNode<HDKey>* setup_address_pub_key(Model& model) {
     node->set_from_string([](const string& s) -> HDKey { return HDKey::parse_key(s); });
     model.add_derivation("address-pub-key <- [address-pub-key-base58]");
     model.add_derivation("address-pub-key <- [address-key]");
-    model.add_derivation("address-pub-key <- [account-pub-key, address-derivation-path]");
+    model.add_derivation("address-pub-key <- [account-pub-key, address-derivation-path, is-derivable]");
     node->set_derivation([&]() -> optional<HDKey> {
         if(model.address_pub_key_base58->has_assigned_value()) {
             return model.address_pub_key_base58->value();
         } else if(model.address_key->has_value()) {
-            return model.address_key->value().derive(KeyType::public_key());
+            auto key_type = KeyType::public_key();
+            auto is_derivable = model.is_derivable->value();
+            return model.address_key->value().derive(key_type, is_derivable);
         } else if(model.account_pub_key->has_value() && model.address_derivation_path->has_value()) {
             auto account_pub_key = model.account_pub_key->value();
+            auto key_type = KeyType::public_key();
             auto path = model.address_derivation_path->value();
-            return account_pub_key.derive(KeyType::public_key(), path);
+            auto is_derivable = model.is_derivable->value();
+            return account_pub_key.derive(key_type, path, is_derivable);
         } else {
             return nullopt;
         }
@@ -306,6 +312,24 @@ DataNode<OutputDescriptor>* setup_output_descriptor(Model& model) {
             return OutputDescriptor(model.output_type->value(), model.account_derivation_path->value(), model.address_derivation_path->value(), model.account_pub_key->value());
         } else {
             return nullopt;
+        }
+    });
+    return node;
+}
+
+DataNode<bool>* setup_is_derivable(Model& model) {
+    auto node = new DataNode<bool>();
+    model.add_node(node);
+    node->set_info("is-derivable", "BOOLEAN", "If false, the derived key will have no chain code, preventing further derivations.");
+    node->set_to_string([](const bool& b) { return bool_to_string(b); });
+    node->set_from_string([](const string& s) -> bool { return string_to_bool(s); });
+    model.add_derivation("is-derivable <- [source-key]");
+    model.add_derivation("is-derivable (default: true)");
+    node->set_derivation([&]() -> optional<bool> {
+        if(model.source_key->has_value()) {
+            return model.source_key->value().is_derivable();
+        } else {
+            return true;
         }
     });
     return node;

@@ -28,16 +28,19 @@ public:
     KeyRequestBody(
         const KeyType& key_type,
         const DerivationPath& path,
-        const UseInfo& use_info
+        const UseInfo& use_info,
+        bool is_derivable
     )
         : _key_type(key_type)
         , _path(path)
         , _use_info(use_info)
+        , _is_derivable(is_derivable)
     { }
 
     const KeyType& key_type() const { return _key_type; }
     const DerivationPath& path() const { return _path; }
     const UseInfo& use_info() const { return _use_info; }
+    bool is_derivable() const { return _is_derivable; }
 
     void encode_cbor(ByteVector& cbor) const;
     static KeyRequestBody decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
@@ -46,6 +49,7 @@ private:
     KeyType _key_type;
     DerivationPath _path;
     UseInfo _use_info;
+    bool _is_derivable;
 };
 
 class PSBTSignatureRequestBody final {

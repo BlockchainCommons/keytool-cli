@@ -8,8 +8,7 @@ RESET=`tput sgr0`
 
 set -e
 
-git submodule init
-git submodule update
+git submodule update --init --recursive
 
 source set_build_paths.sh
 

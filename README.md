@@ -125,6 +125,17 @@ See [`MANUAL.md`](MANUAL.md) for details, more examples, and version history.
 
 These dependencies are automatically installed as submodules when you run the build script. This is the recommended way to install.
 
+### Build with Docker
+
+[Install docker](https://docs.docker.com/get-docker/) and run:
+
+```bash
+# Build the image
+$ docker build -t bc-keytool-cli .
+# Run the container
+$ docker run --rm -it bc-keytool-cli --help
+```
+
 ### MacOS
 
 ```bash

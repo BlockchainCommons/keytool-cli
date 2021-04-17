@@ -7,6 +7,5 @@ jobs:
     - uses: actions/checkout@v2
     - run: brew install autoconf automake libtool shunit2 gnu-sed cppcheck
     - run: ./build.sh
-    - run: make lint
     - run: sudo make install
     - run: make distclean

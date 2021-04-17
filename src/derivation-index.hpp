@@ -8,6 +8,7 @@
 
 class DerivationIndex final {
 public:
+    // cppcheck-suppress noExplicitConstructor
     DerivationIndex(uint32_t value);
 
     uint32_t value() const { return _value; }

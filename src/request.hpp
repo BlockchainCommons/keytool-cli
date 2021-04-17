@@ -12,7 +12,7 @@
 
 class SeedRequestBody final {
 public:
-    SeedRequestBody(const ByteVector& digest) : _digest(digest) { }
+    explicit SeedRequestBody(const ByteVector& digest) : _digest(digest) { }
 
     const ByteVector& digest() const { return _digest; }
 
@@ -66,8 +66,8 @@ typedef std::variant<SeedRequestBody, KeyRequestBody, PSBTSignatureRequestBody> 
 
 class Request final {
 public:
-    Request(RequestBodyVariant body, const std::string& description = "", const UUID& id = UUID());
-    Request(const std::string& ur);
+    explicit Request(RequestBodyVariant body, const std::string& description = "", const UUID& id = UUID());
+    explicit Request(const std::string& ur);
 
     const RequestBodyVariant& body() const { return *_body; }
     const std::string& description() const { return _description; }

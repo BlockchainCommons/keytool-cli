@@ -7,8 +7,8 @@
 class UUID final {
 public:
     UUID();
-    UUID(const std::string& uuid_str);
-    UUID(const ByteVector& data);
+    explicit UUID(const std::string& uuid_str);
+    explicit UUID(const ByteVector& data);
 
     const ByteVector& data() const { return _data; }
     const std::string str() const;

@@ -7511,6 +7511,7 @@ from_stream(std::basic_istream<CharT, Traits>& is, const CharT* fmt,
             if (G != not_a_year && V != not_a_week_num && wd != not_a_weekday)
             {
                 year_month_day ymd_trial = sys_days(year{G-1}/December/Thursday[last]) +
+// cppcheck-suppress cppcheckError
                                            (Monday-Thursday) + weeks{V-1} +
                                            (weekday{static_cast<unsigned>(wd)}-Monday);
                 if (Y == not_a_year)

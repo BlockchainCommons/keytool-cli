@@ -14,7 +14,9 @@ typedef std::variant<DerivationIndex, DerivationIndexRange, DerivationIndexWildc
 
 class DerivationIndexSpec final {
 public:
+    // cppcheck-suppress noExplicitConstructor
     DerivationIndexSpec(DerivationIndexSpecValue value) : _value(value) { }
+    // cppcheck-suppress noExplicitConstructor
     DerivationIndexSpec(uint32_t index) : _value(DerivationIndex(index)) { }
 
     DerivationIndexSpecValue value() const { return _value; }

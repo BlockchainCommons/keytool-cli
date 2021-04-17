@@ -69,6 +69,7 @@ DataNode<Seed>* setup_seed(Model& model) {
     node->set_derivation([&]() -> optional<Seed> {
         if(model.seed_response->has_assigned_value()) {
             return model.seed_response->value().seed_response();
+        // cppcheck-suppress internalAstError
         } else if(model.seed_hex->has_value()) {
             auto data = model.seed_hex->value();
             auto name = model.seed_name->has_value() ? model.seed_name->value() : "";

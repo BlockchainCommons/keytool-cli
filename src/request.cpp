@@ -191,7 +191,6 @@ string Request::ur() const {
     // body
     ByteVector body_map_entry;
     encodeInteger(body_map_entry, 2);
-    auto body = *_body;
     if(is_seed_request()) {
         seed_request().encode_cbor(body_map_entry);
     } else if(is_key_request()) {

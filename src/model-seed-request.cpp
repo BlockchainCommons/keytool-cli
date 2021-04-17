@@ -21,6 +21,7 @@ DataNode<ByteVector>* setup_seed_digest(Model& model) {
     node->set_derivation([&]() -> optional<ByteVector> {
         if(model.seed_request->has_assigned_value()) {
             return model.seed_request->value().seed_request().digest();
+        // cppcheck-suppress internalAstError
         } else if(model.seed->has_value()) {
             return sha256(model.seed->value().data());
         } else {

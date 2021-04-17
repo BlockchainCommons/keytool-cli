@@ -26,7 +26,7 @@ public:
 template <typename T>
 class DataNode final: public DataNodeProtocol {
 public:
-    DataNode() : _tried(false) { }
+    DataNode() : _tried(false), _tag(0) { }
 
     virtual const std::string& name() const override { return _name; }
     virtual int tag() const override { return _tag; }

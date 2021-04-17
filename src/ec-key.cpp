@@ -4,6 +4,7 @@
 
 #include <stdexcept>
 
+// cppcheck-suppress unusedFunction
 std::string ECKey::to_hex() const {
     return data_to_hex(data());
 }
@@ -19,6 +20,7 @@ ECCompressedPublicKey ECPublicKey::compressed() const { return ECCompressedPubli
 // cppcheck-suppress unusedFunction
 ECUncompressedPublicKey ECPublicKey::uncompressed() const { return ECUncompressedPublicKey(data()); }
 
+// cppcheck-suppress unusedFunction
 ECCompressedPublicKey ECPrivateKey::to_public() const {
     return Wally::instance.ec_key_to_public(*this);
 }

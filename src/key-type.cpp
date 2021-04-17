@@ -37,6 +37,7 @@ KeyType KeyType::find(const std::string& name) {
     throw std::domain_error("Unknown key_type: " + name);
 }
 
+// cppcheck-suppress unusedFunction
 bool KeyType::is_public() const {
     return *this == public_key();
 }

@@ -84,7 +84,7 @@ StringVector split(const string& s, const char& separator) {
 	for(auto c: s) {
 		if(c != separator) {
             buf += c;
-        } else if(c == separator && buf.length() > 0) {
+        } else if(buf.length() > 0) {
             result.push_back(buf);
             buf = "";
         }
@@ -194,6 +194,7 @@ const ByteVector sha256(const ByteVector &buf) {
     return ByteVector(digest, digest + SHA256_DIGEST_LENGTH);
 }
 
+// cppcheck-suppress unusedFunction
 uint32_t parse_uint32(const string& s) {
     int n;
     try {
@@ -248,12 +249,14 @@ uint32_t data_to_uint32(const ByteVector& v) {
     return pop_uint32(d);
 }
 
+// cppcheck-suppress unusedFunction
 std::string uint32_to_hex(uint32_t n) {
     ByteVector v;
     push_uint32(v, n);
     return data_to_hex(v);
 }
 
+// cppcheck-suppress unusedFunction
 bool string_to_bool(const std::string& s) {
     if(s == "true") {
         return true;
@@ -264,6 +267,7 @@ bool string_to_bool(const std::string& s) {
     }
 }
 
+// cppcheck-suppress unusedFunction
 std::string bool_to_string(bool b) {
     return b ? "true" : "false";
 }

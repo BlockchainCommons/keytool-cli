@@ -54,6 +54,7 @@ ByteVector Wally::bip39_mnemonic_to_bip32_seed(const string& mnemonic) const {
     return result;
 }
 
+// cppcheck-suppress unusedFunction
 bool Wally::bip32_is_seed_length_valid(size_t len) const {
     vector<size_t> valid_lengths = {BIP32_ENTROPY_LEN_128, BIP32_ENTROPY_LEN_256, BIP32_ENTROPY_LEN_512};
     return any_of(valid_lengths.begin(), valid_lengths.end(), [&](size_t l) { return l == len; });
@@ -88,10 +89,12 @@ bool Wally::bip32_is_seed_length_valid(size_t len) const {
 //     return bip32_key_from_seed(seed, network);
 // }
 
+// cppcheck-suppress unusedFunction
 uint32_t Wally::flags_for_private(bool is_private) {
     return is_private ? BIP32_FLAG_KEY_PRIVATE : BIP32_FLAG_KEY_PUBLIC;
 }
 
+// cppcheck-suppress unusedFunction
 void Wally::print_key(const ext_key& k) const {
     ostringstream result;
     // "ext_key(chain_code: \(chain_code), parent160: \(parent160), priv_key: \(priv_key),
@@ -173,15 +176,15 @@ void Wally::print_key(const ext_key& k) const {
 //     return ECCompressedPublicKey(k);
 // }
 
-bool Wally::is_private(const ext_key& k) {
+bool Wally::is_private(const ext_key& k) const {
     return k.priv_key[0] == BIP32_FLAG_KEY_PRIVATE;
 }
 
-bool Wally::is_master(const ext_key& k) {
+bool Wally::is_master(const ext_key& k) const {
     return k.depth == 0;
 }
 
-bool Wally::is_version_valid(uint32_t ver, uint32_t flags) {
+bool Wally::is_version_valid(uint32_t ver, uint32_t flags) const {
     if(ver == BIP32_VER_MAIN_PRIVATE || ver == BIP32_VER_TEST_PRIVATE) {
         return true;
     }
@@ -189,7 +192,7 @@ bool Wally::is_version_valid(uint32_t ver, uint32_t flags) {
     return flags == BIP32_FLAG_KEY_PUBLIC && (ver == BIP32_VER_MAIN_PUBLIC || ver == BIP32_VER_TEST_PUBLIC);
 }
 
-void Wally::check_valid(const ext_key& k) {
+void Wally::check_valid(const ext_key& k) const {
     auto ver_flags = is_private(k) ? BIP32_FLAG_KEY_PRIVATE : BIP32_FLAG_KEY_PUBLIC;
     assert(is_version_valid(k.version, ver_flags));
     //assert(!is_all_zero(data_of(k.chain_code, sizeof(k.chain_code))));
@@ -218,6 +221,7 @@ ECCompressedPublicKey Wally::ec_key_compress(const ECUncompressedPublicKey& key)
     return ECCompressedPublicKey(key_out);
 }
 
+// cppcheck-suppress unusedFunction
 string Wally::ec_key_to_wif(const ECPrivateKey& key, const Network& network) const {
     char* wif_out;
     uint32_t prefix = network == Network::mainnet() ? 0x80 : 0xef;
@@ -227,6 +231,7 @@ string Wally::ec_key_to_wif(const ECPrivateKey& key, const Network& network) con
     return result;
 }
 
+// cppcheck-suppress unusedFunction
 ECPrivateKey Wally::wif_to_ec_key(const string& wif, const Network& network) const {
     uint32_t prefix = network == Network::mainnet() ? 0x80 : 0xef;
     ByteVector bytes_out(EC_PRIVATE_KEY_LEN);

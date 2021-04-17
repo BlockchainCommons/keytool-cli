@@ -71,7 +71,6 @@ string Response::ur() const {
     // body
     ByteVector body_map_entry;
     encodeInteger(body_map_entry, 2);
-    auto body = *_body;
     if(is_seed_response()) {
         ::append(body_map_entry, seed_response().tagged_cbor());
     } else if(is_key_response()) {

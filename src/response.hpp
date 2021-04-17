@@ -15,7 +15,7 @@ typedef std::variant<Seed, HDKey, PSBTSignatureResponseBody> ResponseBodyVariant
 class Response final {
 public:
     Response(ResponseBodyVariant body, const UUID& id);
-    Response(const std::string& ur);
+    explicit Response(const std::string& ur);
 
     const ResponseBodyVariant& body() const { return *_body; }
     const UUID& id() const { return *_id; }

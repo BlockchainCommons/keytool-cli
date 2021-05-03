@@ -8,7 +8,7 @@ E-Mail: `$email`
 
 Legal Jurisdiction: Wyoming, United States of America
 
-Project: https://github.com/BlockchainCommons/bc-keytool-cli
+Project: https://github.com/BlockchainCommons/keytool-cli
 
 Date: `$date`
 

@@ -17,8 +17,8 @@ This document describes building `keytool` with `MSYS2` and its usage on `Window
 
 ## Compiling Keytool
 
-1. Clone `bc-keytool-cli`, e.g. into `C:\msys64\home`
-2. Open `MSYS2 MinGW 64-bit` application and `cd` into `C:\msys64\home\bc-keytool-cli`
+1. Clone `keytool-cli`, e.g. into `C:\msys64\home`
+2. Open `MSYS2 MinGW 64-bit` application and `cd` into `C:\msys64\home\keytool-cli`
 3. Run the build script with:
 ```bash
 # export CC="clang" && export CXX="clang++" && ./build.sh

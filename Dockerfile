@@ -8,9 +8,9 @@ RUN apt-get -y install
 RUN wget https://apt.llvm.org/llvm.sh
 RUN chmod +x llvm.sh
 RUN ./llvm.sh 10  # version 10
-# Build bc-keytool-cli
-COPY . /bc-keytool-cli
-WORKDIR /bc-keytool-cli
+# Build keytool-cli
+COPY . /keytool-cli
+WORKDIR /keytool-cli
 ENV CC="clang-10" CXX="clang++-10"
 ENV WALLY_CONFIGURE="--disable-clear-tests"
 RUN apt-get install -y python3 python3-dev
@@ -24,7 +24,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -y
 RUN apt-get install -y libc++1 libc++abi1
 # Install binary
-COPY --from=build-stage /bc-keytool-cli/src/keytool /usr/local/bin/keytool
+COPY --from=build-stage /keytool-cli/src/keytool /usr/local/bin/keytool
 # Create an unprivileged user
 RUN useradd --create-home --user-group user
 USER user

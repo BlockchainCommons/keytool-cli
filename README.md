@@ -1,7 +1,7 @@
-# 🔑 Blockchain Commons bc-keytool-cli
+# 🔑 Blockchain Commons keytool-cli
 
-![Build](https://github.com/BlockchainCommons/bc-keytool-cli/workflows/ci/badge.svg)
-![Lint](https://github.com/BlockchainCommons/bc-keytool-cli/workflows/lint/badge.svg)
+![Build](https://github.com/BlockchainCommons/keytool-cli/workflows/ci/badge.svg)
+![Lint](https://github.com/BlockchainCommons/keytool-cli/workflows/lint/badge.svg)
 
 ### _by [Wolf McNally](https://www.github.com/wolfmcnally) and [Christopher Allen](https://www.github.com/ChristopherA)_
 
@@ -134,9 +134,9 @@ These dependencies are automatically installed as submodules when you run the bu
 
 ```bash
 # Build the image
-$ docker build -t bc-keytool-cli .
+$ docker build -t keytool-cli .
 # Run the container
-$ docker run --rm -it bc-keytool-cli --help
+$ docker run --rm -it keytool-cli --help
 ```
 
 ### MacOS
@@ -204,8 +204,8 @@ $ sudo apt-get -y install build-essential pkg-config autoconf libtool shunit2 li
 Then, you can clone and build this repo:
 
 ```bash
-$ git clone https://github.com/BlockchainCommons/bc-keytool-cli.git
-$ cd bc-keytool-cli/
+$ git clone https://github.com/BlockchainCommons/keytool-cli.git
+$ cd keytool-cli/
 $ export CC="clang-10" && export CXX="clang++-10" && ./build.sh
 $ sudo make install
 ```

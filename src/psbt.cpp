@@ -46,6 +46,41 @@ PSBT::PSBT(const string& base64)
     : PSBT(parse_psbt(base64))
     { }
 
+PSBT PSBT::from_cbor(const ByteVector& cbor) {
+    auto pos = cbor.begin();
+    auto end = cbor.end();
+    return decode_cbor(pos, end);
+}
+
+PSBT PSBT::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    ByteVector data;
+    decodeBytes(pos, end, data, cbor_decoding_flags);
+    return PSBT(data);
+}
+
+PSBT PSBT::decode_tagged_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    Tag major_tag;
+    Tag minor_tag;
+    decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
+    if(major_tag != Major::semantic || minor_tag != 310) {
+        throw domain_error("Invalid PSBT.");
+    }
+    return decode_cbor(pos, end);
+}
+
+ByteVector PSBT::cbor() const {
+    ByteVector cbor;
+    encodeBytes(cbor, data());
+    return cbor;
+}
+
+ByteVector PSBT::tagged_cbor() const {
+    ByteVector c;
+    encodeTagAndValue(c, Major::semantic, Tag(310));
+    ::append(c, cbor());
+    return c;
+}
+
 bool PSBT::is_finalized() const {
     return Wally::instance.psbt_is_finalized(_psbt.get());
 }

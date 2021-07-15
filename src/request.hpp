@@ -6,6 +6,7 @@
 #include "key-type.hpp"
 #include "derivation-path.hpp"
 #include "use-info.hpp"
+#include "psbt.hpp"
 #include <string>
 #include <variant>
 #include <optional>
@@ -54,12 +55,15 @@ private:
 
 class PSBTSignatureRequestBody final {
 public:
-    PSBTSignatureRequestBody() { }
+    PSBTSignatureRequestBody(const PSBT& psbt) : _psbt(psbt) { }
+
+    const PSBT& psbt() const { return _psbt; }
 
     void encode_cbor(ByteVector& cbor) const;
     static PSBTSignatureRequestBody decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end);
 
 private:
+    PSBT _psbt;
 };
 
 typedef std::variant<SeedRequestBody, KeyRequestBody, PSBTSignatureRequestBody> RequestBodyVariant;

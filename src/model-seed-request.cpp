@@ -38,6 +38,7 @@ DataNode<UUID>* setup_seed_request_id(Model& model) {
     node->set_to_string([](const UUID& uuid) { return uuid.str(); });
     node->set_from_string([](const string& s) -> UUID { return UUID(s); });
     model.add_derivation("seed-request-id <- [seed-request]");
+    model.add_derivation("seed-request-id <- [seed-response]");
     model.add_derivation("seed-request-id (default: unique)");
     node->set_derivation([&]() -> optional<UUID> {
         if(model.seed_request->has_assigned_value()) {

@@ -42,6 +42,8 @@ public:
     DataNode<std::string> *seed_note;
     DataNode<Seed> *seed;
     DataNode<ByteVector> *seed_digest;
+
+    // seed-request
     DataNode<UUID> *seed_request_id;
     DataNode<std::string> *seed_request_description;
     DataNode<Request> *seed_request;
@@ -105,6 +107,12 @@ public:
     DataNode<PSBT> *psbt_signed_base64;
     DataNode<Transaction> *transaction;
     DataNode<Transaction> *transaction_hex;
+
+    // psbt-signature-request
+    DataNode<UUID> *psbt_signature_request_id;
+    DataNode<std::string> *psbt_signature_request_description;
+    DataNode<Request> *psbt_signature_request;
+    DataNode<Response> *psbt_signature_response;
 
 private:
     std::vector<DataNodeProtocol*> _all_nodes;

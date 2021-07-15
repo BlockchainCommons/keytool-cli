@@ -10,6 +10,17 @@ DataNode<PSBT>* setup_psbt(Model& model) {
     node->set_info("psbt", "PSBT", "A partially signed Bitcoin transaction (PSBT).");
     node->set_to_string([](const PSBT& p) { return p.ur(); });
     node->set_from_string([](const string& s) -> PSBT { return PSBT(s); });
+    model.add_derivation("psbt <- [psbt-signature-request]");
+    model.add_derivation("psbt <- [psbt-signature-response]");
+    node->set_derivation([&]() -> optional<PSBT> {
+        if(model.psbt_signature_request->has_assigned_value()) {
+            return model.psbt_signature_request->value().psbt_signature_request().psbt();
+        } else if(model.psbt_signature_response->has_assigned_value()) {
+            return model.psbt_signature_response->value().psbt_signature_response();
+        } else {
+            return nullopt;
+        }
+    });
     return node;
 }
 

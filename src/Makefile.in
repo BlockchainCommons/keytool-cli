@@ -57,6 +57,7 @@ OBJS = \
 	model-hdkey.o \
 	model-hdkey-request.o \
 	model-psbt.o \
+	model-psbt-signature-request.o \
 	model-seed.o \
 	model-seed-request.o \
 	network.o \
@@ -101,11 +102,12 @@ ec-key.o: ec-key.hpp utils.hpp wally-utils.hpp use-info.hpp
 hd-key.o: hd-key.hpp utils.hpp use-info.hpp derivation-path.hpp wally-utils.hpp seed.hpp ec-key.hpp
 keytool.o: params.hpp
 key-type.o: key-type.hpp
-model.o: model.hpp data-node.hpp asset.hpp hd-key.hpp ec-key.hpp utils.hpp wally-utils.hpp chain-type.hpp output-type.hpp derivation-index-spec.hpp output-descriptor.hpp psbt.hpp transaction.hpp seed.hpp model-eckey.hpp model-hdkey.hpp model-psbt.hpp model-seed.hpp model-seed-request.hpp model-hdkey-request.hpp uuid.hpp request.hpp
+model.o: model.hpp data-node.hpp asset.hpp hd-key.hpp ec-key.hpp utils.hpp wally-utils.hpp chain-type.hpp output-type.hpp derivation-index-spec.hpp output-descriptor.hpp psbt.hpp transaction.hpp seed.hpp model-eckey.hpp model-hdkey.hpp model-psbt.hpp model-seed.hpp model-seed-request.hpp model-hdkey-request.hpp model-psbt-signature-request.hpp uuid.hpp request.hpp
 model-eckey.o: model-eckey.hpp data-node.hpp utils.hpp model.hpp asset.hpp network.hpp ec-key.hpp
 model-hdkey.o: model-hdkey.hpp data-node.hpp utils.hpp model.hpp hd-key.hpp output-type.hpp chain-type.hpp derivation-index-spec.hpp output-descriptor.hpp
 model-hdkey-request.o: model-hdkey-request.hpp model.hpp uuid.hpp request.hpp response.hpp key-type.hpp hd-key.hpp derivation-path.hpp
 model-psbt.o: model-psbt.hpp data-node.hpp utils.hpp model.hpp psbt.hpp transaction.hpp
+model-psbt-signature-request.o: model-psbt-signature-request.hpp data-node.hpp utils.hpp model.hpp psbt.hpp uuid.hpp request.hpp response.hpp
 model-seed.o: model-seed.hpp data-node.hpp utils.hpp model.hpp seed.hpp
 model-seed-request.o: model-seed-request.hpp data-node.hpp utils.hpp model.hpp seed.hpp uuid.hpp request.hpp response.hpp
 network.o: network.hpp utils.hpp
@@ -114,8 +116,8 @@ output-type.o: output-type.hpp
 params.o: params.hpp utils.hpp config.h model.hpp
 psbt.o: psbt.hpp utils.hpp wally-utils.hpp ec-key.hpp
 randombytes.o: randombytes.h
-request.o: request.hpp uuid.hpp utils.hpp key-type.hpp derivation-path.hpp use-info.hpp
-response.o: response.hpp uuid.hpp seed.hpp hd-key.hpp utils.hpp
+request.o: request.hpp uuid.hpp utils.hpp key-type.hpp derivation-path.hpp use-info.hpp psbt.hpp
+response.o: response.hpp uuid.hpp seed.hpp hd-key.hpp psbt.hpp utils.hpp
 seed.o: seed.hpp
 timestamp.o: timestamp.hpp date.h
 transaction.o: transaction.hpp utils.hpp wally-utils.hpp psbt.hpp

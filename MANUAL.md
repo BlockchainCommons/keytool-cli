@@ -36,7 +36,7 @@ address-ec-key <- [address-ec-key-wif, network]
 address-ec-key <- [address-key]
 address-ec-key-wif <- [address-ec-key, network]
 address-index (default: 0)
-address-key <- [account-key, address-derivation-path, is-derivable]
+address-key <- [account-key, address-derivation-path], is-derivable
 address-key <- [address-key-base58]
 address-key <- [master-key, full-address-derivation-path, is-derivable]
 address-key-base58 <- [address-key]
@@ -56,8 +56,8 @@ coin-type <- [asset, network]
 derived-key <- [key-response]
 derived-key-base58 <- [derived-key]
 full-address-derivation-path <- [account-derivation-path, address-derivation-path]
-is-derivable <- [source-key]
 is-derivable (default: true)
+is-derivable <- [source-key]
 key-request <- [key-request-derivation-path, key-request-type, key-request-id, key-request-description, asset, network, is-derivable]
 key-request-derivation-path <- [full-address-derivation-path]
 key-request-derivation-path <- [key-request]
@@ -76,16 +76,26 @@ master-key-fingerprint <- [master-key]
 network (default: mainnet)
 output-descriptor <- [output-type, account-derivation-path, address-derivation-path, account-pub-key]
 output-type (default: wpkh)
+psbt <- [psbt-signature-request]
+psbt <- [psbt-signature-response]
 psbt-base64 <- [psbt]
 psbt-finalized <- [psbt]
 psbt-finalized-base64 <- [psbt-finalized]
 psbt-finalized-hex <- [psbt-finalized]
 psbt-hex <- [psbt]
+psbt-signature-request <- [psbt psbt-signature-request-id psbt-signature-request-description]
+psbt-signature-request-description (default: empty)
+psbt-signature-request-description <- [psbt-signature-request]
+psbt-signature-request-id (default: unique)
+psbt-signature-request-id <- [psbt-signature-request]
+psbt-signature-request-id <- [psbt-signature-response]
+psbt-signature-response <- [psbt-signature-request, psbt-signed]
 psbt-signed <- [psbt, address-ec-key]
 psbt-signed-base64 <- [psbt-signed]
 psbt-signed-hex <- [psbt-signed]
 purpose <- [output-type]
 seed <- [seed-hex, seed-name (optional), seed-note (optional)]
+seed <- [seed-response]
 seed-digest <- [seed-request]
 seed-digest <- [seed]
 seed-hex <- [seed]
@@ -96,6 +106,7 @@ seed-request-description (default: empty)
 seed-request-description <- [seed-request]
 seed-request-id (default: unique)
 seed-request-id <- [seed-request]
+seed-request-id <- [seed-response]
 seed-response <- [seed-request, seed]
 source-key <- [master-key]
 transaction <- [psbt-finalized]
@@ -159,8 +170,10 @@ Usage: keytool [-?V] [--account-derivation-path=BIP32_PATH]
             [--address-segwit=ADDRESS] [--address-sh=ADDRESS] [--asset=ENUM btc
             | eth] [--chain-type=ENUM internal | external | identity]
             [--chain-type-int=INDEX] [--coin-type=INDEX] [--derived-key=HDKEY]
+            [--derived-key-base58=BASE58]
             [--full-address-derivation-path=BIP32_PATH]
-            [--key-request=REQUEST] [--key-request-derivation-path=BIP32_PATH]
+            [--is-derivable=BOOLEAN] [--key-request=REQUEST]
+            [--key-request-derivation-path=BIP32_PATH]
             [--key-request-description=TEXT] [--key-request-id=UUID]
             [--key-request-type=ENUM private | public]
             [--key-response=RESPONSE] [--master-key=HDKEY]
@@ -169,15 +182,19 @@ Usage: keytool [-?V] [--account-derivation-path=BIP32_PATH]
             [--output-descriptor=OUTPUT_DESCRIPTOR] [--output-type=ENUM wpkh |
             pkh | sh-wpkh] [--psbt=PSBT] [--psbt-base64=BASE64]
             [--psbt-finalized=PSBT] [--psbt-finalized-base64=BASE64]
-            [--psbt-finalized-hex=HEX] [--psbt-hex=HEX] [--psbt-signed=PSBT]
+            [--psbt-finalized-hex=HEX] [--psbt-hex=HEX]
+            [--psbt-signature-request=REQUEST]
+            [--psbt-signature-request-description=TEXT]
+            [--psbt-signature-request-id=UUID]
+            [--psbt-signature-response=RESPONSE] [--psbt-signed=PSBT]
             [--psbt-signed-base64=BASE64] [--psbt-signed-hex=HEX]
             [--purpose=INDEX] [--seed=SEED] [--seed-digest=HEX]
             [--seed-hex=HEX] [--seed-name=TEXT] [--seed-note=TEXT]
             [--seed-request=REQUEST] [--seed-request-description=TEXT]
             [--seed-request-id=UUID] [--seed-response=RESPONSE]
             [--source-key=HDKEY] [--transaction=TRANSACTION]
-            [--transaction-hex=HEX] [--help] [--usage] [--version]
-  
+            [--transaction-hex=HEX] [--help] [--usage] [--version] INPUT
+
   output-attributes...
 ```
 
@@ -338,7 +355,7 @@ keytool \
   --psbt "cHNidP8BAMMCAAAAA0DcshmpIS/ZW94f7roto1MhBNhk6Rz/ZaetRRfcedh9AAAAAAD9////wm+mbFIbTYiPlNNhB8P1/vBcwKG/ZryOHMKkL7dSqTYAAAAAAP3///+CmZgUyFrdKNCZUoqfgBhCAFORPdiP/qr0OOt4I5n+CgAAAAAA/f///wJAQg8AAAAAABYAFCBk78yn2RApIqWfuXigrti3WcQRncYQAAAAAAAWABSMyh/Y85oXJKUZQJT+IeAZJk/MeAAAAAAAAQD9PgECAAAABnPYBYJW735g7YMuaFrrK2ZgQj2XELyHukIJmdvOUB4sAAAAAAD+////bmU42jLXSFq3iLHmsyOR/OrF/x0ZQ2lAbecy8CeanlsAAAAAAP7///87WWkGf++EI4Um41R9YUGj00Z0+wvW0fmPYJ+81lWZOAEAAAAA/v///++syYWL4jBkYbhPlOrxJkozfdkL/XJWnhl2nVzVxa2OAAAAAAD+////UAL64CRRErlwBwQM+X5opqpiI0JmpsKs2a1MzGtZh8QAAAAAAP7///8chEjupyVpNkPdCyBE1wpPrS8MGI9EjEGpj7CTgZAXtgAAAAAA/v///wKghgEAAAAAABYAFMzoxnRhxnGxMSMykm4rhwto1dz6vkMPAAAAAAAWABTzi7rfXv1coXc7HvFo2QoeYq4U1E54HAABAR+ghgEAAAAAABYAFMzoxnRhxnGxMSMykm4rhwto1dz6IgYCtKMsZPEI+kb9daMTFeF/+8io6poDvTx+cinpPo9y1EQYDwVpQ1QAAIABAACAAAAAgAAAAAAQAAAAAAEAUgIAAAABbEc0zoXZ/16+PtvwSQ43BytcwpYvO6gGU11xDcaGH7YAAAAAAAEAAAABgEEPAAAAAAAWABQMEbJbdDyzQi5GH1/cPH4QeuPCiwAAAAABAR+AQQ8AAAAAABYAFAwRslt0PLNCLkYfX9w8fhB648KLIgYDcV7jKmCV/4gwmyIZjcVj1LXh1/M4er/DpkPbYiUikt8YDwVpQ1QAAIABAACAAAAAgAAAAACIAAAAAAEAUgIAAAABtvIk4LNoWJem4tfDI5qeVZKR954vLCVJBiqv3pSFR8AAAAAAAAEAAAAB0kEPAAAAAAAWABT93jySCCHYPSeMHxs0jj9i+0UtmAAAAAABAR/SQQ8AAAAAABYAFP3ePJIIIdg9J4wfGzSOP2L7RS2YIgYDhA94BGdguQJPUq61nFoMNrVM4VUaSEJwM7lZcPGyFPUYDwVpQ1QAAIABAACAAAAAgAAAAACGAAAAACICAgFa3FuEwDkszXFDVxN6KU6pVUV/f6d1JSWZ1RsD4CNtGA8FaUNUAACAAQAAgAAAAIAAAAAAiQAAAAAiAgJZ8CLw/Bdus5hyuOPx7cnFfkBkRoTavnS6BRAHi5GOLBgPBWlDVAAAgAEAAIAAAACAAQAAAFIAAAAA" \
   --address-ec-key-wif "cSyLgU8rSvYNU1j6XR2vo5ebSQqza7PR9iFNtkkYrFMwyB5or5gH" \
   psbt-signed
- 
+
 ur:crypto-psbt/hkaarfjojkidjyzmadaesraoaeaeaeaxfzuoprcfptcldltahpuectwyrddpotguclaatpiewlcezmihospmfechuokktpkiaeaeaeaeaezczmzmzmsajloljzgmcwgtlomymwtehsatsrykzewthhrtoyrsiyrfmncesaoxdlrlgmptenaeaeaeaeaezczmzmzmlfnlmkbbsphtutdetinlgmlenelacsfwaegumefstpmyzepkwketwmkscnnlzebkaeaeaeaeaezczmzmzmaofzfwbsaeaeaeaeaecmaebbcxiewssfostabedtcponnerhksnbpltprlhkssbyntswbeaeaeaeaeaecmaebblksgcttpwfnychdkoncffzmwzeclvtcfdsgwsfksaeaeaeaeaeadaezcfmadaoaeaeaeamjktpahlfhfwskbhnwelsdmishtwmdniyhnfwfsmsberfltrdfwasnluytogdckdwaeaeaeaeaezezmzmzmjtihettneytsfdhtrllopavaqdcnmeztwdskzmcacffxinfzjnvdeywtdinynnhpaeaeaeaeaezezmzmzmfrhkinamlbwslrcnlpdsvlghkihsfpottefgjyzobdtbttytmyhnnerftbgonletadaeaeaeaezezmzmzmwspssolpluvodyiehsrogwmwwdwndsgeeokitabdzcjphfnncfkonthhtlskpmmnaeaeaeaeaezezmzmzmgdaozsvtdkgybgrhjoataabnytkbisolpkidcnfwiyolsapstapmgssfjehkltssaeaeaeaeaezezmzmzmcelrfdwyosdainenfxutbdcxfytsbkgwpmdlbncsmyfylkfpptmypfmulymhchrpaeaeaeaeaezezmzmzmaonblnadaeaeaeaeaecmaebbsfvsswjyhsswjspaehcneymojtdnltbdistluozsrnfxbsaeaeaeaeaecmaebbwflurdurhyzchhoyktfrckwnistabkckidplbbtyglksceaeadadctnblnadaeaeaeaeaecmaebbsfvsswjyhsswjspaehcneymojtdnltbdistluozscpaoaoqzotdwiewnayzsfgzckpotbwbzvylbzosppdwdnyaxryfnkbjpdtwlfmmyjptyfyfddyfeaoclaevendbaiazmrdjtisgwinjsfxjeetosrocerdhglazcpfksgesnbgsefedafemhhnaocxdebkoniypyoxrfksmecyenjppfsbrecsadldfgbntastdeutbyptylbymwttpsjzadcpamaoqzotdwiewnayzsfgzckpotbwbzvylbzosppdwdnyaxryfnkbjpdtwlfmmyjptyfycsbsahinfxghaeaelaadaeaelaaeaeaelaaeaeaeaebeaeaeaeaeadaegmaoaeaeaeadjzfleetolptazmhyrnfmuywtgabaematdnhhsamtdlfrpdamguhljsbtswlnctrpaeaeaeaeaeadaeaeaeadlafpbsaeaeaeaeaecmaebbbnbyprhpjyfnqdfwdmfgctheuofnkbbeknvlsaluaeaeaeaeadadctlafpbsaeaeaeaeaecmaebbbnbyprhpjyfnqdfwdmfgctheuofnkbbeknvlsalucpamaxjshyvldrhnmdzmlodyndcpcflgskiatyrevytswfetknrssrolfxuyiddacpmourcsbsahinfxghaeaelaadaeaelaaeaeaelaaeaeaeaeloaeaeaeaeadaegmaoaeaeaeadrpwzdkvtqdishdmsolvotssrcnnynngomomeylnndldwdagaamdrpeuemwlpflrtaeaeaeaeaeadaeaeaeadtdfpbsaeaeaeaeaecmaebbzcuefnmoaycltpfsdilkctcweemnfhidzofedpmkaeaeaeaeadadcttdfpbsaeaeaeaeaecmaebbzcuefnmoaycltpfsdilkctcweemnfhidzofedpmkcpamaxlrbsksaaiohnrhaogwgmplrenshtbnenregsvygocyfdfwjoeorhhkjownprbbykcsbsahinfxghaeaelaadaeaelaaeaeaelaaeaeaeaelnaeaeaeaecpaoaoadhtuohplrrtesdwsnjsfxhgbwkndtglptgofelblboskpdadanltlcwaxvtcnjncsbsahinfxghaeaelaadaeaelaaeaeaelaaeaeaeaeldaeaeaeaecpaoaohkwtcpwtztchjtqdmkjprovlwnwesoskkbfziefglrtnrnjyrdahbeatlumemndwcsbsahinfxghaeaelaadaeaelaaeaeaelaadaeaeaegmaeaeaeaerdinonfp
 ```
 
@@ -365,7 +382,7 @@ keytool --network testnet --psbt ${PSBT_TO_SIGN} --address-ec-key-wif ${KEY_1} p
   | keytool --network testnet --psbt '' --address-ec-key-wif ${KEY_2} psbt-signed \
   | keytool --network testnet --psbt '' --address-ec-key-wif ${KEY_3} psbt-signed \
   | keytool --psbt '' transaction-hex
-  
+
 0200000000010340dcb219a9212fd95bde1feeba2da3532104d864e91cff65a7ad4517dc79d87d0000000000fdffffffc26fa66c521b4d888f94d36107c3f5fef05cc0a1bf66bc8e1cc2a42fb752a9360000000000fdffffff82999814c85add28d099528a9f8018420053913dd88ffeaaf438eb782399fe0a0000000000fdffffff0240420f00000000001600142064efcca7d9102922a59fb978a0aed8b759c4119dc61000000000001600148cca1fd8f39a1724a5194094fe21e019264fcc7802483045022100e49b0e63ffba6e684f6971436b38a7b81cba5780fdb0784acd12c145254590600220280aa566aba4bc78911a3672b0cbb5180189460cd9c728dd11a9f71194d1ac6c012102b4a32c64f108fa46fd75a31315e17ffbc8a8ea9a03bd3c7e7229e93e8f72d44402483045022100de1732ee1350d171012fc097af03e91ff26f00cbd2c96e7a0fe2a6abb61b9d1d02206329366501086ef5d2143877eed4c6f6ed93db8ed26c27f360db1b2c55b80156012103715ee32a6095ff88309b22198dc563d4b5e1d7f3387abfc3a643db62252292df024730440220500b1db89395d62c5049414adc52e79d0b5527180669ac811ad61963d57ebec4022000d64181fe2b1c9d0adb2672ad0612c40c4e0cb027e22e340d35a92307ef4c8e012103840f78046760b9024f52aeb59c5a0c36b54ce1551a48427033b95970f1b214f500000000
 ```
 
@@ -397,28 +414,28 @@ keytool \
 	seed-request \
 	seed-request-id
 
-ur:crypto-request/oeadtpdagdrpaswlkntlcegegmrpprgutelrsevdlfaotaadwkhdcxzsylchinialfurwkjlvejksthkenosuresmhsnhfveetpkpmnlguwlgwrdlblplblghtssad
-b609e97a-d51c-4a52-b6b2-53d384c1e782
+ur:crypto-request/oeadtpdagdvacyoegodnaxfdisqddwtlhdbwoxvejeaotaadwkoyadtaaohdhdcxzsylchinialfurwkjlvejksthkenosuresmhsnhfveetpkpmnlguwlgwrdlblplbvsrnleba
+e61aa255-2b03-4868-b32c-d55813a4e46b
 ```
 
 Generate a response to the above request, printing the request and the request ID:
 
 ```
 keytool \
-	--seed-request ur:crypto-request/oeadtpdagdrpaswlkntlcegegmrpprgutelrsevdlfaotaadwkhdcxzsylchinialfurwkjlvejksthkenosuresmhsnhfveetpkpmnlguwlgwrdlblplblghtssad \
+	--seed-request ur:crypto-request/oeadtpdagdvacyoegodnaxfdisqddwtlhdbwoxvejeaotaadwkoyadtaaohdhdcxzsylchinialfurwkjlvejksthkenosuresmhsnhfveetpkpmnlguwlgwrdlblplbvsrnleba \
 	--seed 581fbdbf6b3eeababae7e7b51e3aabea \
 	seed-response \
 	seed-request-id
 
-ur:crypto-response/oeadtpdagdrpaswlkntlcegegmrpprgutelrsevdlfaotaaddwoyadgdhdctryrsjefmwdrdrdvdvdreckftpywdmerfiyrs
-b609e97a-d51c-4a52-b6b2-53d384c1e782
+ur:crypto-response/oeadtpdagdvacyoegodnaxfdisqddwtlhdbwoxvejeaotaaddwoyadgdhdctryrsjefmwdrdrdvdvdreckftpywdwmdstlrs
+e61aa255-2b03-4868-b32c-d55813a4e46b
 ```
 
 Extract the hex seed from the above response:
 
 ```
 keytool \
-	--seed-response ur:crypto-response/oeadtpdagdrpaswlkntlcegegmrpprgutelrsevdlfaotaaddwoyadgdhdctryrsjefmwdrdrdvdvdreckftpywdmerfiyrs \
+	--seed-response ur:crypto-response/oeadtpdagdvacyoegodnaxfdisqddwtlhdbwoxvejeaotaaddwoyadgdhdctryrsjefmwdrdrdvdvdreckftpywdwmdstlrs \
 	seed-hex
 
 581fbdbf6b3eeababae7e7b51e3aabea
@@ -483,6 +500,38 @@ keytool \
 ur:crypto-hdkey/oxaxhdclaondcfnsctgmqzgmcnpyurahykcfjklkcnjeolcfkimhattbkgglmtjlpddrwpzcktaahdcxrftpgmaoayaefgzmplesjskicmlamktnhgssmucnrytocmcftacxwlcedelneelyamoeadlncsghykadykaeykaocybstimhksaycywtwpeoeyjohkterk
 xpub6DRUbxFn5yqrAkKgnsUNjPcbw5NtFjQnRNK4ytXwCxMKv3rks66xPKWK5YBUy9sDddCpta7FexygbmKUp7shSKeMRk1cWeDQSXvGyvX9s1i
 591e64ac-4fb4-44a4-9e90-4cb05aa2bd84
+```
+
+## Requesting a PSBT signature
+
+This example produces the same finished transaction as the signing example above, but uses `ur:crypto-request` and `ur:crypto-response` in the same manner that airgapped devices would use them.
+
+Each of the three phases of the example repeats these three steps, one for each signing key:
+
+1. Generate a `ur:crypto-request` that requests signing of the unfinished PSBT,
+2. Respond to the request by generating a `ur:crypto-response` containing the PSBT with one or more outputs signed by the provided key, and
+3. Extract a `ur:crypto-psbt` from the response, ready to be put into another signature request or extracted to a finalized transaction.
+
+```
+PSBT_TO_SIGN=cHNidP8BAMMCAAAAA0DcshmpIS/ZW94f7roto1MhBNhk6Rz/ZaetRRfcedh9AAAAAAD9////wm+mbFIbTYiPlNNhB8P1/vBcwKG/ZryOHMKkL7dSqTYAAAAAAP3///+CmZgUyFrdKNCZUoqfgBhCAFORPdiP/qr0OOt4I5n+CgAAAAAA/f///wJAQg8AAAAAABYAFCBk78yn2RApIqWfuXigrti3WcQRncYQAAAAAAAWABSMyh/Y85oXJKUZQJT+IeAZJk/MeAAAAAAAAQD9PgECAAAABnPYBYJW735g7YMuaFrrK2ZgQj2XELyHukIJmdvOUB4sAAAAAAD+////bmU42jLXSFq3iLHmsyOR/OrF/x0ZQ2lAbecy8CeanlsAAAAAAP7///87WWkGf++EI4Um41R9YUGj00Z0+wvW0fmPYJ+81lWZOAEAAAAA/v///++syYWL4jBkYbhPlOrxJkozfdkL/XJWnhl2nVzVxa2OAAAAAAD+////UAL64CRRErlwBwQM+X5opqpiI0JmpsKs2a1MzGtZh8QAAAAAAP7///8chEjupyVpNkPdCyBE1wpPrS8MGI9EjEGpj7CTgZAXtgAAAAAA/v///wKghgEAAAAAABYAFMzoxnRhxnGxMSMykm4rhwto1dz6vkMPAAAAAAAWABTzi7rfXv1coXc7HvFo2QoeYq4U1E54HAABAR+ghgEAAAAAABYAFMzoxnRhxnGxMSMykm4rhwto1dz6IgYCtKMsZPEI+kb9daMTFeF/+8io6poDvTx+cinpPo9y1EQYDwVpQ1QAAIABAACAAAAAgAAAAAAQAAAAAAEAUgIAAAABbEc0zoXZ/16+PtvwSQ43BytcwpYvO6gGU11xDcaGH7YAAAAAAAEAAAABgEEPAAAAAAAWABQMEbJbdDyzQi5GH1/cPH4QeuPCiwAAAAABAR+AQQ8AAAAAABYAFAwRslt0PLNCLkYfX9w8fhB648KLIgYDcV7jKmCV/4gwmyIZjcVj1LXh1/M4er/DpkPbYiUikt8YDwVpQ1QAAIABAACAAAAAgAAAAACIAAAAAAEAUgIAAAABtvIk4LNoWJem4tfDI5qeVZKR954vLCVJBiqv3pSFR8AAAAAAAAEAAAAB0kEPAAAAAAAWABT93jySCCHYPSeMHxs0jj9i+0UtmAAAAAABAR/SQQ8AAAAAABYAFP3ePJIIIdg9J4wfGzSOP2L7RS2YIgYDhA94BGdguQJPUq61nFoMNrVM4VUaSEJwM7lZcPGyFPUYDwVpQ1QAAIABAACAAAAAgAAAAACGAAAAACICAgFa3FuEwDkszXFDVxN6KU6pVUV/f6d1JSWZ1RsD4CNtGA8FaUNUAACAAQAAgAAAAIAAAAAAiQAAAAAiAgJZ8CLw/Bdus5hyuOPx7cnFfkBkRoTavnS6BRAHi5GOLBgPBWlDVAAAgAEAAIAAAACAAQAAAFIAAAAA
+KEY_1=cSyLgU8rSvYNU1j6XR2vo5ebSQqza7PR9iFNtkkYrFMwyB5or5gH
+KEY_2=cVok3VJ1fGhdT2yAndKHFWvgTbDsdVFXb8xE9rsAcQASuS4JV9HG
+KEY_3=cMaqfcb16JjrCdfYTfT2vRKFpGjdAugAucEAxw3VuhN91XgjKqzF
+
+REQUEST_1=`keytool --psbt "${PSBT_TO_SIGN}" psbt-signature-request`
+RESPONSE_1=`keytool --network testnet --address-ec-key-wif ${KEY_1} --psbt-signature-request ${REQUEST_1} psbt-signature-response`
+PSBT_1=`keytool --psbt-signature-response ${RESPONSE_1} psbt`
+
+REQUEST_2=`keytool --psbt ${PSBT_1} psbt-signature-request`
+RESPONSE_2=`keytool --network testnet --address-ec-key-wif ${KEY_2} --psbt-signature-request ${REQUEST_2} psbt-signature-response`
+PSBT_2=`keytool --psbt-signature-response ${RESPONSE_2} psbt`
+
+REQUEST_3=`keytool --psbt ${PSBT_2} psbt-signature-request`
+RESPONSE_3=`keytool --network testnet --address-ec-key-wif ${KEY_3} --psbt-signature-request ${REQUEST_3} psbt-signature-response`
+PSBT_3=`keytool --psbt-signature-response ${RESPONSE_3} psbt`
+
+keytool --psbt ${PSBT_3} transaction-hex
+0200000000010340dcb219a9212fd95bde1feeba2da3532104d864e91cff65a7ad4517dc79d87d0000000000fdffffffc26fa66c521b4d888f94d36107c3f5fef05cc0a1bf66bc8e1cc2a42fb752a9360000000000fdffffff82999814c85add28d099528a9f8018420053913dd88ffeaaf438eb782399fe0a0000000000fdffffff0240420f00000000001600142064efcca7d9102922a59fb978a0aed8b759c4119dc61000000000001600148cca1fd8f39a1724a5194094fe21e019264fcc7802483045022100e49b0e63ffba6e684f6971436b38a7b81cba5780fdb0784acd12c145254590600220280aa566aba4bc78911a3672b0cbb5180189460cd9c728dd11a9f71194d1ac6c012102b4a32c64f108fa46fd75a31315e17ffbc8a8ea9a03bd3c7e7229e93e8f72d44402483045022100de1732ee1350d171012fc097af03e91ff26f00cbd2c96e7a0fe2a6abb61b9d1d02206329366501086ef5d2143877eed4c6f6ed93db8ed26c27f360db1b2c55b80156012103715ee32a6095ff88309b22198dc563d4b5e1d7f3387abfc3a643db62252292df024730440220500b1db89395d62c5049414adc52e79d0b5527180669ac811ad61963d57ebec4022000d64181fe2b1c9d0adb2672ad0612c40c4e0cb027e22e340d35a92307ef4c8e012103840f78046760b9024f52aeb59c5a0c36b54ce1551a48427033b95970f1b214f500000000
 ```
 
 ## Derivable and Non-Derivable Keys
@@ -570,6 +619,12 @@ ur:crypto-hdkey/oxaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoe
 ```
 
 ## Version History
+
+### 0.7.0, 7/14/2021
+
+* Added suite of nodes for requesting and responding to requests for signing PSBTs.
+* Fixed bug in generated format of seed request; now conforms to [specs](https://github.com/BlockchainCommons/Research/blob/master/papers/bcr-2021-001-request.md#cddl-for-request).
+* Added shunit2 as submodule instead of external dependency.
 
 ### 0.6.0, 4/1/2021
 

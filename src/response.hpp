@@ -4,13 +4,12 @@
 #include "uuid.hpp"
 #include "seed.hpp"
 #include "hd-key.hpp"
+#include "psbt.hpp"
 #include "utils.hpp"
 #include <variant>
 #include <optional>
 
-typedef ByteVector PSBTSignatureResponseBody;
-
-typedef std::variant<Seed, HDKey, PSBTSignatureResponseBody> ResponseBodyVariant;
+typedef std::variant<Seed, HDKey, PSBT> ResponseBodyVariant;
 
 class Response final {
 public:
@@ -22,11 +21,11 @@ public:
 
     bool is_seed_response() const { return std::holds_alternative<Seed>(body()); }
     bool is_key_response() const { return std::holds_alternative<HDKey>(body()); }
-    bool is_psbt_signature_response() const { return std::holds_alternative<PSBTSignatureResponseBody>(body()); }
+    bool is_psbt_signature_response() const { return std::holds_alternative<PSBT>(body()); }
 
     const Seed& seed_response() const { return std::get<Seed>(body()); }
     const HDKey& key_response() const { return std::get<HDKey>(body()); }
-    const PSBTSignatureResponseBody& psbt_signature_response() const { return std::get<PSBTSignatureResponseBody>(body()); }
+    const PSBT& psbt_signature_response() const { return std::get<PSBT>(body()); }
 
     std::string ur() const;
 

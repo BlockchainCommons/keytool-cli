@@ -8,14 +8,53 @@ using namespace ur::CborLite;
 
 void SeedRequestBody::encode_cbor(ByteVector& cbor) const {
     encodeTagAndValue(cbor, Major::semantic, Tag(500));
-    encodeBytes(cbor, digest());
+
+    size_t map_size = 0;
+
+    // seed-digest
+    ByteVector seed_digest_map_entry;
+    map_size += 1;
+    encodeInteger(seed_digest_map_entry, 1);
+    encodeTagAndValue(seed_digest_map_entry, Major::semantic, Tag(600));
+    encodeBytes(seed_digest_map_entry, digest());
+
+    ur::CborLite::encodeMapSize(cbor, map_size);
+    ::append(cbor, seed_digest_map_entry);
 }
 
 SeedRequestBody SeedRequestBody::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
+    size_t map_len;
+    decodeMapSize(pos, end, map_len, cbor_decoding_flags);
+    set<int> labels;
+
     auto digest = ByteVector();
-    decodeBytes(pos, end, digest, cbor_decoding_flags);
-    if(digest.size() != 32) {
-        throw domain_error("Invalid seed request.");
+    for(auto index = 0; index < map_len; index++) {
+        int label;
+        decodeInteger(pos, end, label, cbor_decoding_flags);
+        if(labels.find(label) != labels.end()) {
+            throw domain_error("Duplicate label.");
+        }
+        labels.insert(label);
+        switch(label) {
+            case 1: {
+                Tag major_tag;
+                Tag minor_tag;
+                decodeTagAndValue(pos, end, major_tag, minor_tag, cbor_decoding_flags);
+                if(major_tag != Major::semantic || minor_tag != 600) {
+                    throw domain_error("Invalid digest.");
+                }
+                decodeBytes(pos, end, digest, cbor_decoding_flags);
+                if(digest.size() != 32) {
+                    throw domain_error("Invalid seed request.");
+                }
+            }
+                break;
+            default:
+                throw domain_error("Unknown label.");
+        }
+    }
+    if(digest.empty()) {
+        throw domain_error("Seed request doesn't contain seed-digest.");
     }
     return SeedRequestBody(digest);
 }
@@ -109,13 +148,46 @@ KeyRequestBody KeyRequestBody::decode_cbor(ByteVector::const_iterator& pos, Byte
 }
 
 void PSBTSignatureRequestBody::encode_cbor(ByteVector& cbor) const {
-    // TODO
-    throw runtime_error("Unimplemented.");
+    encodeTagAndValue(cbor, Major::semantic, Tag(502));
+
+    size_t map_size = 0;
+
+    // psbt
+    ByteVector psbt_map_entry;
+    map_size += 1;
+    encodeInteger(psbt_map_entry, 1);
+    ::append(psbt_map_entry, psbt().tagged_cbor());
+
+    ur::CborLite::encodeMapSize(cbor, map_size);
+    ::append(cbor, psbt_map_entry);
 }
 
 PSBTSignatureRequestBody PSBTSignatureRequestBody::decode_cbor(ByteVector::const_iterator& pos, ByteVector::const_iterator end) {
-    // TODO
-    throw runtime_error("Unimplemented.");
+    size_t map_len;
+    decodeMapSize(pos, end, map_len, cbor_decoding_flags);
+    set<int> labels;
+
+    optional<PSBT> psbt;
+    for(auto index = 0; index < map_len; index++) {
+        int label;
+        decodeInteger(pos, end, label, cbor_decoding_flags);
+        if(labels.find(label) != labels.end()) {
+            throw domain_error("Duplicate label.");
+        }
+        labels.insert(label);
+        switch(label) {
+            case 1: {
+                psbt = PSBT::decode_tagged_cbor(pos, end);
+            }
+                break;
+            default:
+                throw domain_error("Unknown label.");
+        }
+    }
+    if(!psbt.has_value()) {
+        throw domain_error("PSBT signature request doesn't contain psbt.");
+    }
+    return PSBTSignatureRequestBody(*psbt);
 }
 
 Request::Request(RequestBodyVariant body, const string& description, const UUID& id)

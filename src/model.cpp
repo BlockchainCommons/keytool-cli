@@ -5,6 +5,7 @@
 #include "model-seed.hpp"
 #include "model-seed-request.hpp"
 #include "model-hdkey-request.hpp"
+#include "model-psbt-signature-request.hpp"
 
 #include <algorithm>
 
@@ -90,6 +91,12 @@ Model::Model() {
     psbt_signed_base64 = setup_psbt_signed_base64(*this);
     transaction = setup_transaction(*this);
     transaction_hex = setup_transaction_hex(*this);
+
+    // psbt-signature-request
+    psbt_signature_request_id = setup_psbt_signature_request_id(*this);
+    psbt_signature_request_description = setup_psbt_signature_request_description(*this);
+    psbt_signature_request = setup_psbt_signature_request(*this);
+    psbt_signature_response = setup_psbt_signature_response(*this);
 
     int next_tag = -1;
     for(auto node: all_nodes()) {

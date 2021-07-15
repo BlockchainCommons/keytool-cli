@@ -66,6 +66,7 @@ DataNode<Seed>* setup_seed(Model& model) {
     node->set_info("seed", "SEED", "A seed in UR or HEX format.");
     node->set_to_string([](const Seed& seed) { return seed.ur(); });
     node->set_from_string([](const string& s) -> Seed { return Seed(s); });
+    model.add_derivation("seed <- [seed-response]");
     node->set_derivation([&]() -> optional<Seed> {
         if(model.seed_response->has_assigned_value()) {
             return model.seed_response->value().seed_response();

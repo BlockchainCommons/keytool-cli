@@ -11,3 +11,6 @@
 [submodule "deps/bc-ur"]
 	path = deps/bc-ur
 	url = https://github.com/BlockchainCommons/bc-ur.git
+[submodule "deps/shunit2"]
+	path = deps/shunit2
+	url = https://github.com/kward/shunit2.git

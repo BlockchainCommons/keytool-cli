@@ -46,9 +46,7 @@ Response::Response(const string& s) {
                     } else if(minor_tag == 303) {
                         _body = HDKey::decode_cbor(pos, end);
                     } else if(minor_tag == 310) {
-                        // TODO
-                        // _body = PSBT::decode_cbor(pos, end);
-                        throw runtime_error("Unimplemented.");
+                        _body = PSBT::decode_cbor(pos, end);
                     } else {
                         throw domain_error("Unknown response.");
                     }
@@ -76,8 +74,7 @@ string Response::ur() const {
     } else if(is_key_response()) {
         ::append(body_map_entry, key_response().tagged_cbor());
     } else if(is_psbt_signature_response()) {
-        // TODO
-        // ::append(body_map_entry, psbt_signature_response().tagged_cbor());
+        ::append(body_map_entry, psbt_signature_response().tagged_cbor());
     } else {
         throw runtime_error("Unknown response.");
     }

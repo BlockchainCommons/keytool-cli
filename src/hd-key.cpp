@@ -138,9 +138,8 @@ ext_key HDKey::wally_ext_key() const {
     return k;
 }
 
-// cppcheck-suppress unusedFunction
 HDKey HDKey::from_seed(const Seed& seed, const UseInfo& use_info) {
-    auto& data = seed.data();
+    const auto& data = seed.data();
     if(!Wally::instance.bip39_is_entropy_length_valid(data.size())) {
         throw domain_error("Cannot construct HDKey from seed of invalid length.");
     }
@@ -466,7 +465,6 @@ HDKey HDKey::from_ur(const string& ur_string) {
     return decode_cbor(pos, end);
 }
 
-// cppcheck-suppress unusedFunction
 ECPrivateKey HDKey::to_ec_private() const {
     if(key_type() != KeyType::private_key()) {
         throw domain_error("Cannot derive private key from public key.");
@@ -477,7 +475,6 @@ ECPrivateKey HDKey::to_ec_private() const {
     return ECPrivateKey(v);
 }
 
-// cppcheck-suppress unusedFunction
 ECCompressedPublicKey HDKey::to_ec_public() const {
     auto k = wally_ext_key();
     auto a = k.pub_key;
@@ -485,7 +482,6 @@ ECCompressedPublicKey HDKey::to_ec_public() const {
     return ECCompressedPublicKey(v);
 }
 
-// cppcheck-suppress unusedFunction
 string HDKey::to_segwit_address() const {
     string address_family;
     if(use_info().network() == Network::mainnet()) {
@@ -504,7 +500,6 @@ string HDKey::to_segwit_address() const {
     return result;
 }
 
-// cppcheck-suppress unusedFunction
 HDKey HDKey::parse_key(const std::string& s) {
     try {
         return from_ur(s);

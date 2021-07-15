@@ -119,7 +119,6 @@ bool Model::is_valid_name(const string& node_name) const {
     return find_by_name(node_name) != nullptr;
 }
 
-// cppcheck-suppress unusedFunction
 bool Model::can_derive(const string& node_name) const {
     auto node = find_by_name(node_name);
     if(node == nullptr) {

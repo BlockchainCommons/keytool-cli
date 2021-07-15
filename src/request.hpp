@@ -55,7 +55,7 @@ private:
 
 class PSBTSignatureRequestBody final {
 public:
-    PSBTSignatureRequestBody(const PSBT& psbt) : _psbt(psbt) { }
+    explicit PSBTSignatureRequestBody(const PSBT& psbt) : _psbt(psbt) { }
 
     const PSBT& psbt() const { return _psbt; }
 

@@ -21,7 +21,6 @@ DataNode<HDKey>* setup_master_key(Model& model) {
     node->set_derivation([&]() -> optional<HDKey> {
         if(model.master_key_base58->has_assigned_value()) {
             return model.master_key_base58->value();
-        // cppcheck-suppress internalAstError
         } else if(model.seed->has_value()) {
             auto seed = model.seed->value();
             auto asset = model.asset->value();

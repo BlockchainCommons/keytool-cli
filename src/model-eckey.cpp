@@ -37,7 +37,6 @@ DataNode<ECPrivateKey>* setup_address_ec_key(Model& model) {
     node->set_derivation([&]() -> optional<ECPrivateKey> {
         if(model.address_key->has_value()) {
             return model.address_key->value().to_ec_private();
-        // cppcheck-suppress internalAstError
         } else if(model.address_ec_key_wif->has_value()) {
             return Wally::instance.wif_to_ec_key(model.address_ec_key_wif->value(), model.network->value());
         } else {

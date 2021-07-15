@@ -142,7 +142,7 @@ $ docker run --rm -it keytool-cli --help
 ### MacOS
 
 ```bash
-$ brew install autoconf automake gnu-sed libtool shunit2
+$ brew install autoconf automake gnu-sed libtool
 ```
 
 You must then download or clone this repo. Afterward, cd into the repo directory and:
@@ -198,7 +198,7 @@ $ sudo apt install lsb-release wget software-properties-common git apt-transport
 $ wget https://apt.llvm.org/llvm.sh
 $ chmod +x llvm.sh
 $ sudo ./llvm.sh 10  # version 10
-$ sudo apt-get -y install build-essential pkg-config autoconf libtool shunit2 libc++-10-dev libc++abi-10-dev python
+$ sudo apt-get -y install build-essential pkg-config autoconf libtool libc++-10-dev libc++abi-10-dev python
 ```
 
 Then, you can clone and build this repo:
@@ -268,8 +268,6 @@ This table below also establishes provenance (repository of origin, permalink, a
 To build `keytool` you'll need to use the following tools:
 
 - autotools - Gnu Build System from Free Software Foundation ([intro](https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html)).
-- shunit2 - Unit testing for shell scripts
-
 
 ## Financial Support
 

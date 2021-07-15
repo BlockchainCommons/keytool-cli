@@ -37,7 +37,6 @@ string Wally::bip39_mnemonic_from_entropy(const ByteVector& entropy) const {
     return result;
 }
 
-// cppcheck-suppress unusedFunction
 ByteVector Wally::bip39_mnemonic_to_entropy(const string& mnemonic) const {
     ByteVector result(500);
     size_t written = 0;
@@ -54,7 +53,6 @@ ByteVector Wally::bip39_mnemonic_to_bip32_seed(const string& mnemonic) const {
     return result;
 }
 
-// cppcheck-suppress unusedFunction
 bool Wally::bip32_is_seed_length_valid(size_t len) const {
     vector<size_t> valid_lengths = {BIP32_ENTROPY_LEN_128, BIP32_ENTROPY_LEN_256, BIP32_ENTROPY_LEN_512};
     return any_of(valid_lengths.begin(), valid_lengths.end(), [&](size_t l) { return l == len; });
@@ -89,12 +87,10 @@ bool Wally::bip32_is_seed_length_valid(size_t len) const {
 //     return bip32_key_from_seed(seed, network);
 // }
 
-// cppcheck-suppress unusedFunction
 uint32_t Wally::flags_for_private(bool is_private) {
     return is_private ? BIP32_FLAG_KEY_PRIVATE : BIP32_FLAG_KEY_PUBLIC;
 }
 
-// cppcheck-suppress unusedFunction
 void Wally::print_key(const ext_key& k) const {
     ostringstream result;
     // "ext_key(chain_code: \(chain_code), parent160: \(parent160), priv_key: \(priv_key),
@@ -221,7 +217,6 @@ ECCompressedPublicKey Wally::ec_key_compress(const ECUncompressedPublicKey& key)
     return ECCompressedPublicKey(key_out);
 }
 
-// cppcheck-suppress unusedFunction
 string Wally::ec_key_to_wif(const ECPrivateKey& key, const Network& network) const {
     char* wif_out;
     uint32_t prefix = network == Network::mainnet() ? 0x80 : 0xef;
@@ -231,7 +226,6 @@ string Wally::ec_key_to_wif(const ECPrivateKey& key, const Network& network) con
     return result;
 }
 
-// cppcheck-suppress unusedFunction
 ECPrivateKey Wally::wif_to_ec_key(const string& wif, const Network& network) const {
     uint32_t prefix = network == Network::mainnet() ? 0x80 : 0xef;
     ByteVector bytes_out(EC_PRIVATE_KEY_LEN);

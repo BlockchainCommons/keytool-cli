@@ -52,7 +52,6 @@ DataNode<UUID>* setup_key_request_id(Model& model) {
     node->set_derivation([&]() -> optional<UUID> {
         if(model.key_request->has_assigned_value()) {
             return model.key_request->value().id();
-        // cppcheck-suppress internalAstError
         } else if(model.key_response->has_assigned_value()) {
             return model.key_response->value().id();
         } else {

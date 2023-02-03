@@ -37,7 +37,7 @@ if [[ "$OSTYPE" == "msys" ]]; then
 # FIXME: figure out how to disable PTHREADS instead of tests
 ./configure "${WALLY_CONFIGURE-}" --disable-tests --disable-shared --prefix ${SYSROOT}
 else
-./configure "${WALLY_CONFIGURE-}" --disable-shared --prefix ${SYSROOT}
+./configure "${WALLY_CONFIGURE-}" --disable-tests --disable-shared --prefix ${SYSROOT}
 fi
 
 make

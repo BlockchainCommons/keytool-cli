@@ -3,6 +3,7 @@
 
 #include <string>
 #include <optional>
+#include <limits>
 #include "utils.hpp"
 #include "use-info.hpp"
 #include "derivation-path.hpp"

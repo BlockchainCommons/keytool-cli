@@ -1,0 +1,74 @@
+#!/usr/bin/make -f
+
+# See debhelper(7) (uncomment to enable).
+# Output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+
+# See FEATURE AREAS in dpkg-buildflags(1).
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# See ENVIRONMENT in dpkg-buildflags(1).
+# Package maintainers to append CFLAGS.
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# Package maintainers to append LDFLAGS.
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+export CC=clang 
+export CXX=clang++
+export SYSROOT=/tmp/sysroot
+export LIB=${SYSROOT}/lib
+export INCLUDE=${SYSROOT}/include
+
+export CFLAGS += -I${INCLUDE}
+export CXXFLAGS += -I${INCLUDE}
+export LDFLAGS += -L${LIB}
+
+
+%:
+	cd deps/bc-crypto-base && autoconf
+	cd deps/bc-crypto-base && ./configure --prefix ${SYSROOT}
+	cd deps/bc-crypto-base && make check
+	cd deps/bc-crypto-base && make install
+
+	cd deps/bc-ur && autoconf
+	cd deps/bc-ur && ./configure --prefix ${SYSROOT}
+	cd deps/bc-ur && make check
+	cd deps/bc-ur && make install
+
+	cd deps/libwally-core && tools/autogen.sh
+	cd deps/libwally-core && ./configure "${WALLY_CONFIGURE-}" --disable-shared --disable-tests --prefix ${SYSROOT}
+	cd deps/libwally-core && make check
+	cd deps/libwally-core && make install
+
+	cd deps/argp-standalone/argp-standalone && autoconf
+	cd deps/argp-standalone/argp-standalone && ./configure --prefix ${SYSROOT}
+	cd deps/argp-standalone/argp-standalone && make install
+	cd deps/argp-standalone/argp-standalone && cp libargp.a ${SYSROOT}/lib/
+	cd deps/argp-standalone/argp-standalone && cp argp.h ${SYSROOT}/include/
+
+	dh $@
+
+#override_dh_autoreconf:
+#	dh_autoreconf
+
+# dh_make generated override targets.
+# This is an example for Cmake (see <https://bugs.debian.org/641051>).
+# override_dh_auto_configure:
+# 	./configure
+
+# override_dh_auto_build:
+# 	dh_auto_build
+
+# override_dh_auto_test:
+# 	dh_auto_test
+
+override_dh_auto_clean:
+	cd deps/bc-crypto-base && make distclean
+	cd deps/bc-ur && make distclean
+	cd deps/libwally-core && make distclean
+	# cd deps/libwally-core/src/secp256k1 && make clean
+	cd deps/argp-standalone/argp-standalone && make distclean
+	[ -f ./Makefile ] && make distclean || true
+
+override_dh_dwz:
+	true

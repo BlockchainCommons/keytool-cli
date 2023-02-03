@@ -1,0 +1,79 @@
+debian/.debhelper/
+sysroot/
+#3config.log
+# Makefile
+config.status
+# src/Makefile
+src/config.h
+deps/argp-standalone/argp-standalone/argp-ba.o
+# deps/argp-standalone/argp-standalone/Makefile
+deps/argp-standalone/argp-standalone/config.h
+deps/argp-standalone/argp-standalone/config.log
+deps/argp-standalone/argp-standalone/config.status
+deps/argp-standalone/argp-standalone/configure
+deps/argp-standalone/argp-standalone/stamp-h1
+# deps/argp-standalone/argp-standalone/testsuite/Makefile
+# deps/bc-crypto-base/Makefile
+deps/bc-crypto-base/config.h
+deps/bc-crypto-base/config.log
+deps/bc-crypto-base/config.status
+deps/bc-crypto-base/configure
+# deps/bc-crypto-base/src/Makefile
+# deps/bc-crypto-base/test/Makefile
+# deps/bc-ur/Makefile
+deps/bc-ur/config.log
+deps/bc-ur/config.status
+deps/bc-ur/configure
+deps/bc-ur/config.h
+# deps/bc-ur/src/Makefile
+# deps/bc-ur/test/Makefile
+# deps/libwally-core/Makefile
+deps/libwally-core/Makefile.in
+deps/libwally-core/aclocal.m4
+deps/libwally-core/config.log
+deps/libwally-core/config.status
+deps/libwally-core/configure
+deps/libwally-core/libtool
+# deps/libwally-core/src/Makefile
+deps/libwally-core/src/Makefile.in
+deps/libwally-core/src/config.h
+deps/libwally-core/src/config.h.in
+# deps/libwally-core/src/secp256k1/Makefile
+deps/libwally-core/src/secp256k1/Makefile.in
+deps/libwally-core/src/secp256k1/aclocal.m4
+deps/libwally-core/src/secp256k1/build-aux/compile
+deps/libwally-core/src/secp256k1/build-aux/config.guess
+deps/libwally-core/src/secp256k1/build-aux/config.sub
+deps/libwally-core/src/secp256k1/build-aux/depcomp
+deps/libwally-core/src/secp256k1/build-aux/install-sh
+deps/libwally-core/src/secp256k1/build-aux/ltmain.sh
+deps/libwally-core/src/secp256k1/build-aux/m4/libtool.m4
+deps/libwally-core/src/secp256k1/build-aux/m4/ltoptions.m4        
+deps/libwally-core/src/secp256k1/build-aux/m4/ltsugar.m4
+deps/libwally-core/src/secp256k1/build-aux/m4/ltversion.m4        
+deps/libwally-core/src/secp256k1/build-aux/m4/lt~obsolete.m4      
+deps/libwally-core/src/secp256k1/build-aux/missing
+deps/libwally-core/src/secp256k1/build-aux/test-driver
+deps/libwally-core/src/secp256k1/config.log
+deps/libwally-core/src/secp256k1/config.status
+deps/libwally-core/src/secp256k1/configure
+deps/libwally-core/src/secp256k1/libsecp256k1.pc
+deps/libwally-core/src/secp256k1/libtool
+deps/libwally-core/src/secp256k1/src/libsecp256k1-config.h        
+deps/libwally-core/src/secp256k1/src/libsecp256k1-config.h.in     
+deps/libwally-core/src/secp256k1/src/stamp-h1
+deps/libwally-core/src/stamp-h1
+deps/libwally-core/src/wallycore.pc
+deps/libwally-core/tools/build-aux/compile
+deps/libwally-core/tools/build-aux/config.guess
+deps/libwally-core/tools/build-aux/config.sub
+deps/libwally-core/tools/build-aux/depcomp
+deps/libwally-core/tools/build-aux/install-sh
+deps/libwally-core/tools/build-aux/ltmain.sh
+deps/libwally-core/tools/build-aux/m4/libtool.m4
+deps/libwally-core/tools/build-aux/m4/ltoptions.m4
+deps/libwally-core/tools/build-aux/m4/ltsugar.m4
+deps/libwally-core/tools/build-aux/m4/ltversion.m4
+deps/libwally-core/tools/build-aux/m4/lt~obsolete.m4
+deps/libwally-core/tools/build-aux/missing
+deps/libwally-core/tools/build-aux/test-driver

@@ -1,0 +1,20 @@
+Source: keytool-cli
+Section: unknown
+Priority: optional
+Maintainer: Wolf McNally <Wolf@WolfMcNally.com>
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper-compat (= 13),
+ autotools-dev,
+Standards-Version: 4.6.1
+Homepage: https://github.com/BlockchainCommons/keytool-cli
+#Vcs-Browser: https://salsa.debian.org/debian/keytool-cli
+Vcs-Git: git@github.com:BlockchainCommons/keytool-cli.git
+
+Package: keytool-cli
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: `keytool` is a command-line tool that implements a data flow graph for deriving cryptocurrency keys and addresses, and signing transactions. 
+ 

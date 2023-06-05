@@ -1,1 +1,6 @@
-# extend-diff-ignore = '(/deps/.*)'
+extend-diff-ignore = build.sh
+extend-diff-ignore = build/build-tailsOS.Dockerfile
+extend-diff-ignore = "(.*/)*Makefile|(config\..*)|configure"
+extend-diff-ignore = "deps/libwally-core/src/secp256k1/build-aux"
+extend-diff-ignore = "(.*/)autom4te.cache/.*"
+extend-diff-ignore = "(.*/)aclocal.m4"

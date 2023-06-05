@@ -18,16 +18,6 @@ Forwarded: <no|not-needed|url proving that it has been forwarded>
 Reviewed-By: <name and email of someone who approved the patch>
 Last-Update: 2023-02-05
 
---- keytool-cli-0.7.0.orig/configure.ac
-+++ keytool-cli-0.7.0/configure.ac
-@@ -3,6 +3,7 @@
- 
- AC_PREREQ([2.69])
- AC_INIT([keytool-cli], [0.7.0])
-+AC_CONFIG_AUX_DIR([/usr/share/autoconf/build-aux])
- AC_CONFIG_SRCDIR([src/keytool.cpp])
- AC_CONFIG_HEADERS([src/config.h])
- 
 --- keytool-cli-0.7.0.orig/deps/argp-standalone/argp-standalone/argp-fmtstream.h
 +++ keytool-cli-0.7.0/deps/argp-standalone/argp-standalone/argp-fmtstream.h
 @@ -192,7 +192,7 @@ extern void __argp_fmtstream_update (arg
@@ -39,26 +29,6 @@ Last-Update: 2023-02-05
  /* Inline versions of above routines.  */
  
  #if !_LIBC
---- keytool-cli-0.7.0.orig/deps/bc-crypto-base/configure.ac
-+++ keytool-cli-0.7.0/deps/bc-crypto-base/configure.ac
-@@ -3,6 +3,7 @@
- 
- AC_PREREQ([2.69])
- AC_INIT([bc-crypto-base], [0.2])
-+AC_CONFIG_AUX_DIR([/usr/share/autoconf/build-aux])
- AC_CONFIG_SRCDIR([src/sha2.c])
- AC_CONFIG_HEADERS([config.h])
- 
---- keytool-cli-0.7.0.orig/deps/bc-ur/configure.ac
-+++ keytool-cli-0.7.0/deps/bc-ur/configure.ac
-@@ -3,6 +3,7 @@
- 
- AC_PREREQ([2.69])
- AC_INIT([bc-ur], [0.2.0])
-+AC_CONFIG_AUX_DIR([/usr/share/autoconf/build-aux])
- AC_CONFIG_SRCDIR([src/ur.cpp])
- AC_CONFIG_HEADERS([config.h])
- 
 --- keytool-cli-0.7.0.orig/deps/bc-ur/src/Makefile.in
 +++ keytool-cli-0.7.0/deps/bc-ur/src/Makefile.in
 @@ -29,7 +29,7 @@ RESET=`tput sgr0`

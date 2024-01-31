@@ -31,6 +31,9 @@ popd
 echo "${BLUE}== libwally-core ==${RESET}"
 
 pushd deps/libwally-core
+git submodule init
+git submodule sync --recursive
+git submodule update --init --recursive
 ./tools/autogen.sh
 
 if [[ "$OSTYPE" == "msys" ]]; then

@@ -281,7 +281,7 @@ string Wally::to_base58(const ByteVector& bytes, bool is_check) const {
 
 wally_psbt* Wally::psbt_from_data(const ByteVector& data) const {
     wally_psbt* output = nullptr;
-    if(wally_psbt_from_bytes(&data.front(), data.size(), &output) != WALLY_OK) {
+    if(wally_psbt_from_bytes(&data.front(), data.size(), 0, &output) != WALLY_OK) {
         throw domain_error("Invalid PSBT.");
     }
     return output;
@@ -317,7 +317,7 @@ wally_psbt* Wally::psbt_copy(wally_psbt* psbt) const {
 }
 
 void Wally::psbt_finalize(wally_psbt* psbt) const {
-    if(wally_psbt_finalize(psbt) != WALLY_OK) {
+    if(wally_psbt_finalize(psbt, 0) != WALLY_OK) {
         throw domain_error("Could not finalize PSBT.");
     }
 }
@@ -347,7 +347,7 @@ ByteVector Wally::tx_to_data(wally_tx* tx) const {
 
 wally_tx* Wally::tx_from_psbt(wally_psbt* psbt) const {
     wally_tx* output;
-    if(wally_psbt_extract(psbt, &output) != WALLY_OK) {
+    if(wally_psbt_extract(psbt, 0, &output) != WALLY_OK) {
         throw domain_error("Could not extract transaction from PBST.");
     }
     return output;

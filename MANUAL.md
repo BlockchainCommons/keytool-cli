@@ -620,6 +620,10 @@ ur:crypto-hdkey/oxaoykaxhdclaebkmdcfjtdmaacybbesmskbolvdvalbdkgachhtlefpcmotltoe
 
 ## Version History
 
+### 0.8.0, 1/31/2024
+
+* Updated libwally
+
 ### 0.7.0, 7/14/2021
 
 * Added suite of nodes for requesting and responding to requests for signing PSBTs.

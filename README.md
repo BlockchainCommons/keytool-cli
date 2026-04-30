@@ -143,12 +143,15 @@ $ docker run --rm -it keytool-cli --help
 ### MacOS
 
 ```bash
-$ brew install autoconf automake gnu-sed libtool
+$ brew install autoconf automake gnu-sed libtool python python-setuptools
 ```
 
 You must then download or clone this repo. Afterward, cd into the repo directory and:
 
 ```bash
+$ git clone https://github.com/BlockchainCommons/keytool-cli.git
+$ cd keytool-cli
+$ autoreconf -i
 $ ./build.sh
 $ sudo make install
 ```

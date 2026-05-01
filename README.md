@@ -198,19 +198,24 @@ First, install the dependencies:
 ```bash
 $ sudo apt-get update
 
-$ sudo apt install lsb-release wget software-properties-common git apt-transport-https
+$ sudo apt-get install llvm clang
+$ sudo apt install lsb-release wget git apt-transport-https
 $ wget https://apt.llvm.org/llvm.sh
 $ chmod +x llvm.sh
-$ sudo ./llvm.sh 10  # version 10
-$ sudo apt-get -y install build-essential pkg-config autoconf libtool libc++-10-dev libc++abi-10-dev python
+$ sudo ./llvm.sh
+$ sudo apt-get -y install build-essential pkg-config autoconf libtool libc++-dev libc++abi-dev python3 python3-setuptools
+$ sudo ln -s /usr/bin/python3 /usr/bin/python
 ```
+
+Missing: software-properties-common 
 
 Then, you can clone and build this repo:
 
 ```bash
 $ git clone https://github.com/BlockchainCommons/keytool-cli.git
 $ cd keytool-cli/
-$ export CC="clang-10" && export CXX="clang++-10" && ./build.sh
+$ autoreconf -i
+$ export CC="clang" && export CXX="clang++" && ./build.sh
 $ sudo make install
 ```
 

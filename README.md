@@ -186,32 +186,23 @@ Then the shell is finding Java's `keytool` before ours. You will need to edit yo
 PATH=/usr/local/bin:$PATH
 ```
 
-### Build on Linux
-
-Make sure you have `llvm`/`clang`, `libc++` and `libc++abi` installed, all with
-a minimum recommended version 10.
-
-#### Build on Ubuntu and Debian
+### Linux (Tested on Debian)
 
 First, install the dependencies:
 
 ```bash
 $ sudo apt-get update
 
-$ sudo apt-get install llvm clang
-$ sudo apt install lsb-release wget git apt-transport-https
-$ wget https://apt.llvm.org/llvm.sh
-$ chmod +x llvm.sh
-$ sudo ./llvm.sh
-$ sudo apt-get -y install build-essential pkg-config autoconf libtool libc++-dev libc++abi-dev python3 python3-setuptools
+$ sudo apt-get install llvm clang lsb-release wget git apt-transport-https
+$ sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+$ sudo apt-get install build-essential pkg-config autoconf libtool libc++-dev libc++abi-dev python3 python3-setuptools
 $ sudo ln -s /usr/bin/python3 /usr/bin/python
 ```
-
-Missing: software-properties-common 
 
 Then, you can clone and build this repo:
 
 ```bash
+$ cd /tmp
 $ git clone https://github.com/BlockchainCommons/keytool-cli.git
 $ cd keytool-cli/
 $ autoreconf -i
